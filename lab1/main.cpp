@@ -5,7 +5,10 @@ template<typename T, typename M>
 class Graph {
 public:
     virtual void print() = 0; //TODO: (?) void print(Graph<T, M>);
-    virtual bool check_nodes_adjacency(int index1, int index2) = 0;
+
+    virtual bool nodes_adjacency(int index1, int index2) = 0;
+
+    virtual bool adjacent(int index) = 0;
 
     virtual void add_node(T data) = 0;
 
@@ -105,7 +108,7 @@ public:
             for (int k = 0; k < nodes.size(); k++) {
                 for (int j = 0; j < 2; j++)
                     std::cout << " ";
-                std::cout << (int) check_nodes_adjacency(i, k);
+                std::cout << (int) nodes_adjacency(i, k);
             }
             std::cout << std::endl;
         }
@@ -113,13 +116,38 @@ public:
 
     }
 
-    bool check_nodes_adjacency(int index1, int index2) override {
+    bool nodes_adjacency(int index1, int index2) override {
         for (auto &e:nodes[index1]->adjacent_nodes) {
             if (e.first == index2) {
                 return true;
             }
         }
         return false;
+    }
+
+    bool adjacent(int index) override {
+        static std::vector<bool> visited;
+        static bool start = true;
+        if (start) {
+            start = false;
+            for (auto &e:nodes)
+                visited.push_back(false);
+
+            adjacent(0);
+
+            for (int i = 1; i < nodes.size(); i++) {
+                if (!visited[i]) {
+                    start = true;
+                    return false;
+                }
+            }
+            start = true;
+        } else {
+            visited[index] = true;
+            for (auto &e:nodes[index]->adjacent_nodes)
+                if (!visited[e.first]) adjacent(e.first);
+        }
+        return true;
     }
 
     void add_node(T data) override {
@@ -203,7 +231,7 @@ public:
             for (int k = 0; k < nodes.size(); k++) {
                 for (int j = 0; j < 2; j++)
                     std::cout << " ";
-                std::cout << (int) check_nodes_adjacency(i, k);
+                std::cout << (int) nodes_adjacency(i, k);
             }
             std::cout << std::endl;
         }
@@ -211,10 +239,35 @@ public:
 
     }
 
-    bool check_nodes_adjacency(int index1, int index2) override {
+    bool nodes_adjacency(int index1, int index2) override {
         if (index1 < nodes.size() && index2 < nodes.size()) {
             return edges[index1][index2].first;
         } else return false;
+    }
+
+    bool adjacent(int index) override {
+        static std::vector<bool> visited;
+        static bool start = true;
+        if (start) {
+            start = false;
+            for (auto &e:nodes)
+                visited.push_back(false);
+
+            adjacent(0);
+
+            for (int i = 1; i < nodes.size(); i++) {
+                if (!visited[i]) {
+                    start = true;
+                    return false;
+                }
+            }
+            start = true;
+        } else {
+            visited[index] = true;
+            for (int j = 0; j < nodes.size(); j++)
+                if (!visited[j] && edges[index][j].first) adjacent(j);
+        }
+        return true;
     }
 
     void add_node(T data) override {
@@ -249,13 +302,17 @@ void test_int(Graph<int, double> *graph) {
     for (int i = 0; i < 10; i++) {
         graph->add_node(i);
     }
-    graph->add_edge(1, 1, 1.2);
-    graph->add_edge(2, 5, 4.6);
-    graph->add_edge(4, 8, 0);
-    graph->add_edge(4, 5, 7.9);
-    graph->add_edge(1, 9, 1.1);
-    graph->add_edge(2, 2, -9);
+    graph->add_edge(0, 1, 0);
+    graph->add_edge(1, 2, 0);
+    graph->add_edge(2, 3, 0);
+    graph->add_edge(3, 4, 0);
+    graph->add_edge(4, 5, 0);
+    graph->add_edge(5, 6, 0);
+    graph->add_edge(6, 7, 0);
+    graph->add_edge(7, 8, 0);
+    graph->add_edge(8, 9, 0);
     graph->print();
+    std::cout << "res:: " << graph->adjacent(0);
 }
 
 

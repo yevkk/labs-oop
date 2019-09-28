@@ -10,7 +10,7 @@ Graphs based on adjacency structure and adjacency matrix, that can store any dat
 - [ ] delete node by value
 - [ ] delete edge
 - [x] check nodes adjacency
-- [ ] check graph adjacency
+- [x] check graph adjacency
 - [ ] distance between nodes (by index)
 - [x] print
 
