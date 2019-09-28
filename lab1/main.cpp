@@ -5,6 +5,9 @@ template<typename T, typename M>
 class Graph {
 public:
     virtual void add_node(T data) = 0;
+    virtual bool check_nodes_adjacency(int index1, int index2) = 0;
+
+    //virtual void add_edge(int index1, int index2, M data) = 0;
 };
 
 template<typename T>
@@ -53,6 +56,15 @@ public:
         for (auto &node:nodes) delete node;
     }
 
+    bool check_nodes_adjacency(int index1, int index2) override{
+        for(auto &e:nodes[index1]->adjacent_nodes){
+            if (e.first == index2){
+                return true;
+            }
+        }
+        return false;
+    }
+
     void add_node(T data) override {
         nodes.push_back(new GraphNodeAdjStr<T, M>(data));
     }
@@ -74,6 +86,15 @@ public:
         for (auto &edge:edges)
             for (int i = 0; i < edge.size(); i++)
                 delete edge[i].second;
+    }
+
+    bool check_nodes_adjacency(int index1, int index2) override{
+        for(auto &edge:edges[index1]){
+            if (edge.first == index2){
+                return true;
+            }
+        }
+        return false;
     }
 
     void add_node(T data) override {

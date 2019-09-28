@@ -9,8 +9,10 @@ Graphs based on adjacency structure and adjacency matrix, that can store any dat
 - [ ] delete node by index
 - [ ] delete node by value
 - [ ] delete edge
-- [ ] check adjacency
+- [x] check nodes adjacency
+- [ ] check graph adjacency
 - [ ] distance between nodes (by index)
+- [ ] print
 
 ### Custom class
 A dice with face number N = 2, 4, 6, 8, 12, 20.
