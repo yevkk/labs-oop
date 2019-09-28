@@ -4,8 +4,11 @@
 template<typename T, typename M>
 class Graph {
 public:
-    virtual void add_node(T data) = 0;
+    virtual void print() = 0; //TODO: (?) void print(Graph<T, M>);
+
     virtual bool check_nodes_adjacency(int index1, int index2) = 0;
+
+    virtual void add_node(T data) = 0;
 
     //virtual void add_edge(int index1, int index2, M data) = 0;
 };
@@ -56,9 +59,44 @@ public:
         for (auto &node:nodes) delete node;
     }
 
-    bool check_nodes_adjacency(int index1, int index2) override{
-        for(auto &e:nodes[index1]->adjacent_nodes){
-            if (e.first == index2){
+    void print() override {
+        std::cout << "Graph:" << std::endl;
+        std::cout << "directed: " << std::boolalpha << directed << std::endl;
+
+        std::cout << "   ";
+        for (int i = 0; i < nodes.size(); i++) {
+            for (int j = 0; j < 3 - std::to_string(i + 1).size(); j++)
+                std::cout << " ";
+            std::cout << i + 1;
+        }
+        std::cout << std::endl;
+
+        std::cout << "   ";
+        for (int i = 0; i < nodes.size(); i++) {
+            std::cout << "---";
+        }
+        std::cout << std::endl;
+
+        for (int i = 0; i < nodes.size(); i++) {
+
+            for (int j = 0; j < 2 - std::to_string(i + 1).size(); j++)
+                std::cout << " ";
+            std::cout << i + 1 << "|";
+
+            for (int k = 0; k < nodes.size(); k++) {
+                for (int j = 0; j < 2; j++)
+                    std::cout << " ";
+                std::cout << (int) check_nodes_adjacency(i, k);
+            }
+            std::cout << std::endl;
+        }
+        std::cout << std::endl;
+
+    }
+
+    bool check_nodes_adjacency(int index1, int index2) override {
+        for (auto &e:nodes[index1]->adjacent_nodes) {
+            if (e.first == index2) {
                 return true;
             }
         }
@@ -88,9 +126,44 @@ public:
                 delete edge[i].second;
     }
 
-    bool check_nodes_adjacency(int index1, int index2) override{
-        for(auto &edge:edges[index1]){
-            if (edge.first == index2){
+    void print() override {
+        std::cout << "Graph:" << std::endl;
+        std::cout << "directed: " << std::boolalpha << directed << std::endl;
+
+        std::cout << "   ";
+        for (int i = 0; i < nodes.size(); i++) {
+            for (int j = 0; j < 3 - std::to_string(i + 1).size(); j++)
+                std::cout << " ";
+            std::cout << i + 1;
+        }
+        std::cout << std::endl;
+
+        std::cout << "   ";
+        for (int i = 0; i < nodes.size(); i++) {
+            std::cout << "---";
+        }
+        std::cout << std::endl;
+
+        for (int i = 0; i < nodes.size(); i++) {
+
+            for (int j = 0; j < 2 - std::to_string(i + 1).size(); j++)
+                std::cout << " ";
+            std::cout << i + 1 << "|";
+
+            for (int k = 0; k < nodes.size(); k++) {
+                for (int j = 0; j < 2; j++)
+                    std::cout << " ";
+                std::cout << (int) check_nodes_adjacency(i, k);
+            }
+            std::cout << std::endl;
+        }
+        std::cout << std::endl;
+
+    }
+
+    bool check_nodes_adjacency(int index1, int index2) override {
+        for (auto &edge:edges[index1]) {
+            if (edge.first == true) {
                 return true;
             }
         }
@@ -99,21 +172,25 @@ public:
 
     void add_node(T data) override {
         static const std::pair<bool, GraphEdge<M> *> tmp = {false, nullptr};
+        static const std::vector<std::pair<bool, GraphEdge<M> *>> tmp_vec = {tmp};
         nodes.push_back(new GraphNodeAdjStr<T, M>(data));
         if (edges.empty()) {
-            edges.emplace_back(tmp);
+            edges.emplace_back(tmp_vec);
         } else {
             edges.emplace_back();
-            for (int i = 0; i < edges.size(); i ++){
-                edges.emplace_back(tmp);
-                edges[edges.size()-1].emplace_back(tmp);
+            for (int i = 0; i < edges.size(); i++) {
+                edges[i].emplace_back(tmp);
+                edges[edges.size() - 1].emplace_back(tmp);
             }
         }
     }
 };
 
 void test_int(Graph<int, int> *graph) {
-    graph->add_node(5);
+    for (int i = 0; i < 20; i++) {
+        graph->add_node(i);
+    }
+    graph->print();
 }
 
 
