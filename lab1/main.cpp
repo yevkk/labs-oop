@@ -77,7 +77,17 @@ public:
     }
 
     void add_node(T data) override {
+        static const std::pair<bool, GraphEdge<M> *> tmp = {false, nullptr};
         nodes.push_back(new GraphNodeAdjStr<T, M>(data));
+        if (edges.empty()) {
+            edges.emplace_back(tmp);
+        } else {
+            edges.emplace_back();
+            for (int i = 0; i < edges.size(); i ++){
+                edges.emplace_back(tmp);
+                edges[edges.size()-1].emplace_back(tmp);
+            }
+        }
     }
 };
 
