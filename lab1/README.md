@@ -4,7 +4,7 @@ Graphs based on adjacency structure and adjacency matrix, that can store any dat
 
 **Methods implemented:**
 - [x] add node
-- [ ] add edge
+- [x] add edge
 - [ ] find node by value
 - [ ] delete node by index
 - [ ] delete node by value

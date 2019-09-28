@@ -5,12 +5,11 @@ template<typename T, typename M>
 class Graph {
 public:
     virtual void print() = 0; //TODO: (?) void print(Graph<T, M>);
-
     virtual bool check_nodes_adjacency(int index1, int index2) = 0;
 
     virtual void add_node(T data) = 0;
 
-    //virtual void add_edge(int index1, int index2, M data) = 0;
+    virtual void add_edge(int index1, int index2, M data) = 0;
 };
 
 template<typename T>
@@ -46,7 +45,7 @@ public:
 };
 
 template<typename T, typename M>
-class GraphAdjStr : public Graph<T, M> {
+class GraphAdjStr : public Graph<T, M>{
 public:
     std::vector<GraphNodeAdjStr<T, M> *> nodes;
     bool directed;
@@ -65,9 +64,9 @@ public:
 
         std::cout << "   ";
         for (int i = 0; i < nodes.size(); i++) {
-            for (int j = 0; j < 3 - std::to_string(i + 1).size(); j++)
+            for (int j = 0; j < 3 - std::to_string(i).size(); j++)
                 std::cout << " ";
-            std::cout << i + 1;
+            std::cout << i;
         }
         std::cout << std::endl;
 
@@ -79,9 +78,9 @@ public:
 
         for (int i = 0; i < nodes.size(); i++) {
 
-            for (int j = 0; j < 2 - std::to_string(i + 1).size(); j++)
+            for (int j = 0; j < 2 - std::to_string(i).size(); j++)
                 std::cout << " ";
-            std::cout << i + 1 << "|";
+            std::cout << i << "|";
 
             for (int k = 0; k < nodes.size(); k++) {
                 for (int j = 0; j < 2; j++)
@@ -105,6 +104,15 @@ public:
 
     void add_node(T data) override {
         nodes.push_back(new GraphNodeAdjStr<T, M>(data));
+    }
+
+    void add_edge(int index1, int index2, M data) override {
+        if (!(index1 < nodes.size() && index2 < nodes.size())) return;
+
+        auto edge = new GraphEdge<M>(data);
+        nodes[index1]->adjacent_nodes.emplace_back(index2, edge);
+        if (!directed)
+            nodes[index2]->adjacent_nodes.emplace_back(index1, edge);
     }
 };
 
@@ -134,7 +142,7 @@ public:
         for (int i = 0; i < nodes.size(); i++) {
             for (int j = 0; j < 3 - std::to_string(i + 1).size(); j++)
                 std::cout << " ";
-            std::cout << i + 1;
+            std::cout << i;
         }
         std::cout << std::endl;
 
@@ -146,9 +154,9 @@ public:
 
         for (int i = 0; i < nodes.size(); i++) {
 
-            for (int j = 0; j < 2 - std::to_string(i + 1).size(); j++)
+            for (int j = 0; j < 2 - std::to_string(i).size(); j++)
                 std::cout << " ";
-            std::cout << i + 1 << "|";
+            std::cout << i << "|";
 
             for (int k = 0; k < nodes.size(); k++) {
                 for (int j = 0; j < 2; j++)
@@ -162,12 +170,9 @@ public:
     }
 
     bool check_nodes_adjacency(int index1, int index2) override {
-        for (auto &edge:edges[index1]) {
-            if (edge.first == true) {
-                return true;
-            }
-        }
-        return false;
+        if(index1 < nodes.size() && index2 < nodes.size()){
+         return edges[index1][index2].first;
+        } else return false;
     }
 
     void add_node(T data) override {
@@ -184,20 +189,38 @@ public:
             }
         }
     }
+
+    void add_edge(int index1, int index2, M data) override {
+        if (!(index1 < nodes.size() && index2 < nodes.size())) return;
+
+        auto edge = new GraphEdge<M>(data);
+        edges[index1][index2].first = true;
+        edges[index1][index2].second = edge;
+        if (!directed){
+            edges[index2][index1].first = true;
+            edges[index2][index1].second = edge;
+        }
+    }
 };
 
-void test_int(Graph<int, int> *graph) {
-    for (int i = 0; i < 20; i++) {
+void test_int(Graph<int, double> *graph) {
+    for (int i = 0; i < 10; i++) {
         graph->add_node(i);
     }
+    graph->add_edge(1, 2, 1.2);
+    graph->add_edge(2, 5, 4.6);
+    graph->add_edge(4, 8, 0);
+    graph->add_edge(4, 5, 7.9);
+    graph->add_edge(1, 9, 1.1);
+    graph->add_edge(2, 2, -9);
     graph->print();
 }
 
 
 int main() {
-    auto G1 = new GraphAdjStr<int, int>();
+    auto G1 = new GraphAdjStr<int, double>();
     test_int(G1);
-    auto G2 = new GraphMtrx<int, int>();
+    auto G2 = new GraphMtrx<int, double>();
     test_int(G2);
 
     return 0;
