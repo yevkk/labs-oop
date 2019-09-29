@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <string>
 
 template<typename T, typename M>
 class Graph {
@@ -406,6 +407,35 @@ public:
         return true;
     }
 };
+
+template<typename T>
+struct inf;
+
+template<>
+struct inf<int>{
+    static constexpr int value = INT_MAX;
+};
+
+template<>
+struct inf<unsigned int>{
+    static constexpr unsigned int value = INT_MAX;
+};
+
+template<>
+struct inf<double>{
+    static constexpr double value = INT_MAX;
+};
+
+template<>
+struct inf<std::string>{
+    const std::string value = {CHAR_MAX};
+};
+
+template<typename T>
+struct inf<std::vector<T>>{
+    static constexpr std::vector<T> value = {inf<T>::value};
+};
+
 
 void test_int(Graph<int, double> *graph) {
     for (int i = 0; i < 5; i++) {
