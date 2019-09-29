@@ -15,6 +15,8 @@ public:
     virtual void add_edge(int index1, int index2, M data) = 0;
 
     virtual int find_node(T key) = 0; //returns index of first element equal to key or -1 if there is no such element;
+
+    virtual bool delete_node_by_index(int index) = 0;
 };
 
 template<typename T>
@@ -64,7 +66,8 @@ public:
     }
 
     void print() override {
-        std::cout << "========== [ Graph | " << "directed: " << std::boolalpha << directed << " ] ==========" << std::endl;
+        std::cout << "========== [ Graph | " << "directed: " << std::boolalpha << directed << " ] =========="
+                  << std::endl;
 
         std::cout << "Nodes:" << std::endl;
         for (unsigned int i = 0; i < nodes.size(); i++) {
@@ -169,6 +172,29 @@ public:
         }
         return -1;
     }
+
+    bool delete_node_by_index(int index) override {
+        if (index >= nodes.size()) return false;
+
+        int i = 0;
+        for (auto &e:nodes) {
+            while (i < e->adjacent_nodes.size()) {
+                if (e->adjacent_nodes[i].first == index) {
+                    delete e->adjacent_nodes[i].second;
+                    e->adjacent_nodes.erase(e->adjacent_nodes.begin() + i);
+                } else {
+                    if (e->adjacent_nodes[i].first > index) e->adjacent_nodes[i].first--;
+                    i++;
+                }
+            }
+            i = 0;
+        }
+        for (auto &e:nodes[index]->adjacent_nodes) {
+            delete e.second;
+        }
+        nodes.erase(nodes.begin() + index);
+        return true;
+    }
 };
 
 template<typename T, typename M>
@@ -190,7 +216,8 @@ public:
     }
 
     void print() override {
-        std::cout << "========== [ Graph | " << "directed: " << std::boolalpha << directed << " ] ==========" << std::endl;
+        std::cout << "========== [ Graph | " << "directed: " << std::boolalpha << directed << " ] =========="
+                  << std::endl;
 
         std::cout << "Nodes:" << std::endl;
         for (unsigned int i = 0; i < nodes.size(); i++) {
@@ -309,36 +336,50 @@ public:
         }
         return -1;
     }
+
+    bool delete_node_by_index(int index) override {
+        if (index >= nodes.size()) return false;
+
+        int i = 0;
+        for (auto &e:edges) {
+            delete e[index].second;
+            e.erase(e.begin() + index);
+        }
+        for (auto &e:edges[index]) {
+            delete e.second;
+        }
+        edges.erase(edges.begin() + index);
+        nodes.erase(nodes.begin() + index);
+        return true;
+    }
 };
 
 void test_int(Graph<int, double> *graph) {
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 5; i++) {
         graph->add_node(i * 2);
     }
     graph->add_edge(0, 1, 0);
-    graph->add_edge(1, 2, 0);
+    graph->add_edge(0, 4, 0);
     graph->add_edge(2, 3, 0);
     graph->add_edge(3, 4, 0);
-    graph->add_edge(4, 5, 0);
-    graph->add_edge(5, 6, 0);
-    graph->add_edge(6, 7, 0);
-    graph->add_edge(7, 8, 0);
-    graph->add_edge(8, 9, 0);
+    graph->add_edge(4, 2, 0);
+    graph->add_edge(0, 2, 0);
+    graph->add_edge(1, 3, 0);
+    graph->add_edge(2, 1, 0);
+    graph->add_edge(0, 0, 0);
     graph->print();
-    std::cout << "res:: " << graph->adjacent(0) << std::endl;
-    std::cout << "find 3: " << graph->find_node(3) << std::endl;
-    std::cout << "find 2: " << graph->find_node(2) << std::endl;
-    std::cout << "find 6: " << graph->find_node(6) << std::endl;
-    std::cout << "find 5: " << graph->find_node(5) << std::endl;
-    std::cout << "find 10: " << graph->find_node(10) << std::endl;
-    std::cout << "find 8: " << graph->find_node(8) << std::endl;
+
+    graph->delete_node_by_index(0);
+    graph->print();
+
+
     std::cout << std::endl << std::endl;
 }
 
 
 int main() {
-    auto G1 = new GraphAdjStr<int, double>();
-    test_int(G1);
+//    auto G1 = new GraphAdjStr<int, double>();
+//    test_int(G1);
     auto G2 = new GraphMtrx<int, double>();
     test_int(G2);
 

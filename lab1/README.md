@@ -1,12 +1,12 @@
 # Lab1
 ### Data structures
-Graphs based on adjacency structure and adjacency matrix, that can store any data type
+Graphs based on adjacency structure and adjacency matrix, that can store any data type.
 
 **Methods implemented:**
 - [x] add node
 - [x] add edge
 - [x] find node by value
-- [ ] delete node by index
+- [x] delete node by index
 - [ ] delete node by value
 - [ ] delete edge
 - [x] check nodes adjacency
