@@ -67,14 +67,14 @@ public:
 
 
         std::cout << "Nodes:" << std::endl;
-        for (int i = 0; i < nodes.size(); i++) {
+        for (unsigned int i = 0; i < nodes.size(); i++) {
             std::cout << i << ')' << std::endl;
             std::cout << nodes[i]->data << std::endl;
             std::cout << std::endl;
         }
 
         std::cout << "Edges:" << std::endl;
-        for (int i = 0; i < nodes.size(); i++) {
+        for (unsigned int i = 0; i < nodes.size(); i++) {
             for (auto &e:nodes[i]->adjacent_nodes) {
                 if ((!directed && e.first <= i) || directed) {
                     std::cout << i << " - " << e.first << ')' << std::endl;
@@ -86,7 +86,7 @@ public:
 
         std::cout << "Adjacency Matrix:" << std::endl;
         std::cout << "   ";
-        for (int i = 0; i < nodes.size(); i++) {
+        for (unsigned int i = 0; i < nodes.size(); i++) {
             for (int j = 0; j < 3 - std::to_string(i).size(); j++)
                 std::cout << " ";
             std::cout << i;
@@ -94,18 +94,18 @@ public:
         std::cout << std::endl;
 
         std::cout << "   ";
-        for (int i = 0; i < nodes.size(); i++) {
+        for (unsigned int i = 0; i < nodes.size(); i++) {
             std::cout << "---";
         }
         std::cout << std::endl;
 
-        for (int i = 0; i < nodes.size(); i++) {
+        for (unsigned int i = 0; i < nodes.size(); i++) {
 
             for (int j = 0; j < 2 - std::to_string(i).size(); j++)
                 std::cout << " ";
             std::cout << i << "|";
 
-            for (int k = 0; k < nodes.size(); k++) {
+            for (unsigned int k = 0; k < nodes.size(); k++) {
                 for (int j = 0; j < 2; j++)
                     std::cout << " ";
                 std::cout << (int) nodes_adjacency(i, k);
@@ -135,7 +135,7 @@ public:
 
             adjacent(0);
 
-            for (int i = 1; i < nodes.size(); i++) {
+            for (unsigned int i = 1; i < nodes.size(); i++) {
                 if (!visited[i]) {
                     start = true;
                     return false;
@@ -187,7 +187,7 @@ public:
         std::cout << "directed: " << std::boolalpha << directed << std::endl << std::endl;
 
         std::cout << "Nodes:" << std::endl;
-        for (int i = 0; i < nodes.size(); i++) {
+        for (unsigned int i = 0; i < nodes.size(); i++) {
             std::cout << i << ')' << std::endl;
             std::cout << nodes[i]->data << std::endl;
             std::cout << std::endl;
@@ -195,9 +195,9 @@ public:
 
         int num;
         std::cout << "Edges:" << std::endl;
-        for (int i = 0; i < nodes.size(); i++) {
+        for (unsigned int i = 0; i < nodes.size(); i++) {
             num = directed ? 0 : i;
-            for (int j = num; j < nodes.size(); j++) {
+            for (unsigned int j = num; j < nodes.size(); j++) {
                 if (edges[i][j].first) {
                     std::cout << i << " - " << j << ')' << std::endl;
                     std::cout << edges[i][j].second->data << std::endl;
@@ -209,7 +209,7 @@ public:
 
         std::cout << "Adjacency Matrix:" << std::endl;
         std::cout << "   ";
-        for (int i = 0; i < nodes.size(); i++) {
+        for (unsigned int i = 0; i < nodes.size(); i++) {
             for (int j = 0; j < 3 - std::to_string(i).size(); j++)
                 std::cout << " ";
             std::cout << i;
@@ -217,18 +217,18 @@ public:
         std::cout << std::endl;
 
         std::cout << "   ";
-        for (int i = 0; i < nodes.size(); i++) {
+        for (unsigned int i = 0; i < nodes.size(); i++) {
             std::cout << "---";
         }
         std::cout << std::endl;
 
-        for (int i = 0; i < nodes.size(); i++) {
+        for (unsigned int i = 0; i < nodes.size(); i++) {
 
             for (int j = 0; j < 2 - std::to_string(i).size(); j++)
                 std::cout << " ";
             std::cout << i << "|";
 
-            for (int k = 0; k < nodes.size(); k++) {
+            for (unsigned int k = 0; k < nodes.size(); k++) {
                 for (int j = 0; j < 2; j++)
                     std::cout << " ";
                 std::cout << (int) nodes_adjacency(i, k);
@@ -255,7 +255,7 @@ public:
 
             adjacent(0);
 
-            for (int i = 1; i < nodes.size(); i++) {
+            for (unsigned int i = 1; i < nodes.size(); i++) {
                 if (!visited[i]) {
                     start = true;
                     return false;
@@ -264,7 +264,7 @@ public:
             start = true;
         } else {
             visited[index] = true;
-            for (int j = 0; j < nodes.size(); j++)
+            for (unsigned int j = 0; j < nodes.size(); j++)
                 if (!visited[j] && edges[index][j].first) adjacent(j);
         }
         return true;
@@ -278,7 +278,7 @@ public:
             edges.emplace_back(tmp_vec);
         } else {
             edges.emplace_back();
-            for (int i = 0; i < edges.size(); i++) {
+            for (unsigned int i = 0; i < edges.size(); i++) {
                 edges[i].emplace_back(tmp);
                 edges[edges.size() - 1].emplace_back(tmp);
             }
