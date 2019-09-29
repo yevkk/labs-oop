@@ -2,6 +2,52 @@
 #include <vector>
 #include <string>
 
+template<typename T>
+struct inf;
+
+template<>
+struct inf<int> {
+    static constexpr int value = INT_MAX;
+};
+
+template<>
+struct inf<double> {
+    static constexpr double value = INT_MAX;
+};
+
+template<>
+struct inf<std::string> {
+    const std::string value = {CHAR_MAX};
+};
+
+template<typename T>
+struct inf<std::vector<T>> {
+    static constexpr std::vector<T> value = {inf<T>::value};
+};
+
+template<typename T>
+struct null;
+
+template<>
+struct null<int> {
+    static constexpr int value = 0;
+};
+
+template<>
+struct null<double> {
+    static constexpr double value = 0;
+};
+
+template<>
+struct null<std::string> {
+    const std::string value = "";
+};
+
+template<typename T>
+struct null<std::vector<T>> {
+    static constexpr std::vector<T> value = {};
+};
+
 template<typename T, typename M>
 class Graph {
 public:
@@ -22,6 +68,8 @@ public:
     virtual bool delete_node_by_value(T key) = 0;
 
     virtual bool delete_edge(int index1, int index2) = 0;
+
+    virtual M min_distance(int index1, int index2) = 0;
 };
 
 template<typename T>
@@ -226,6 +274,44 @@ public:
         }
         return false;
     }
+
+    M min_distance(int index1, int index2) override { //based on Floyd's algorithm;
+        if (!(index1 < nodes.size() && index2 < nodes.size())) return -1;
+        std::vector<std::vector<M>> dist;
+        std::vector<M> tmp;
+
+        for (auto &e:nodes) {
+            tmp.push_back(null<M>::value);
+        }
+
+        for (auto &e:nodes) {
+            dist.push_back(tmp);
+        }
+
+        for (unsigned int i = 0; i < nodes.size(); i++) {
+            for (auto &e:nodes[i]->adjacent_nodes) {
+                dist[i][e.first] = e.second->data;
+            }
+        }
+
+        for (unsigned int i = 0; i < nodes.size(); i++) {
+            for (unsigned int j = 0; j < nodes.size(); j++) {
+                if ((i != j) && (dist[i][j] == null<M>::value)) dist[i][j] = inf<M>::value;
+                if (i == j) dist[i][j] = null<M>::value;
+            }
+        }
+
+        for (unsigned int k = 0; k < nodes.size(); k++) {
+            for (unsigned int i = 0; i < nodes.size(); i++) {
+                for (unsigned int j = 0; j < nodes.size(); j++) {
+                    if (dist[i][k] + dist[k][j] < dist[i][j])
+                        dist[i][j] = dist[i][k] + dist[k][j];
+                }
+            }
+        }
+
+        return dist[index1][index2];
+    }
 };
 
 template<typename T, typename M>
@@ -406,63 +492,37 @@ public:
         }
         return true;
     }
-};
 
-template<typename T>
-struct inf;
+    M min_distance(int index1, int index2) override {
+        M a;
+        return a;
+    }
 
-template<>
-struct inf<int>{
-    static constexpr int value = INT_MAX;
-};
-
-template<>
-struct inf<unsigned int>{
-    static constexpr unsigned int value = INT_MAX;
-};
-
-template<>
-struct inf<double>{
-    static constexpr double value = INT_MAX;
-};
-
-template<>
-struct inf<std::string>{
-    const std::string value = {CHAR_MAX};
-};
-
-template<typename T>
-struct inf<std::vector<T>>{
-    static constexpr std::vector<T> value = {inf<T>::value};
 };
 
 
-void test_int(Graph<int, double> *graph) {
+void test_int(Graph<int, int> *graph) {
     for (int i = 0; i < 5; i++) {
         graph->add_node(i * 2);
     }
-    graph->add_edge(1, 1, 0);
-    graph->add_edge(2, 2, 0);
-    graph->add_edge(3, 3, 0);
-    graph->add_edge(4, 4, 0);
-    graph->add_edge(0, 0, 0);
-    graph->add_edge(2, 3, 0);
+    graph->add_edge(0, 1, 1);
+    graph->add_edge(0, 4, 5);
+    graph->add_edge(1, 4, 3);
+    graph->add_edge(0, 2, 1);
+    graph->add_edge(2, 3, 1);
+    graph->add_edge(3, 4, 1);
 
     graph->print();
 
-    graph->delete_edge(2, 3);
-    graph->print();
-
-
+    std::cout << graph->min_distance(0, 4);
     std::cout << std::endl << std::endl;
 }
 
 
 int main() {
-    auto G1 = new GraphAdjStr<int, double>();
+    auto G1 = new GraphAdjStr<int, int>();
     test_int(G1);
-    auto G2 = new GraphMtrx<int, double>();
-    test_int(G2);
-
+//    auto G2 = new GraphMtrx<int, double>();
+//    test_int(G2);
     return 0;
 }
