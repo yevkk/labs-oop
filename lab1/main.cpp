@@ -17,6 +17,8 @@ public:
     virtual int find_node(T key) = 0; //returns index of first element equal to key or -1 if there is no such element;
 
     virtual bool delete_node_by_index(int index) = 0;
+
+    virtual bool delete_node_by_value(T key) = 0;
 };
 
 template<typename T>
@@ -195,6 +197,14 @@ public:
         nodes.erase(nodes.begin() + index);
         return true;
     }
+
+    bool delete_node_by_value(T key) override {
+        int i = -2;
+        while ((i = find_node(key)) != -1) {
+            delete_node_by_index(i);
+        }
+        return i != -2;
+    }
 };
 
 template<typename T, typename M>
@@ -352,6 +362,14 @@ public:
         nodes.erase(nodes.begin() + index);
         return true;
     }
+
+    bool delete_node_by_value(T key) override {
+        int i = -2;
+        while ((i = find_node(key)) != -1) {
+            delete_node_by_index(i);
+        }
+        return i != -2;
+    }
 };
 
 void test_int(Graph<int, double> *graph) {
@@ -369,7 +387,7 @@ void test_int(Graph<int, double> *graph) {
     graph->add_edge(0, 0, 0);
     graph->print();
 
-    graph->delete_node_by_index(0);
+    graph->delete_node_by_value(4);
     graph->print();
 
 
@@ -378,8 +396,8 @@ void test_int(Graph<int, double> *graph) {
 
 
 int main() {
-//    auto G1 = new GraphAdjStr<int, double>();
-//    test_int(G1);
+    auto G1 = new GraphAdjStr<int, double>();
+    test_int(G1);
     auto G2 = new GraphMtrx<int, double>();
     test_int(G2);
 
