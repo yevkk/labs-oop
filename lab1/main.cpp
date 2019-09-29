@@ -4,7 +4,7 @@
 template<typename T, typename M>
 class Graph {
 public:
-    virtual void print() = 0; //TODO: (?) void print(Graph<T, M>);
+    virtual void print() = 0;
 
     virtual bool nodes_adjacency(int index1, int index2) = 0;
 
@@ -13,6 +13,8 @@ public:
     virtual void add_node(T data) = 0;
 
     virtual void add_edge(int index1, int index2, M data) = 0;
+
+    virtual int find_node(T key) = 0; //returns index of first element equal to key or -1 if there is no such element;
 };
 
 template<typename T>
@@ -62,9 +64,7 @@ public:
     }
 
     void print() override {
-        std::cout << "Graph:" << std::endl;
-        std::cout << "directed: " << std::boolalpha << directed << std::endl;
-
+        std::cout << "========== [ Graph | " << "directed: " << std::boolalpha << directed << " ] ==========" << std::endl;
 
         std::cout << "Nodes:" << std::endl;
         for (unsigned int i = 0; i < nodes.size(); i++) {
@@ -162,6 +162,13 @@ public:
         if (!directed && index1 != index2)
             nodes[index2]->adjacent_nodes.emplace_back(index1, edge);
     }
+
+    int find_node(T key) override {
+        for (unsigned int i = 0; i < nodes.size(); i++) {
+            if (nodes[i]->data == key) return (int) i;
+        }
+        return -1;
+    }
 };
 
 template<typename T, typename M>
@@ -183,8 +190,7 @@ public:
     }
 
     void print() override {
-        std::cout << "Graph:" << std::endl;
-        std::cout << "directed: " << std::boolalpha << directed << std::endl << std::endl;
+        std::cout << "========== [ Graph | " << "directed: " << std::boolalpha << directed << " ] ==========" << std::endl;
 
         std::cout << "Nodes:" << std::endl;
         for (unsigned int i = 0; i < nodes.size(); i++) {
@@ -296,11 +302,18 @@ public:
             edges[index2][index1].second = edge;
         }
     }
+
+    int find_node(T key) override {
+        for (unsigned int i = 0; i < nodes.size(); i++) {
+            if (nodes[i]->data == key) return (int) i;
+        }
+        return -1;
+    }
 };
 
 void test_int(Graph<int, double> *graph) {
     for (int i = 0; i < 10; i++) {
-        graph->add_node(i);
+        graph->add_node(i * 2);
     }
     graph->add_edge(0, 1, 0);
     graph->add_edge(1, 2, 0);
@@ -312,7 +325,14 @@ void test_int(Graph<int, double> *graph) {
     graph->add_edge(7, 8, 0);
     graph->add_edge(8, 9, 0);
     graph->print();
-    std::cout << "res:: " << graph->adjacent(0);
+    std::cout << "res:: " << graph->adjacent(0) << std::endl;
+    std::cout << "find 3: " << graph->find_node(3) << std::endl;
+    std::cout << "find 2: " << graph->find_node(2) << std::endl;
+    std::cout << "find 6: " << graph->find_node(6) << std::endl;
+    std::cout << "find 5: " << graph->find_node(5) << std::endl;
+    std::cout << "find 10: " << graph->find_node(10) << std::endl;
+    std::cout << "find 8: " << graph->find_node(8) << std::endl;
+    std::cout << std::endl << std::endl;
 }
 
 
