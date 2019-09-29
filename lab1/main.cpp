@@ -19,6 +19,8 @@ public:
     virtual bool delete_node_by_index(int index) = 0;
 
     virtual bool delete_node_by_value(T key) = 0;
+
+    virtual bool delete_edge(int index1, int index2) = 0;
 };
 
 template<typename T>
@@ -205,6 +207,24 @@ public:
         }
         return i != -2;
     }
+
+    bool delete_edge(int index1, int index2) override {
+        if (!(index1 < nodes.size() && index2 < nodes.size())) return false;
+        static bool flag = true;
+        for (unsigned int i = 0; i < nodes[index1]->adjacent_nodes.size(); i++) {
+            if (nodes[index1]->adjacent_nodes[i].first == index2) {
+                delete nodes[index1]->adjacent_nodes[i].second;
+                nodes[index1]->adjacent_nodes.erase(nodes[index1]->adjacent_nodes.begin() + i);
+                if (flag) {
+                    flag = false;
+                    if (!directed) delete_edge(index2, index1);
+                    flag = true;
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 };
 
 template<typename T, typename M>
@@ -370,24 +390,37 @@ public:
         }
         return i != -2;
     }
+
+    bool delete_edge(int index1, int index2) override {
+        if (!(index1 < nodes.size() && index2 < nodes.size())) return false;
+
+        edges[index1][index2].first = false;
+        delete edges[index1][index2].second;
+        edges[index1][index2].second = nullptr;
+
+        if (!directed) {
+            edges[index2][index1].first = false;
+            delete edges[index2][index1].second;
+            edges[index2][index1].second = nullptr;
+        }
+        return true;
+    }
 };
 
 void test_int(Graph<int, double> *graph) {
     for (int i = 0; i < 5; i++) {
         graph->add_node(i * 2);
     }
-    graph->add_edge(0, 1, 0);
-    graph->add_edge(0, 4, 0);
-    graph->add_edge(2, 3, 0);
-    graph->add_edge(3, 4, 0);
-    graph->add_edge(4, 2, 0);
-    graph->add_edge(0, 2, 0);
-    graph->add_edge(1, 3, 0);
-    graph->add_edge(2, 1, 0);
+    graph->add_edge(1, 1, 0);
+    graph->add_edge(2, 2, 0);
+    graph->add_edge(3, 3, 0);
+    graph->add_edge(4, 4, 0);
     graph->add_edge(0, 0, 0);
+    graph->add_edge(2, 3, 0);
+
     graph->print();
 
-    graph->delete_node_by_value(4);
+    graph->delete_edge(2, 3);
     graph->print();
 
 
