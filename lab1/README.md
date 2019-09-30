@@ -11,7 +11,7 @@ Graphs based on adjacency structure and adjacency matrix, that can store any dat
 - [x] delete edge
 - [x] check nodes adjacency
 - [x] check graph adjacency
-- [ ] distance between two nodes (based on Floyd's algorithm)
+- [x] distance between two nodes (based on Floyd's algorithm)
 - [x] print
 
 ### Custom class

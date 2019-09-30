@@ -496,8 +496,38 @@ public:
     }
 
     M min_distance(int index1, int index2) override {
-        M a;
-        return a;
+        if (!(index1 < nodes.size() && index2 < nodes.size())) return -1;
+        std::vector<std::vector<M>> dist;
+        std::vector<M> tmp;
+
+        M m_null = null<M>::value;
+
+        for (auto &e:nodes) {
+            tmp.push_back(m_null);
+        }
+
+        for (auto &e:nodes) {
+            dist.push_back(tmp);
+        }
+
+        for (unsigned int i = 0; i < nodes.size(); i++) {
+            for (unsigned int j = 0; j < nodes.size(); j++) {
+                if (i == j) dist[i][j] = m_null;
+                else if (edges[i][j].first) dist[i][j] = edges[i][j].second->data;
+                else dist[i][j] = inf<M>::value;
+            }
+        }
+
+        for (unsigned int k = 0; k < nodes.size(); k++) {
+            for (unsigned int i = 0; i < nodes.size(); i++) {
+                for (unsigned int j = 0; j < nodes.size(); j++) {
+                    if (dist[i][k] + dist[k][j] < dist[i][j])
+                        dist[i][j] = dist[i][k] + dist[k][j];
+                }
+            }
+        }
+
+        return dist[index1][index2];
     }
 
 };
@@ -525,7 +555,8 @@ void test_int(Graph<int, double> *graph) {
 int main() {
     auto G1 = new GraphAdjStr<int, double>();
     test_int(G1);
-//    auto G2 = new GraphMtrx<int, double>();
-//    test_int(G2);
+    auto G2 = new GraphMtrx<int, double>();
+    test_int(G2);
+
     return 0;
 }
