@@ -30,22 +30,22 @@ struct null;
 
 template<>
 struct null<int> {
-    static constexpr int value = INT_MAX;
+    static constexpr int value = 0;
 };
 
 template<>
 struct null<double> {
-    static constexpr double value = INT_MAX;
+    static constexpr double value = 0;
 };
 
 template<>
 struct null<std::string> {
-    const std::string value = {CHAR_MAX};
+    const std::string value = "";
 };
 
 template<typename T>
 struct null<std::vector<T>> {
-    static constexpr std::vector<T> value = {inf<T>::value};
+    static constexpr std::vector<T> value = {};
 };
 
 template<typename T, typename M>
@@ -69,7 +69,7 @@ public:
 
     virtual bool delete_edge(int index1, int index2) = 0;
 
-    virtual M min_distance(int index1, int index2) = 0;
+    virtual M min_distance(int index1, int index2) = 0; //based on Floyd's algorithm;
 };
 
 template<typename T>
@@ -275,7 +275,7 @@ public:
         return false;
     }
 
-    M min_distance(int index1, int index2) override { //based on Floyd's algorithm;
+    M min_distance(int index1, int index2) override {
         if (!(index1 < nodes.size() && index2 < nodes.size())) return -1;
         std::vector<std::vector<M>> dist;
         std::vector<M> tmp;
