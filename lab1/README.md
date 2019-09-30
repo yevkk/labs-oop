@@ -1,6 +1,6 @@
 # Lab1
 ### Data structures
-Graphs based on adjacency structure and adjacency matrix, that can store any data type.
+Graphs based on adjacency structure and adjacency matrix, that can store any data type (`int`, `double`, `std::string`,` std::vector<>`).
 
 **Methods implemented:**
 - [x] add node
