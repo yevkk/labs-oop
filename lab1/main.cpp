@@ -30,22 +30,22 @@ struct null;
 
 template<>
 struct null<int> {
-    static constexpr int value = 0;
+    static constexpr int value = INT_MAX;
 };
 
 template<>
 struct null<double> {
-    static constexpr double value = 0;
+    static constexpr double value = INT_MAX;
 };
 
 template<>
 struct null<std::string> {
-    const std::string value = "";
+    const std::string value = {CHAR_MAX};
 };
 
 template<typename T>
 struct null<std::vector<T>> {
-    static constexpr std::vector<T> value = {};
+    static constexpr std::vector<T> value = {inf<T>::value};
 };
 
 template<typename T, typename M>
@@ -280,8 +280,10 @@ public:
         std::vector<std::vector<M>> dist;
         std::vector<M> tmp;
 
+        M m_null = null<M>::value;
+
         for (auto &e:nodes) {
-            tmp.push_back(null<M>::value);
+            tmp.push_back(m_null);
         }
 
         for (auto &e:nodes) {
@@ -296,8 +298,8 @@ public:
 
         for (unsigned int i = 0; i < nodes.size(); i++) {
             for (unsigned int j = 0; j < nodes.size(); j++) {
-                if ((i != j) && (dist[i][j] == null<M>::value)) dist[i][j] = inf<M>::value;
-                if (i == j) dist[i][j] = null<M>::value;
+                if ((i != j) && (dist[i][j] == m_null)) dist[i][j] = inf<M>::value;
+                if (i == j) dist[i][j] = m_null;
             }
         }
 
@@ -501,7 +503,7 @@ public:
 };
 
 
-void test_int(Graph<int, int> *graph) {
+void test_int(Graph<int, double> *graph) {
     for (int i = 0; i < 5; i++) {
         graph->add_node(i * 2);
     }
@@ -515,12 +517,13 @@ void test_int(Graph<int, int> *graph) {
     graph->print();
 
     std::cout << graph->min_distance(0, 4);
+    std::cout << graph->min_distance(4, 2);
     std::cout << std::endl << std::endl;
 }
 
 
 int main() {
-    auto G1 = new GraphAdjStr<int, int>();
+    auto G1 = new GraphAdjStr<int, double>();
     test_int(G1);
 //    auto G2 = new GraphMtrx<int, double>();
 //    test_int(G2);
