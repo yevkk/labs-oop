@@ -533,6 +533,24 @@ public:
 
 };
 
+class Dice{
+public:
+    int face_number;
+    double* probability;
+
+    Dice (int Face_number, const double Probability[Face_number]){
+        face_number = Face_number;
+        probability = new double[face_number];
+        for(int i = 0; i < face_number; i++){
+            probability[i] = Probability[i];
+        }
+    }
+};
+
+class DiceSet : public std::vector<Dice>{
+
+};
+
 template<typename T>
 bool operator<(std::vector<T> &vec1, std::vector<T> &vec2) {
     int i = 0;
