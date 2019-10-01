@@ -21,6 +21,6 @@ Every face has own probability of being dropped.
 A set of dices is implemented as inheritance of `std::vector<Dice>`.
 
 **Methods implemented:**
-- [ ] count all possible sums in set (min and max)
+- [x] count all possible sums in set (min and max)
 - [ ] count probabilities for all possible sums in set
 - [ ] comparing two sets by most possible sum
