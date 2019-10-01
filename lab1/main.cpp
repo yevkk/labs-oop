@@ -543,10 +543,18 @@ public:
     double *probability;
 
     Dice(int Face_number, const double Probability[]) {
+        double tmp = 1;
         face_number = Face_number;
         probability = new double[face_number];
         for (int i = 0; i < face_number; i++) {
-            probability[i] = Probability[i];
+            if (Probability[i] < tmp){
+                probability[i] = Probability[i];
+                tmp -= Probability[i];
+            } else {
+                probability[i] = tmp;
+                tmp = 0;
+            }
+
         }
     }
 };

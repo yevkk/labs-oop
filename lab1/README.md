@@ -1,6 +1,6 @@
 # Lab1
 ### Data structures
-Graphs based on adjacency structure and adjacency matrix, that can store a values of any data type in nodes and edges (`int`, `double`, `std::string`,` std::vector<>`).
+Graphs based on adjacency structure and adjacency matrix, that can store a values of any data type in nodes and edges (`int`, `double`, `std::string`, `std::vector<>`).
 
 **Methods implemented:**
 - add node
@@ -18,7 +18,7 @@ Graphs based on adjacency structure and adjacency matrix, that can store a value
 A dice with face number N = 2, 4, 6, 8, 12, 20.
 Every face has own probability of being dropped.
 
-A set of dices is implemented as inheritance of `std::vector<Dice>`/
+A set of dices is implemented as inheritance of `std::vector<Dice>`.
 
 **Methods implemented:**
 - [ ] count all possible sums in set
