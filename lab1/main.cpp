@@ -540,14 +540,14 @@ public:
 class Dice {
 public:
     int face_number;
-    double *probability;
+    double *probability; //i-th element is a probability of dropping face with number (i+1)
 
     Dice(int Face_number, const double Probability[]) {
         double tmp = 1;
         face_number = Face_number;
         probability = new double[face_number];
         for (int i = 0; i < face_number; i++) {
-            if (Probability[i] < tmp){
+            if (Probability[i] < tmp) {
                 probability[i] = Probability[i];
                 tmp -= Probability[i];
             } else {
@@ -559,7 +559,22 @@ public:
     }
 };
 
-class DiceSet : public std::vector<Dice> {
+class DiceSet {
+public:
+    std::vector<Dice> elements;
+
+    DiceSet() = default;
+
+    int min_sum() {
+        return elements.size();
+    }
+
+    int max_sum() {
+        int res = 0;
+        for (auto &e:elements)
+            res += e.face_number;
+        return res;
+    }
 
 };
 
