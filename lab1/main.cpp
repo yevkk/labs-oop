@@ -107,8 +107,10 @@ public:
 
 template<typename T, typename M>
 class GraphAdjStr : public Graph<T, M> {
-public:
+private:
     std::vector<GraphNodeAdjStr<T, M> *> nodes;
+
+public:
     bool directed;
 
     explicit GraphAdjStr(bool Directed = false) {
@@ -319,9 +321,11 @@ public:
 
 template<typename T, typename M>
 class GraphMtrx : public Graph<T, M> {
-public:
+private:
     std::vector<GraphNode<T> *> nodes;
     std::vector<std::vector<std::pair<bool, GraphEdge<M> *>>> edges;
+
+public:
     bool directed;
 
     explicit GraphMtrx(bool Directed = false) {
@@ -533,21 +537,21 @@ public:
 
 };
 
-class Dice{
+class Dice {
 public:
     int face_number;
-    double* probability;
+    double *probability;
 
-    Dice (int Face_number, const double Probability[Face_number]){
+    Dice(int Face_number, const double Probability[]) {
         face_number = Face_number;
         probability = new double[face_number];
-        for(int i = 0; i < face_number; i++){
+        for (int i = 0; i < face_number; i++) {
             probability[i] = Probability[i];
         }
     }
 };
 
-class DiceSet : public std::vector<Dice>{
+class DiceSet : public std::vector<Dice> {
 
 };
 
@@ -598,7 +602,7 @@ std::vector<T> operator+(std::vector<T> &vec1, std::vector<T> &vec2) {
 
 template<typename T>
 std::ostream &operator<<(std::ostream &os, std::vector<T> &vec) {
-    for (auto &e:vec){
+    for (auto &e:vec) {
         os << e << ' ';
     }
     os << std::endl;
