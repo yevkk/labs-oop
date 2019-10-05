@@ -28,6 +28,6 @@ A set of dices.
 - count expected value of set
 
 **Operators overloaded:**
-- [x] << for `std::ostream` and `Dice`
-- [x] << for `std::ostream` and `DiceSet`
-- [ ] comparing two sets by expected value of sum
+- << for `std::ostream` and `Dice`
+- << for `std::ostream` and `DiceSet`
+- relational operators for two sets (comparing expected values)

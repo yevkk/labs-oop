@@ -67,7 +67,31 @@ double DiceSet::expected_value() {
     return res;
 }
 
-std::ostream &operator<< (std::ostream &os, DiceSet &obj) {
+std::ostream &operator<<(std::ostream &os, DiceSet &obj) {
     for (auto &e: obj.elements) os << e << std::endl;
     return os;
+}
+
+bool operator<(DiceSet &obj_l, DiceSet &obj_r) {
+    return obj_l.expected_value() < obj_r.expected_value();
+}
+
+bool operator>(DiceSet &obj_l, DiceSet &obj_r) {
+    return obj_r < obj_l;
+}
+
+bool operator<=(DiceSet &obj_l, DiceSet &obj_r) {
+    return !(obj_l > obj_r);
+}
+
+bool operator>=(DiceSet &obj_l, DiceSet &obj_r) {
+    return !(obj_l < obj_r);
+}
+
+bool operator==(DiceSet &obj_l, DiceSet &obj_r) {
+    return !(obj_l < obj_r) && !(obj_l > obj_r);
+}
+
+bool operator!=(DiceSet &obj_l, DiceSet &obj_r) {
+    return !(obj_l == obj_r);
 }

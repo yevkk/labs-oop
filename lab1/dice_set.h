@@ -25,6 +25,18 @@ public:
 
 };
 
-std::ostream &operator<< (std::ostream &os, DiceSet &obj);
+std::ostream &operator<<(std::ostream &os, DiceSet &obj);
+
+bool operator<(DiceSet &obj_l, DiceSet &obj_r);
+
+bool operator>(DiceSet &obj_l, DiceSet &obj_r);
+
+bool operator<=(DiceSet &obj_l, DiceSet &obj_r);
+
+bool operator>=(DiceSet &obj_l, DiceSet &obj_r);
+
+bool operator==(DiceSet &obj_l, DiceSet &obj_r);
+
+bool operator!=(DiceSet &obj_l, DiceSet &obj_r);
 
 #endif //LAB1_DICE_SET_H
