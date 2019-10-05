@@ -15,12 +15,19 @@ Graphs based on adjacency structure and adjacency matrix, that can store a value
 - print
 
 ### Custom class
+`Dice`:
 A dice with face number N = 2, 4, 6, 8, 12, 20.
 Every face has own probability of being dropped.
 
-A set of dices is implemented as inheritance of `std::vector<Dice>`.
+`DiceSet`:
+A set of dices.
 
 **Methods implemented:**
 - [x] count all possible sums in set (min and max)
-- [ ] count probabilities for all possible sums in set
-- [ ] comparing two sets by most possible sum
+- [x] count probabilities for all possible sums in set
+- [x] count expected value of set
+
+**Operators overloaded:**
+- [ ] << for `std::ostream` and `Dice`
+- [ ] << for `std::ostream` and `DiceSet`
+- [ ] comparing two sets by expected value of sum

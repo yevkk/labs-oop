@@ -81,9 +81,14 @@ void test_int(Graph<int, double> *graph) {
 }
 
 int main() {
-    auto G1 = new GraphAdjStr<int, double>();
-    test_int(G1);
-    auto G2 = new GraphMtrx<int, double>();
-    test_int(G2);
+//    auto G1 = new GraphAdjStr<int, double>();
+//    test_int(G1);
+//    auto G2 = new GraphMtrx<int, double>();
+//    test_int(G2);
+    DiceSet set({{2, {0.3, 0.7}},
+                 {3, {0.2, 0.3, 0.5}},
+                 {2, {0.1, 0.9}}});
+    set.print_sum_probabilities();
+    std::cout << "expected value: " << set.expected_value();
     return 0;
 }
