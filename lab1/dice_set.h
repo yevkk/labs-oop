@@ -15,6 +15,8 @@ public:
 
     int max_sum();
 
+    std::vector<double> sum_probabilities();
+
 };
 
 #endif //LAB1_DICE_SET_H
