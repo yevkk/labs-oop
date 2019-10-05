@@ -19,6 +19,8 @@ public:
 
     void print_sum_probabilities();
 
+    double expected_value();
+
 };
 
 #endif //LAB1_DICE_SET_H

@@ -39,16 +39,26 @@ std::vector<double> DiceSet::sum_probabilities() { //result[i] is a probability 
     }
 
     res.clear();
-    for(int i = min - 1; i < max; i++){
+    for (int i = min - 1; i < max; i++) {
         res.emplace_back(sub_res[i]);
     }
 
     return res;
 }
 
-void DiceSet::print_sum_probabilities(){
+void DiceSet::print_sum_probabilities() {
     std::vector<double> tmp = sum_probabilities();
     for (int i = 0; i <= max_sum() - min_sum(); i++) {
         std::cout << i + min_sum() << ":  " << tmp[i] << std::endl;
     }
 };
+
+double DiceSet::expected_value() {
+    double res = 0;
+    std::vector<double> tmp = sum_probabilities();
+    int i = min_sum();
+    for (auto &e:tmp) {
+        res += e * (i++);
+    }
+    return res;
+}

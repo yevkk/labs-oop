@@ -92,5 +92,6 @@ int main() {
     set.elements.emplace_back(d3);
 
     set.print_sum_probabilities();
+    std::cout << "expected value: " << set.expected_value();
     return 0;
 }

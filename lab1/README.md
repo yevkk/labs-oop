@@ -23,5 +23,5 @@ A set of dices.
 **Methods implemented:**
 - [x] count all possible sums in set (min and max)
 - [x] count probabilities for all possible sums in set
-- [ ] count expected value of set
+- [x] count expected value of set
 - [ ] comparing two sets by expected value of sum
