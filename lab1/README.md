@@ -18,9 +18,10 @@ Graphs based on adjacency structure and adjacency matrix, that can store a value
 A dice with face number N = 2, 4, 6, 8, 12, 20.
 Every face has own probability of being dropped.
 
-A set of dices is implemented as inheritance of `std::vector<Dice>`.
+A set of dices.
 
 **Methods implemented:**
 - [x] count all possible sums in set (min and max)
 - [x] count probabilities for all possible sums in set
-- [ ] comparing two sets by most possible sum
+- [ ] count expected value of set
+- [ ] comparing two sets by expected value of sum
