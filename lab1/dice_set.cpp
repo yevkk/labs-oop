@@ -1,5 +1,9 @@
 #include "dice_set.h"
 
+DiceSet::DiceSet(std::vector<Dice> vec){
+    elements = vec;
+}
+
 int DiceSet::min_sum() {
     return elements.size();
 }
