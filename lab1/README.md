@@ -23,11 +23,11 @@ Every face has own probability of being dropped.
 A set of dices.
 
 **Methods implemented:**
-- [x] count all possible sums in set (min and max)
-- [x] count probabilities for all possible sums in set
-- [x] count expected value of set
+- count all possible sums in set (min and max)
+- count probabilities for all possible sums in set
+- count expected value of set
 
 **Operators overloaded:**
-- [ ] << for `std::ostream` and `Dice`
-- [ ] << for `std::ostream` and `DiceSet`
+- [x] << for `std::ostream` and `Dice`
+- [x] << for `std::ostream` and `DiceSet`
 - [ ] comparing two sets by expected value of sum

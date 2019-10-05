@@ -1,6 +1,6 @@
 #include "dice_set.h"
 
-DiceSet::DiceSet(std::vector<Dice> vec){
+DiceSet::DiceSet(std::vector<Dice> vec) {
     elements = vec;
 }
 
@@ -65,4 +65,8 @@ double DiceSet::expected_value() {
         res += e * (i++);
     }
     return res;
+}
+
+std::ostream &operator<<(std::ostream &os, DiceSet &obj) {
+    for (auto &e: obj.elements) os << e;
 }
