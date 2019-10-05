@@ -14,7 +14,7 @@ Graphs based on adjacency structure and adjacency matrix, that can store a value
 - distance between two nodes (based on Floyd's algorithm)
 - print
 
-### Custom class
+### Custom classes
 `Dice`:
 A dice with face number N = 2, 4, 6, 8, 12, 20.
 Every face has own probability of being dropped.

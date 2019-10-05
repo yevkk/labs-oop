@@ -81,20 +81,5 @@ void test_int(Graph<int, double> *graph) {
 }
 
 int main() {
-//    auto G1 = new GraphAdjStr<int, double>();
-//    test_int(G1);
-//    auto G2 = new GraphMtrx<int, double>();
-//    test_int(G2);
-    DiceSet set1({{2, {0.3, 0.7}},
-                  {4, {0.2, 0.3, 0.3, 0.4}},
-                  {2, {0.1, 0.9}}});
-    DiceSet set2({{2, {0.9, 0.1}},
-                  {4, {0.9, 0.3, 0.1, 0.1}},
-                  {2, {0.9, 0.2}},
-                  {4, {0.9, 0.2, 0.5, 0.2}}});
-    std::cout << "expected value 1: " << set1.expected_value() << std::endl;
-    std::cout << "expected value 2: " << set2.expected_value() << std::endl;
-    std::cout << set1 << std::endl << set2;
-    std::cout << (set1 < set2);
     return 0;
 }
