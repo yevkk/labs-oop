@@ -67,6 +67,7 @@ double DiceSet::expected_value() {
     return res;
 }
 
-std::ostream &operator<<(std::ostream &os, DiceSet &obj) {
-    for (auto &e: obj.elements) os << e;
+std::ostream &operator<< (std::ostream &os, DiceSet &obj) {
+    for (auto &e: obj.elements) os << e << std::endl;
+    return os;
 }

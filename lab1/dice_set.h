@@ -25,4 +25,6 @@ public:
 
 };
 
+std::ostream &operator<< (std::ostream &os, DiceSet &obj);
+
 #endif //LAB1_DICE_SET_H

@@ -86,9 +86,11 @@ int main() {
 //    auto G2 = new GraphMtrx<int, double>();
 //    test_int(G2);
     DiceSet set({{2, {0.3, 0.7}},
-                 {3, {0.2, 0.3, 0.5}},
+                 {4, {0.2, 0.3, 0.3, 0.4}},
                  {2, {0.1, 0.9}}});
     set.print_sum_probabilities();
-    std::cout << "expected value: " << set.expected_value();
+    std::cout << "expected value: " << set.expected_value() << std::endl;
+
+    std::cout << set;
     return 0;
 }
