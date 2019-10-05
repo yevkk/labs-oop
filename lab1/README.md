@@ -22,5 +22,5 @@ A set of dices is implemented as inheritance of `std::vector<Dice>`.
 
 **Methods implemented:**
 - [x] count all possible sums in set (min and max)
-- [ ] count probabilities for all possible sums in set
+- [x] count probabilities for all possible sums in set
 - [ ] comparing two sets by most possible sum

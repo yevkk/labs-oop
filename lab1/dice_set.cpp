@@ -27,7 +27,7 @@ std::vector<double> DiceSet::sum_probabilities() { //result[i] is a probability 
     for (int i = 0; i < elements[0].face_number; i++)
         tmp[i] = elements[0].probability[i];
 
-    for (int i = 1; i < elements.size(); i++) {
+    for (unsigned int i = 1; i < elements.size(); i++) {
         sub_res = res;
         for (int j = 0; j < elements[i].face_number; j++) {
             for (int k = 0; k < curr_size; k++) {
@@ -45,3 +45,10 @@ std::vector<double> DiceSet::sum_probabilities() { //result[i] is a probability 
 
     return res;
 }
+
+void DiceSet::print_sum_probabilities(){
+    std::vector<double> tmp = sum_probabilities();
+    for (int i = 0; i <= max_sum() - min_sum(); i++) {
+        std::cout << i + min_sum() << ":  " << tmp[i] << std::endl;
+    }
+};

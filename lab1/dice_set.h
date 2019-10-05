@@ -17,6 +17,8 @@ public:
 
     std::vector<double> sum_probabilities();
 
+    void print_sum_probabilities();
+
 };
 
 #endif //LAB1_DICE_SET_H

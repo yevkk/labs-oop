@@ -91,10 +91,6 @@ int main() {
     set.elements.emplace_back(d2);
     set.elements.emplace_back(d3);
 
-    std::vector<double> res = set.sum_probabilities();
-    for (int i = 0; i <= set.max_sum() - set.min_sum(); i++) {
-        std::cout << i + set.min_sum() <<
-                  "  " << res[i] << std::endl;
-    }
+    set.print_sum_probabilities();
     return 0;
 }
