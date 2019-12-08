@@ -27,6 +27,9 @@ SOURCES += \
 HEADERS += \
     defectmodel.h \
     featuremodel.h \
+    graphs/graph.h \
+    graphs/graph_adj_str.h \
+    graphs/graph_adj_str.hxx \
     mainwindow.h \
     models.h \
     previewhighlighter.h \
