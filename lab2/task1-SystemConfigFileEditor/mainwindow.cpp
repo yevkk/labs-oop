@@ -60,7 +60,7 @@ bool MainWindow::saveModelsToFile(bool ignore_current_file){
         current_file = filename;
     }
 
-    writeModelsToXml(current_file, features_model, types_model);
+    writeModelsToXml(current_file, features_model, types_model, defects_model);
     saved = true;
     return true;
 }
@@ -343,7 +343,7 @@ void MainWindow::on_actionOpen_triggered()
     QString file = QFileDialog::getOpenFileName(this,
         tr("Open config file"), "", tr("XML Files (*.xml)"));
     if (file == "") return;
-    if(readXmlToModels(file, features_model, types_model)){
+    if(readXmlToModels(file, features_model, types_model, defects_model)){
         current_file = file;
         saved = 1;
          ui->stackedWidget->setCurrentIndex(FEATURES_PAGE_INDEX);
@@ -398,7 +398,7 @@ void MainWindow::on_actionNew_triggered()
 void MainWindow::on_actionXML_triggered()
 {
     std::string str;
-    print(std::back_inserter(str), *modelsToXml(features_model, types_model), 0);
+    print(std::back_inserter(str), *modelsToXml(features_model, types_model, defects_model), 0);
     ui->xmlPreviewText->setPlainText(QString::fromStdString(str));
 
     ui->stackedWidget->setCurrentIndex(XML_PREVIEW_PAGE);
