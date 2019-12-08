@@ -5,6 +5,7 @@
 #include "rapidxml/rapidxml_print.hpp"
 #include "types.h"
 #include "models.h"
+#include "graphs/graph_adj_str.h"
 
 #include <memory>
 #include <fstream>
@@ -87,7 +88,9 @@ bool readXmlToModels(const QString& filename,
     }
 
 
+
     //reading all 'Type' nodes
+    //GraphAdjStr<int, int> graph(true);
     xml_node<> *type_list_node = root_node->first_node("TypeList");
     for (xml_node<> *type_node = type_list_node->first_node("Type");
          type_node; type_node = type_node->next_sibling()) {
@@ -146,12 +149,14 @@ bool readXmlToModels(const QString& filename,
             component_type.sub_components << new_sub_component;
         }
 
+        //graph.add_node(types.size());
         types << component_type;
     }
 
     //additional check of data correctness for config.component_types[]->sub_components;
     for (int j = 0; j < types.size(); j++) {
         for (int i = 0; i < types[j].sub_components.size(); i++) {
+            //graph.add_edge(j, i, 0);
             if(!(types[j].sub_components[i] != j)){
                 return false;
             }
@@ -159,6 +164,7 @@ bool readXmlToModels(const QString& filename,
                 return false;
             }
         }
+        //if (graph.cycle_exist()) return false;
     }
 
     //reading all 'Defect' nodes

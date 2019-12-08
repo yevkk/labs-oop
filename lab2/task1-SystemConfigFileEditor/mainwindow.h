@@ -1,6 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "graphs/graph_adj_str.h"
 #include "models.h"
 
 #include <QMainWindow>
@@ -81,6 +82,7 @@ private:
     void editFeatureSetup();
     void editTypeSetup();
     void editDefectSetup();
+    GraphAdjStr<int, int> buildTypesGraph();
 
 
     const int FEATURES_PAGE_INDEX = 0;

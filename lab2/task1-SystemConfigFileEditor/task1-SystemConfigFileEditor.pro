@@ -30,6 +30,7 @@ HEADERS += \
     graphs/graph.h \
     graphs/graph_adj_str.h \
     graphs/graph_adj_str.hxx \
+    graphs/infnull.h \
     mainwindow.h \
     models.h \
     previewhighlighter.h \

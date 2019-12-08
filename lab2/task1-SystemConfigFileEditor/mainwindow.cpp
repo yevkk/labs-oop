@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include "graphs/graph_adj_str.h"
 #include "models.h"
 #include "xmlparse.h"
 #include "previewhighlighter.h"
@@ -87,6 +88,22 @@ void MainWindow::editFeatureSetup(){
     ui->stackedWidget->setCurrentIndex(FEATURES_EDIT_PAGE_INDEX);
 }
 
+//GraphAdjStr<int, int> MainWindow::buildTypesGraph(){
+//    GraphAdjStr<int, int> graph(true);
+
+//    for (int i = 0; i < types_model->rowCount(); i++)
+//        graph.add_node(i);
+
+//    for (int i = 0; i < types_model->rowCount(); i++){
+//        Type type = types_model->getObject(i).value<Type>();
+//        for(auto &e:type.sub_components){
+//            graph.add_edge(i, e, 0);
+//        }
+//    }
+
+//    return graph;
+//}
+
 void MainWindow::editTypeSetup(){
     Type type = types_model->getObject(types_model->selected_row).value<Type>();
     ui->tNameLineEdit->setText(type.name);
@@ -106,11 +123,14 @@ void MainWindow::editTypeSetup(){
         vec[featureId]->setChecked(true);
     }
 
+
     vec.clear();
     delete ui->tSubcomponentsSAWidget->layout();
     ui->tSubcomponentsSAWidget->setLayout(new QBoxLayout(QBoxLayout::LeftToRight));
     for(int i = 0; i < types_model->rowCount(); i++){
-        if(i != types_model->selected_row){
+        //GraphAdjStr<int, int> tmp = buildTypesGraph();
+        //tmp.add_edge(types_model->selected_row, i, 0);
+        if(i != types_model->selected_row /*&& !tmp.cycle_exist()*/){
             auto tmpCheckBox = new DynamicCheckbox(QString::number(i));
             ui->tSubcomponentsSAWidget->layout()->addWidget(tmpCheckBox);
             vec << tmpCheckBox;

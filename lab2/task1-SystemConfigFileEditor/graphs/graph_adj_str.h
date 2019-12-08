@@ -1,5 +1,5 @@
-#ifndef LAB1_GRAPH_ADJ_STR_H
-#define LAB1_GRAPH_ADJ_STR_H
+#ifndef GRAPH_ADJ_STR_H
+#define GRAPH_ADJ_STR_H
 
 #include "graph.h"
 #include <iostream>
@@ -45,10 +45,12 @@ public:
 
     EdgeDataT min_distance(int index1, int index2) override;
 
-    //IMPORTANT NOTE: WORKS CORRECTLY ONLY FOR DIRECTED GRAPHS!
-    bool cycle_exist(int index = 0, bool start = true);
+    //testing methods for another lab
+    bool cycle_exist_step(int index, std::vector<bool> visited, std::vector<bool> &rec_stack);
+    bool cycle_exist();
+
 };
 
 #include "graph_adj_str.hxx"
 
-#endif //LAB1_GRAPH_ADJ_STR_H
+#endif //GRAPH_ADJ_STR_H

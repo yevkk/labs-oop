@@ -1,5 +1,5 @@
-#ifndef LAB1_GRAPH_ADJ_STR_HXX
-#define LAB1_GRAPH_ADJ_STR_HXX
+#ifndef GRAPH_ADJ_STR_HXX
+#define GRAPH_ADJ_STR_HXX
 
 #include "graph_adj_str.h"
 #include "infnull.h"
@@ -228,21 +228,34 @@ EdgeDataType GraphAdjStr<NodeDataT, EdgeDataType>::min_distance(int index1, int 
     return dist[index1][index2];
 }
 
-//IMPORTANT NOTE: WORKS CORRECTLY ONLY FOR DIRECTED GRAPHS!
 template<typename NodeDataT, typename EdgeDataType>
-bool GraphAdjStr<NodeDataT, EdgeDataType>::cycle_exist(int index, bool start) {
-    static std::vector<bool> visited;
-    if (start) {
-        visited.clear();
-        for (auto &n:nodes) visited.emplace_back(false);
-    }
+bool GraphAdjStr<NodeDataT, EdgeDataType>::cycle_exist_step(int index, std::vector<bool> visited,
+                                                            std::vector<bool> &rec_stack) {
+    if (visited[index] == false) {
+        visited[index] = true;
+        rec_stack[index] = true;
 
-    if (visited[index]) return true;
-    visited[index] = true;
-    for (auto &e:nodes[index]->adjacent_nodes) {
-        if (e.first != index)
-            if (cycle_exist(e.first, false)) return true;
+        for(auto &e:nodes[index]->adjacent_nodes){
+            if (!visited[e.first]
+                && cycle_exist_step(e.first, visited, rec_stack))
+                return true;
+            else if (rec_stack[e.first])
+                return true;
+        }
     }
+    rec_stack[index] = false;
+    return false;
+}
+
+template<typename NodeDataT, typename EdgeDataType>
+bool GraphAdjStr<NodeDataT, EdgeDataType>::cycle_exist() {
+    std::vector<bool> visited(nodes.size(), false);
+    std::vector<bool> rec_stack(nodes.size(), false);
+
+    for (int i = 0; i < nodes.size(); i++)
+        if (cycle_exist_step(i, visited, rec_stack))
+            return true;
+
     return false;
 }
 
