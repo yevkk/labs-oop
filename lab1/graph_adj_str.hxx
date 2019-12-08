@@ -228,4 +228,35 @@ EdgeDataType GraphAdjStr<NodeDataT, EdgeDataType>::min_distance(int index1, int 
     return dist[index1][index2];
 }
 
+template<typename NodeDataT, typename EdgeDataType>
+bool GraphAdjStr<NodeDataT, EdgeDataType>::cycle_exist_step(int index, std::vector<bool> visited,
+                                                            std::vector<bool> &rec_stack) {
+    if (visited[index] == false) {
+        visited[index] = true;
+        rec_stack[index] = true;
+
+        for(auto &e:nodes[index]->adjacent_nodes){
+            if (!visited[e.first]
+                && cycle_exist_step(e.first, visited, rec_stack))
+                return true;
+            else if (rec_stack[e.first])
+                return true;
+        }
+    }
+    rec_stack[index] = false;
+    return false;
+}
+
+template<typename NodeDataT, typename EdgeDataType>
+bool GraphAdjStr<NodeDataT, EdgeDataType>::cycle_exist() {
+    std::vector<bool> visited(nodes.size(), false);
+    std::vector<bool> rec_stack(nodes.size(), false);
+
+    for (int i = 0; i < nodes.size(); i++)
+        if (cycle_exist_step(i, visited, rec_stack))
+            return true;
+
+    return false;
+}
+
 #endif //LAB1_GRAPH_ADJ_STR_HXX

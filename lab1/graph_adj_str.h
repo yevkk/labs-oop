@@ -44,6 +44,11 @@ public:
     bool delete_edge(int index1, int index2) override;
 
     EdgeDataT min_distance(int index1, int index2) override;
+
+    //testing methods for another lab
+    bool cycle_exist_step(int index, std::vector<bool> visited, std::vector<bool> &rec_stack);
+    bool cycle_exist();
+
 };
 
 #include "graph_adj_str.hxx"
