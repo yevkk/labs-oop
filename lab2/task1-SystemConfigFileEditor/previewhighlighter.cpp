@@ -14,7 +14,7 @@ PreviewHighlighter::PreviewHighlighter(QTextDocument *document)
         setFormatFor(Entity, entityFormat);
 
         QTextCharFormat nodeFormat;
-        nodeFormat.setForeground(QColor(10, 30, 160));
+        nodeFormat.setForeground(QColor(255, 128, 66));
         nodeFormat.setFontWeight(QFont::Bold);
         setFormatFor(Node, nodeFormat);
     }
