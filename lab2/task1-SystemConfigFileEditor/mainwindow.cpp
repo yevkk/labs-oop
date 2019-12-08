@@ -43,14 +43,6 @@ MainWindow::MainWindow(QWidget *parent)
     ui->defectsTableView->setSelectionMode(QAbstractItemView::SingleSelection);
 
     ui->stackedWidget->setCurrentIndex(FEATURES_PAGE_INDEX);
-
-    //TEST:
-    Defect defect;
-    defect.detect_chance = 0.32;
-    defect.component_types = {{1, {2, 2}}, {3, {4, 5}}, {5, {5, 4}}};
-
-    defects_model->addObject(QVariant::fromValue<Defect>(defect));
-    //=========
 }
 
 MainWindow::~MainWindow()
@@ -136,11 +128,11 @@ void MainWindow::editDefectSetup(){
     Defect defect = defects_model->getObject(defects_model->selected_row).value<Defect>();
     ui->dDetectChanceSpinBox->setValue(defect.detect_chance);
 
-    QVector<DynamicLayout*> vec;
+    QVector<DynamicGroupBox*> vec;
     delete ui->dCTypesSAWidget->layout();
     ui->dCTypesSAWidget->setLayout(new QVBoxLayout());
     for(int i = 0; i < types_model->rowCount(); i++){
-        auto tmpLayout = new DynamicLayout(QString::number(i), false, 0, "");
+        auto tmpLayout = new DynamicGroupBox(QString::number(i), false, 0, "");
         ui->dCTypesSAWidget->layout()->addWidget(tmpLayout);
         vec << tmpLayout;
     }
@@ -189,6 +181,13 @@ void MainWindow::on_typesDeleteBtn_clicked()
     saved = false;
     ui->typesTableView->selectRow(0);
     modelDeleteSelectedRow(types_model);
+}
+
+void MainWindow::on_defectsDeleteBtn_clicked()
+{
+    saved = false;
+    ui->defectsTableView->selectRow(0);
+    modelDeleteSelectedRow(defects_model);
 }
 
 // ===== [EDIT BTN CLICKED] =====
@@ -288,6 +287,30 @@ void MainWindow::on_tSaveBtn_clicked()
     ui->stackedWidget->setCurrentIndex(TYPES_PAGE_INDEX);
 }
 
+
+void MainWindow::on_dSaveBtn_clicked()
+{
+    Defect defect;
+    defect.id = defects_model->getObject(defects_model->selected_row).value<Defect>().id;
+    defect.detect_chance = ui->dDetectChanceSpinBox->value();
+
+    QList<DynamicGroupBox> typesGroupBoxList = ui->dCTypesScrollArea->findChildren<DynamicGroupBox>("");
+
+    foreach(auto &groupBox, typesGroupBoxList){
+        if(groupBox.checkBox->isChecked()){
+            QPair<int, QPair<int, int>> tmp;
+            tmp.first = groupBox.checkBox->text().toInt();
+            tmp.second.first = groupBox.spinBox->value();
+            tmp.second.second = groupBox.lineEdit->text().toInt();
+            defect.component_types << tmp;
+        }
+    }
+
+    modelEditSelectedRow(defects_model, QVariant::fromValue<Defect>(defect));
+
+    ui->stackedWidget->setCurrentIndex(DEFECTS_PAGE_INDEX);
+}
+
 // ===== [ACTIONS TRIGGERED] =====
 
 void MainWindow::on_actionFeatures_triggered()
@@ -368,7 +391,8 @@ void MainWindow::on_actionNew_triggered()
     saved = true;
     features_model->clearModel();
     types_model->clearModel();
-     ui->stackedWidget->setCurrentIndex(FEATURES_PAGE_INDEX);
+    defects_model->clearModel();
+    ui->stackedWidget->setCurrentIndex(FEATURES_PAGE_INDEX);
 }
 
 void MainWindow::on_actionXML_triggered()
@@ -378,20 +402,4 @@ void MainWindow::on_actionXML_triggered()
     ui->xmlPreviewText->setPlainText(QString::fromStdString(str));
 
     ui->stackedWidget->setCurrentIndex(XML_PREVIEW_PAGE);
-}
-
-
-//TODO: defects create
-//TODO: defects edit
-//TODO; defects delete
-
-
-
-
-
-
-
-void MainWindow::on_dSaveBtn_clicked()
-{
-
 }

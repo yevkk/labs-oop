@@ -63,7 +63,7 @@ QTableView {
 }</string>
       </property>
       <property name="currentIndex">
-       <number>5</number>
+       <number>4</number>
       </property>
       <widget class="QWidget" name="featuresTablePage">
        <layout class="QGridLayout" name="gridLayout_2">
@@ -880,8 +880,14 @@ QTableView {
               <pointsize>11</pointsize>
              </font>
             </property>
+            <property name="horizontalScrollBarPolicy">
+             <enum>Qt::ScrollBarAsNeeded</enum>
+            </property>
             <property name="alternatingRowColors">
              <bool>true</bool>
+            </property>
+            <property name="horizontalScrollMode">
+             <enum>QAbstractItemView::ScrollPerItem</enum>
             </property>
             <attribute name="horizontalHeaderHighlightSections">
              <bool>false</bool>

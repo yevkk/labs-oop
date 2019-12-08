@@ -68,6 +68,8 @@ private slots:
 
     void on_dSaveBtn_clicked();
 
+    void on_defectsDeleteBtn_clicked();
+
 private:
     Ui::MainWindow *ui;
 

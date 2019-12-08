@@ -62,13 +62,13 @@ public:
     }
 };
 
-class DynamicLayout : public QGroupBox {
+class DynamicGroupBox : public QGroupBox {
 public:
     DynamicCheckbox* checkBox;
     QLineEdit* lineEdit;
     QSpinBox* spinBox;
 
-    DynamicLayout(const QString& checkbox_name, bool checkbox_checked, int spinbox_value, QString lineedit_value) : QGroupBox()
+    DynamicGroupBox(const QString& checkbox_name, bool checkbox_checked, int spinbox_value, QString lineedit_value) : QGroupBox()
     {
         QHBoxLayout* lyt = new QHBoxLayout;
         checkBox = new DynamicCheckbox(checkbox_name, checkbox_checked);
@@ -82,14 +82,15 @@ public:
         lineEdit = new QLineEdit;
         lineEdit->setFont(QFont("Yu Gothic UI", 11));
         lineEdit->setText(lineedit_value);
+        lineEdit->setInputMask("999");
         lyt->addWidget(lineEdit);
 
         setLayout(lyt);
     }
 
-    DynamicLayout(const DynamicLayout &other){}
+    DynamicGroupBox(const DynamicGroupBox &other){}
 
-    DynamicLayout& operator=(const DynamicLayout &other){
+    DynamicGroupBox& operator=(const DynamicGroupBox &other){
         return *this;
     }
 
