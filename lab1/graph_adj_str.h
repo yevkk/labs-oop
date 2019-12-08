@@ -44,6 +44,9 @@ public:
     bool delete_edge(int index1, int index2) override;
 
     EdgeDataT min_distance(int index1, int index2) override;
+
+    //IMPORTANT NOTE: WORKS CORRECTLY ONLY FOR DIRECTED GRAPHS!
+    bool cycle_exist(int index = 0, bool start = true);
 };
 
 #include "graph_adj_str.hxx"
