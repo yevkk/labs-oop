@@ -1,5 +1,5 @@
 # Lab1
-### Data structures
+### Data structures (\*\*\*\*)
 Graphs based on adjacency structure and adjacency matrix, that can store a values of any data type in nodes and edges (`int`, `double`, `std::string`, `std::vector<>`).
 
 **Methods implemented:**
@@ -14,7 +14,7 @@ Graphs based on adjacency structure and adjacency matrix, that can store a value
 - distance between two nodes (based on Floyd's algorithm)
 - print
 
-### Custom classes
+### Custom classes (\*\*\*)
 `Dice`:
 A dice with face number N = 2, 4, 6, 8, 12, 20.
 Every face has own probability of being dropped.
@@ -30,4 +30,4 @@ A set of dices.
 **Operators overloaded:**
 - << for `std::ostream` and `Dice`
 - << for `std::ostream` and `DiceSet`
-- relational operators for two sets (comparing expected values)
+- relational operators for two sets (comparing expected values) __(+\*)__
