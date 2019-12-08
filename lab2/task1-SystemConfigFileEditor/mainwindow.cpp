@@ -200,6 +200,7 @@ void MainWindow::on_typesDeleteBtn_clicked()
 {
     saved = false;
     ui->typesTableView->selectRow(0);
+    defects_model->deletedType(types_model->selected_row);
     modelDeleteSelectedRow(types_model);
 }
 

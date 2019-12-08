@@ -71,6 +71,8 @@ public:
     QVariant getObject(int index) override;
     int rowCount() override;
 
+    void deletedType(int index);
+
 private:
     DefectModel *model;
 };

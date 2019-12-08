@@ -150,3 +150,7 @@ int DefectModels::rowCount(){
     return  model->rowCount();
 }
 
+void DefectModels::deletedType(int index){
+    model->deletedType(index);
+}
+

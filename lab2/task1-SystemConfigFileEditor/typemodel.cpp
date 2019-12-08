@@ -146,6 +146,8 @@ void TypeModel::deletedFeature(int index){
             } else if (type.features[i] > index){
                 type.features[i]--;
                 i++;
+            } else {
+                i++;
             }
 
         }

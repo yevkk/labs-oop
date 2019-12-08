@@ -114,3 +114,21 @@ void DefectModel::deleteDefect(int index){
     }
 }
 
+void DefectModel::deletedType(int index){
+    for(auto &defect:defects){
+        int i = 0;
+        while(i < defect.component_types.size()){
+            if (defect.component_types[i].first == index){
+                defect.component_types.erase(defect.component_types.begin() + i);
+            } else if (defect.component_types[i].first > index){
+                defect.component_types[i].first--;
+                i++;
+            } else {
+                i++;
+            }
+
+        }
+
+    }
+}
+

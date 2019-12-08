@@ -23,6 +23,7 @@ public:
 
     // Editable:
     void editDefect(int index, Defect defetc);
+    void deletedType(int index);
 
     Qt::ItemFlags flags(const QModelIndex& index) const override;
 
