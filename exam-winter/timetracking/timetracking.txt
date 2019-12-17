@@ -1,0 +1,27 @@
+=== SATURDAY ===
+14.25 - 14.40 - Reading tasks and requirements
+15.00 - 15.30 - Asking questions
+16.45 - 17.30 - Thinking on project structure 
+17.40 - 18.50 Testing tree model and QTreeView, decided to use QTreeWidget (simplier but more than enough for task) :(
+18.50 - 19.05 Testing QTreeWidget...
+20.00 - 20.30, 23.00 - 23.40 Product and base Country classes declared and implemented 
+
+=== SUNDAY ===
+9.30 - 9.45 ProductIE class declared and implemented
+9.45 - 10.00, 11.00 - 15.00 Random implemented, Product class developed, implemented adding products into tree
+16.40 - 17.00 Creating base simulation structure
+17.05 - 18.00, 19.00 - 19.50 Setting up tables
+20.00 - 20.30 First IE policy implementation
+20.45 - 21.20 Random Country
+21.30 ... - ... 22.00 fixing :(
+22.30 - 23.35 Icon and images added, generating countries, clearing all (added menu)
+23.35 - 00.00 Status bar
+
+=== OVERTIME ===
+00.00 - 00.05 Implemented general simulation
+00.10 - 01.10 Second IE policy implementation
+01.10 - 01.40 Third IE policy implementation
+02.00 - 02.30 Forth IE policy implementation 
+02.30 - 03.00 Fixing mistakes
+03.30 - 05.00 Trying to setup scrollArea... :(
+... - 6.20 Fixing mistakes

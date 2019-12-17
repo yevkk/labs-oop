@@ -386,7 +386,7 @@ QCheckBox::indicator:disabled, QRadioButton::indicator:disabled
 }</string>
       </property>
       <property name="currentIndex">
-       <number>4</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="featuresTablePage">
        <layout class="QGridLayout" name="gridLayout_2">
