@@ -21,7 +21,6 @@ SOURCES += \
     mainwindow.cpp \
     product.cpp \
     product_ie.cpp \
-    qcustomplot/qcustomplot.cpp \
     simulation.cpp
 
 HEADERS += \
@@ -29,9 +28,10 @@ HEADERS += \
     mainwindow.h \
     product.h \
     product_ie.h \
-    qcustomplot/qcustomplot.h \
     random.h \
     simulation.h
+
+LIBS += qcustomplot \
 
 FORMS += \
     mainwindow.ui
@@ -41,7 +41,7 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-RC_ICONS = icon.ico
+#RC_ICONS = icon.ico
 
 RESOURCES += \
     source.qrc
