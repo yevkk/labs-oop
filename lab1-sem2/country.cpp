@@ -38,7 +38,7 @@ ConsumptionList CountryIEPolicy1::getConsumptionList() {
    return _consumption_list;
 }
 
-void CountryIEPolicy1::simulation(std::vector<ProductIE>& products) {
+void CountryIEPolicy1::simulation(std::vector<ProductIE>& products, double random_precision) {
    //EXPORT: all products from production list;
    //IMPORT: all products from consumption list;
 
@@ -47,8 +47,8 @@ void CountryIEPolicy1::simulation(std::vector<ProductIE>& products) {
    for(auto &production_item:production_list) {
       for(auto &product:products) {
          if (production_item.first == product.getProduct()){
-               int real_production = Random::randomDouble(production_item.second * (1 - RANDOM_PRECISION),
-                                                          production_item.second * (1 + RANDOM_PRECISION));
+               int real_production = Random::randomDouble(production_item.second * (1 - random_precision),
+                                                          production_item.second * (1 + random_precision));
                product.incExport(real_production);
          }
       }
@@ -57,8 +57,8 @@ void CountryIEPolicy1::simulation(std::vector<ProductIE>& products) {
    for(auto &consumption_item:_consumption_list) {
       for(auto &product:products) {
          if (consumption_item.first == product.getProduct()){
-               int real_consumption = Random::randomDouble(consumption_item.second * (1 - RANDOM_PRECISION),
-                                                           consumption_item.second * (1 + RANDOM_PRECISION));
+               int real_consumption = Random::randomDouble(consumption_item.second * (1 - random_precision),
+                                                           consumption_item.second * (1 + random_precision));
                product.incImport(real_consumption);
          }
       }
@@ -78,7 +78,7 @@ ConsumptionList CountryIEPolicy2::getConsumptionList() {
    return _consumption_list;
 }
 
-void CountryIEPolicy2::simulation(std::vector<ProductIE>& products) {
+void CountryIEPolicy2::simulation(std::vector<ProductIE>& products, double random_precision) {
    auto production_list = getProductionList();
    auto consumption_list = getConsumptionList();
 
@@ -86,12 +86,12 @@ void CountryIEPolicy2::simulation(std::vector<ProductIE>& products) {
    std::vector<int> consumpted_amount(consumption_list.size()); //i-th element corresponds to consumption_list[i];
 
    for (unsigned i = 0; i < produced_amount.size(); i++)
-      produced_amount[i] = Random::randomDouble(production_list[i].second * (1 - RANDOM_PRECISION),
-                                                production_list[i].second * (1 + RANDOM_PRECISION));
+      produced_amount[i] = Random::randomDouble(production_list[i].second * (1 - random_precision),
+                                                production_list[i].second * (1 + random_precision));
 
    for (unsigned i = 0; i < consumpted_amount.size(); i++)
-      consumpted_amount[i] = Random::randomDouble(consumption_list[i].second * (1 - RANDOM_PRECISION),
-                                                  consumption_list[i].second * (1 + RANDOM_PRECISION));
+      consumpted_amount[i] = Random::randomDouble(consumption_list[i].second * (1 - random_precision),
+                                                  consumption_list[i].second * (1 + random_precision));
 
 
    for (unsigned j = 0; j < consumption_list.size(); j++) {
@@ -148,19 +148,19 @@ void CountryIEPolicy3::setComsumptionVolumesList(const std::vector<unsigned> &ne
    _consumption_volumes_list = new_list;
 }
 
-void CountryIEPolicy3::simulation(std::vector<ProductIE>& products) {
+void CountryIEPolicy3::simulation(std::vector<ProductIE>& products, double random_precision) {
    auto production_list = getProductionList();
 
    std::vector<int> produced_amount(production_list.size()); //i-th element corresponds to production_list[i];
    std::vector<int> consumpted_amount(_consumption_volumes_list.size()); //i-th element corresponds to consumption_list[i];
 
    for (unsigned i = 0; i < produced_amount.size(); i++)
-      produced_amount[i] = Random::randomDouble(production_list[i].second * (1 - RANDOM_PRECISION),
-                                                production_list[i].second * (1 + RANDOM_PRECISION));
+      produced_amount[i] = Random::randomDouble(production_list[i].second * (1 - random_precision),
+                                                production_list[i].second * (1 + random_precision));
 
    for (unsigned i = 0; i < consumpted_amount.size(); i++)
-      consumpted_amount[i] = Random::randomDouble(_consumption_volumes_list[i] * (1 - RANDOM_PRECISION),
-                                                  _consumption_volumes_list[i] * (1 + RANDOM_PRECISION));
+      consumpted_amount[i] = Random::randomDouble(_consumption_volumes_list[i] * (1 - random_precision),
+                                                  _consumption_volumes_list[i] * (1 + random_precision));
 
    for (unsigned i = 0; i < production_list.size(); i++) {
       for (auto &product:production_list[i].first->getRawList()) {

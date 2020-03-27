@@ -34,7 +34,7 @@ public:
 
    void setProductionList(const ProductionList& production_list);
 
-   virtual void simulation(std::vector<ProductIE>& products) = 0; //some actions according to export/import policy;
+   virtual void simulation(std::vector<ProductIE>& products, double random_precision = RANDOM_PRECISION) = 0; //some actions according to export/import policy;
 };
 
 //EXPORT: all products from production list;
@@ -49,7 +49,7 @@ public:
 
    ConsumptionList getConsumptionList();
 
-   void simulation(std::vector<ProductIE>& products) override;
+   void simulation(std::vector<ProductIE>& products, double random_precision = RANDOM_PRECISION) override;
 };
 
 //EXPORT: extra products from production list;
@@ -64,7 +64,7 @@ public:
 
    ConsumptionList getConsumptionList();
 
-   void simulation(std::vector<ProductIE>& products) override;
+   void simulation(std::vector<ProductIE>& products, double random_precision = RANDOM_PRECISION) override;
 };
 
 //production list ~ consumption list (traditional products for this country);
@@ -80,7 +80,7 @@ public:
 
    void setComsumptionVolumesList(const std::vector<unsigned>& new_list);
 
-   void simulation(std::vector<ProductIE>& products) override;
+   void simulation(std::vector<ProductIE>& products, double random_precision = RANDOM_PRECISION) override;
 };
 
 //prodcution list ~ consumption list (last year most popular products);
