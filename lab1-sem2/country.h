@@ -68,8 +68,8 @@ public:
 };
 
 //production list ~ consumption list (traditional products for this country);
-//EXPORT: all products required for production;
-//IMPORT: extra products from consumption list;
+//EXPORT: extra products from consumption list;
+//IMPORT: all products required for production;
 class CountryIEPolicy3 : public Country {
 private:
    std::vector<unsigned> _consumption_volumes_list;
