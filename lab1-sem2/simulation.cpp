@@ -13,13 +13,7 @@ Simulation::Simulation(unsigned starting_year, int years_count,
       std::vector<ProductIE> current_year = basic_vector;
 
       for (auto &country:countries){
-         if (dynamic_cast<CountryIEPolicy4*>(country.get())) {
-               if (_data.empty()) {
-                  dynamic_cast<CountryIEPolicy4*>(country.get())->simulation(current_year, std::vector<ProductIE>());
-               } else {
-                  dynamic_cast<CountryIEPolicy4*>(country.get())->simulation(current_year, _data.back());
-               }
-         } else country->simulation(current_year);
+        country->simulation(current_year);
       }
 
       _data.push_back(current_year);

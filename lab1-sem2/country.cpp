@@ -207,38 +207,6 @@ void CountryIEPolicy3::simulation(std::vector<ProductIE>& products, double rando
 
 //======================================================
 
-CountryIEPolicy4::CountryIEPolicy4(const std::string &name, const ProductionList &production_list,
-                                   const std::vector<unsigned> &consumption_volumes_list) :
-   CountryIEPolicy3(name, production_list, consumption_volumes_list) {
-
-}
-
-void CountryIEPolicy4::simulation(std::vector<ProductIE> &products, std::vector<ProductIE> products_previous) {
-   if (!products_previous.empty()) {
-      unsigned number = Random::randomInt(2, 5);
-      ProductionList new_production_list;
-      std::vector<unsigned> consumption_volumes_list;
-      for (unsigned i = 0; i < products_previous.size() && i < number; i++) {
-         int tmp = products_previous[0].getImport() - products_previous[0].getExport();
-         int index = 0;
-         for (unsigned j = 0; j < products_previous.size(); j++) {
-            if ((int)products_previous[j].getImport() - (int)products_previous[j].getExport() > tmp) {
-               tmp = products_previous[j].getImport() - products_previous[j].getExport();
-               index = j;
-            }
-         }
-         new_production_list.emplace_back(products_previous[index].getProduct(), products_previous[index].getImport());
-         consumption_volumes_list.emplace_back(products_previous[index].getImport() * 0.8);
-      }
-      setProductionList(new_production_list);
-      setComsumptionVolumesList(consumption_volumes_list);
-   }
-
-   this->CountryIEPolicy3::simulation(products);
-}
-
-//======================================================
-
 std::shared_ptr<Country> randomCountry(std::vector<std::shared_ptr<RawProduct>> products) {
    std::shared_ptr<Country> res;
    double random = Random::randomDouble(0, 1);
@@ -282,15 +250,15 @@ std::shared_ptr<Country> randomCountry(std::vector<std::shared_ptr<RawProduct>> 
       }
 
       if (random < 0.75) {
-         static int p3_created = 1;
-         std::string name = "Country(P3) " + std::to_string(p3_created++);
+          static int p3_created = 1;
+          std::string name = "Country(P3) " + std::to_string(p3_created++);
 
-         res = std::make_shared<CountryIEPolicy3>(CountryIEPolicy3(name, production_list, consumption_volumes_list));
+          res = std::make_shared<CountryIEPolicy3>(CountryIEPolicy3(name, production_list, consumption_volumes_list));
       } else {
-         static int p4_created = 1;
-         std::string name = "Country(P4) " + std::to_string(p4_created++);
+          static int p3_created = 1;
+          std::string name = "Country(P3) " + std::to_string(p3_created++);
 
-         res = std::make_shared<CountryIEPolicy4>(CountryIEPolicy4(name, production_list, consumption_volumes_list));
+          res = std::make_shared<CountryIEPolicy3>(CountryIEPolicy3(name, production_list, consumption_volumes_list));
       }
 
    }

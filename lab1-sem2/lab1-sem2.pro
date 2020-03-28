@@ -1,4 +1,6 @@
-CONFIG += c++11 mainConfig
+CONFIG += c++11
+
+CONFIG += testsConfig
 
 
 mainConfig {

@@ -83,17 +83,6 @@ public:
    void simulation(std::vector<ProductIE>& products, double random_precision = RANDOM_PRECISION) override;
 };
 
-//prodcution list ~ consumption list (last year most popular products);
-//EXPORT: all products required for production;
-//IMPORT: extra products from consumption list;
-class CountryIEPolicy4 : public CountryIEPolicy3 {
-public:
-   CountryIEPolicy4(const std::string& name, const ProductionList& production_list = ProductionList(),
-                    const std::vector<unsigned>& consumption_volumes_list = std::vector<unsigned>());
-
-   void simulation(std::vector<ProductIE>& products, std::vector<ProductIE> products_previous);
-};
-
 std::shared_ptr<Country> randomCountry(std::vector<std::shared_ptr<RawProduct>> products);
 
 #endif // COUNTRY_H
