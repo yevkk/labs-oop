@@ -2,6 +2,18 @@ CONFIG += c++11
 
 CONFIG += testsConfig
 
+SOURCES += \
+    country.cpp \
+    product.cpp \
+    product_ie.cpp \
+    simulation.cpp \
+
+HEADERS += \
+    country.h \
+    product.h \
+    product_ie.h \
+    random.h \
+    simulation.h \
 
 mainConfig {
 QT       += core gui
@@ -11,21 +23,12 @@ DEFINES += QT_DEPRECATED_WARNINGS
 TARGET = main
 
 SOURCES += \
-    country.cpp \
     main.cpp \
     mainwindow.cpp \
-    product.cpp \
-    product_ie.cpp \
-    simulation.cpp \
     qcustomplot/qcustomplot.cpp
 
 HEADERS += \
-    country.h \
     mainwindow.h \
-    product.h \
-    product_ie.h \
-    random.h \
-    simulation.h \
     qcustomplot/qcustomplot.h
 
 FORMS += \
