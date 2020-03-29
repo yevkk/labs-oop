@@ -218,7 +218,7 @@ std::shared_ptr<Country> randomCountry(std::vector<std::shared_ptr<RawProduct>> 
       unsigned chosen_index = Random::randomInt(0, products_copy.size() - 1);
       auto tmp = products_copy[chosen_index];
       products_copy.erase(products_copy.begin() + chosen_index);
-      production_list.emplace_back(tmp, Random::randomInt(1, 1000));
+      production_list.emplace_back(tmp, Random::randomInt(1, 100));
    }
 
    if (random < 0.5) {
@@ -228,7 +228,7 @@ std::shared_ptr<Country> randomCountry(std::vector<std::shared_ptr<RawProduct>> 
          unsigned chosen_index = Random::randomInt(0, products.size() - 1);
          auto tmp = products[chosen_index];
          products.erase(products.begin() + chosen_index);
-         consumption_list.emplace_back(tmp, Random::randomInt(1, 1000));
+         consumption_list.emplace_back(tmp, Random::randomInt(1, 100));
       }
 
       if (random < 0.25) {
@@ -246,7 +246,7 @@ std::shared_ptr<Country> randomCountry(std::vector<std::shared_ptr<RawProduct>> 
    } else {
       std::vector<unsigned> consumption_volumes_list;
       for(unsigned i = 0; i < production_list.size(); i++) {
-         consumption_volumes_list.emplace_back(Random::randomInt(1, 1000));
+         consumption_volumes_list.emplace_back(Random::randomInt(1, 100));
       }
 
       if (random < 0.75) {

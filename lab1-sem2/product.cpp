@@ -58,7 +58,7 @@ std::shared_ptr<RawProduct> randomProduct(std::vector<std::shared_ptr<RawProduct
          unsigned chosen_index = Random::randomInt(0, products.size() - 1);
          auto tmp = products[chosen_index];
          products.erase(products.begin() + chosen_index);
-         raw_list.emplace_back(tmp, Random::randomInt(1, 100));
+         raw_list.emplace_back(tmp, Random::randomInt(1, 15));
       }
 
       static unsigned final_created = 1;

@@ -13,9 +13,9 @@ class ProductIE {
 private:
    std::shared_ptr<RawProduct> _product;
 
-   int _import;
+   uint64_t _import;
 
-   int _export;
+   uint64_t _export;
 
    std::vector<std::shared_ptr<Country>> _importing_countries_list;
 
