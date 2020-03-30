@@ -1,7 +1,7 @@
 #include "catch.hpp"
-#include "../product.h"
 #include "../product_ie.h"
 #include "../country.h"
+#include "../simulation.h"
 
 #include <memory>
 #include <vector>
@@ -44,7 +44,7 @@ TEST_CASE("sting countries' policy", "[Policy test]"){
      */
 
     SECTION("policy type - 1") {
-        SECTION("simple") {
+        SECTION("single country") {
             CountryIEPolicy1 country("TestCountry 1", {{wood, 3}, {sand, 5}, {stick, 6}, {torch, 7}}, {{stick, 3}, {torch, 6}, {fishing_rod, 2}});
 
             country.simulation(productsIE, 0);
@@ -70,7 +70,7 @@ TEST_CASE("sting countries' policy", "[Policy test]"){
             REQUIRE(productsIE[12].balance() == -2);
         }
 
-        SECTION("normal") {
+        SECTION("a couple of countries") {
             CountryIEPolicy1 country_1("TestCountry 1", {{wood, 3}, {coal, 4}, {stick, 10}, {shovel, 5}, {string, 7}}, {{wool, 10}, {bed, 12}, {glass, 5}});
             CountryIEPolicy1 country_2("TestCountry 2", {{iron, 10}, {sand, 6}, {chest, 4}}, {{wood, 9}, {iron, 4}, {chest, 3}, {bed, 10}, {shovel, 4}, {torch, 3}, {string, 10}, {fishing_rod, 7}});
             CountryIEPolicy1 country_3("TestCountry 3", {{coal, 4}, {stick, 2}, {torch, 15}, {glass, 11}}, {{sand, 15}, {coal, 12}, {chest, 8}, {torch, 13}, {string, 1}, {fishing_rod, 4}});
@@ -121,10 +121,62 @@ TEST_CASE("sting countries' policy", "[Policy test]"){
             REQUIRE(productsIE[9].balance() == 0);
             REQUIRE(productsIE[10].balance() == 23);
             REQUIRE(productsIE[11].balance() == -2);
-            REQUIRE(productsIE[12].balance() == -6 );
+            REQUIRE(productsIE[12].balance() == -6);
         }
 
-        SECTION("complicated") {
+        SECTION("several years") {
+            std::shared_ptr<CountryIEPolicy1> country_1 = std::make_shared<CountryIEPolicy1>(CountryIEPolicy1("TestCountry 1", {{wool, 10}, {sand, 4}, {chest, 7}, {bed, 9}, {string, 15}}, {{wood, 10}, {wool, 4}, {stick, 11}, {glass, 8}, {torch, 2}, {fishing_rod, 2}, {string, 4}}));
+            std::shared_ptr<CountryIEPolicy1> country_2 = std::make_shared<CountryIEPolicy1>(CountryIEPolicy1("TestCountry 2", {{iron, 20}, {coal, 10}, {shovel, 4}, {glass, 3}, {torch, 17}, {string, 3}}, {{sand, 8}, {chest, 11}, {stick, 13}}));
+            std::shared_ptr<CountryIEPolicy1> country_3 = std::make_shared<CountryIEPolicy1>(CountryIEPolicy1("TestCountry 3", {}, {{wood, 21}, {stick, 8}, {shovel, 3}, {torch, 13}, {string, 9}, {fishing_rod, 4}}));
+            std::shared_ptr<CountryIEPolicy1> country_4 = std::make_shared<CountryIEPolicy1>(CountryIEPolicy1("TestCountry 4", {{wood, 40}, {fishing_rod, 10}}, {{wool, 6}, {sand, 12}, {bed, 17}, {torch, 3}, {coal, 11}, {string, 6}, {glass, 3}, {stick, 2}, {fishing_rod, 1}}));
+
+            Simulation simulation(2000, 3, products, {country_1, country_2, country_3, country_4}, 0);
+
+            //real production and consumption volumes are equal to average value because random_precision = 0;
+            for(auto& year: simulation.getData()) {
+                REQUIRE(year[0].getExport() == 40);
+                REQUIRE(year[1].getExport() == 10);
+                REQUIRE(year[2].getExport() == 20);
+                REQUIRE(year[3].getExport() == 4);
+                REQUIRE(year[4].getExport() == 10);
+                REQUIRE(year[5].getExport() == 7);
+                REQUIRE(year[6].getExport() == 0);
+                REQUIRE(year[7].getExport() == 9);
+                REQUIRE(year[8].getExport() == 4);
+                REQUIRE(year[9].getExport() == 17);
+                REQUIRE(year[10].getExport() == 3);
+                REQUIRE(year[11].getExport() == 18);
+                REQUIRE(year[12].getExport() == 10);
+
+                REQUIRE(year[0].getImport() == 31);
+                REQUIRE(year[1].getImport() == 10);
+                REQUIRE(year[2].getImport() == 0);
+                REQUIRE(year[3].getImport() == 20);
+                REQUIRE(year[4].getImport() == 11);
+                REQUIRE(year[5].getImport() == 11);
+                REQUIRE(year[6].getImport() == 34);
+                REQUIRE(year[7].getImport() == 17);
+                REQUIRE(year[8].getImport() == 3);
+                REQUIRE(year[9].getImport() == 18);
+                REQUIRE(year[10].getImport() == 11);
+                REQUIRE(year[11].getImport() == 19);
+                REQUIRE(year[12].getImport() == 7);
+
+                REQUIRE(year[0].balance() == 9);
+                REQUIRE(year[1].balance() == 0);
+                REQUIRE(year[2].balance() == 20);
+                REQUIRE(year[3].balance() == -16);
+                REQUIRE(year[4].balance() == -1);
+                REQUIRE(year[5].balance() == -4);
+                REQUIRE(year[6].balance() == -34);
+                REQUIRE(year[7].balance() == -8);
+                REQUIRE(year[8].balance() == 1);
+                REQUIRE(year[9].balance() == -1);
+                REQUIRE(year[10].balance() == -8);
+                REQUIRE(year[11].balance() == -1);
+                REQUIRE(year[12].balance() == 3);
+            }
+
 
         }
     }
