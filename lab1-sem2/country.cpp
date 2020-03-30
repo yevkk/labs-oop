@@ -89,12 +89,48 @@ void CountryIEPolicy2::simulation(std::vector<ProductIE>& products, double rando
       produced_amount[i] = Random::randomDouble(production_list[i].second * (1 - random_precision),
                                                 production_list[i].second * (1 + random_precision));
 
-   for (unsigned i = 0; i < consumpted_amount.size(); i++)
-      consumpted_amount[i] = Random::randomDouble(consumption_list[i].second * (1 - random_precision),
-                                                  consumption_list[i].second * (1 + random_precision));
+   for (unsigned i = 0; i < consumpted_amount.size(); i++) {
+       consumpted_amount[i] = Random::randomDouble(consumption_list[i].second * (1 - random_precision),
+                                                   consumption_list[i].second * (1 + random_precision));
+   }
 
+   for (unsigned i = 0; i < production_list.size(); i++) {
+       for (unsigned j = 0; j < consumption_list.size(); j++) {
+           if (consumption_list[j].first == production_list[i].first) {
+               if (consumpted_amount[j] >= produced_amount[i]) {
+                   consumpted_amount[j] -= produced_amount[i];
+                   produced_amount[i] = 0;
+               } else {
+                   produced_amount[i] -= consumpted_amount[j];
+                   consumpted_amount[j] = 0;
+               }
+           }
+       }
+   }
 
    for (unsigned j = 0; j < consumption_list.size(); j++) {
+      if(consumption_list[j].first->getRawList().empty()) {
+          auto product = consumption_list[j];
+          bool flag = true;
+
+          for(unsigned i = 0; i < production_list.size(); i++) {
+             if (product.first == production_list[i].first) {
+                produced_amount[i] -= consumpted_amount[j];
+                flag = false;
+                break;
+             }
+          }
+
+          if (flag) {
+             for (unsigned i = 0; i < products.size(); i++) {
+                if (product.first == products[i].getProduct()) {
+                   products[i].incImport(consumpted_amount[j]);
+                   break;
+                }
+             }
+          }
+      }
+
       for (auto &product:consumption_list[j].first->getRawList()) {
          if (!product.first->getRawList().empty()) continue;
 
