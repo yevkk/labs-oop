@@ -2,7 +2,7 @@
 
 Simulation::Simulation(unsigned starting_year, int years_count,
            const std::vector<std::shared_ptr<RawProduct>>& products,
-           const std::vector<std::shared_ptr<Country>>& countries) :
+           const std::vector<std::shared_ptr<Country>>& countries, double random_precision) :
    _starting_year(starting_year) {
 
    std::vector<ProductIE> basic_vector;
@@ -13,7 +13,7 @@ Simulation::Simulation(unsigned starting_year, int years_count,
       std::vector<ProductIE> current_year = basic_vector;
 
       for (auto &country:countries){
-        country->simulation(current_year);
+        country->simulation(current_year, random_precision);
       }
 
       _data.push_back(current_year);

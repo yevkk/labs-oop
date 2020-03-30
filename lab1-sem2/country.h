@@ -7,8 +7,6 @@
 #include <string>
 #include <vector>
 
-constexpr double RANDOM_PRECISION = 0.3;
-
 class ProductIE;
 
 // first - a pointer to raw product; second - amount of average production per year;
@@ -34,7 +32,7 @@ public:
 
    void setProductionList(const ProductionList& production_list);
 
-   virtual void simulation(std::vector<ProductIE>& products, double random_precision = RANDOM_PRECISION) = 0; //some actions according to export/import policy;
+   virtual void simulation(std::vector<ProductIE>& products, double random_precision) = 0; //some actions according to export/import policy;
 };
 
 //EXPORT: all products from production list;
@@ -49,7 +47,7 @@ public:
 
    ConsumptionList getConsumptionList();
 
-   void simulation(std::vector<ProductIE>& products, double random_precision = RANDOM_PRECISION) override;
+   void simulation(std::vector<ProductIE>& products, double random_precision) override;
 };
 
 //EXPORT: extra products from production list;
@@ -64,7 +62,7 @@ public:
 
    ConsumptionList getConsumptionList();
 
-   void simulation(std::vector<ProductIE>& products, double random_precision = RANDOM_PRECISION) override;
+   void simulation(std::vector<ProductIE>& products, double random_precision) override;
 };
 
 //production list ~ consumption list (traditional products for this country);
@@ -80,7 +78,7 @@ public:
 
    void setComsumptionVolumesList(const std::vector<unsigned>& new_list);
 
-   void simulation(std::vector<ProductIE>& products, double random_precision = RANDOM_PRECISION) override;
+   void simulation(std::vector<ProductIE>& products, double random_precision) override;
 };
 
 std::shared_ptr<Country> randomCountry(std::vector<std::shared_ptr<RawProduct>> products);
