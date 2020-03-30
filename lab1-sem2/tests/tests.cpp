@@ -182,7 +182,88 @@ TEST_CASE("sting countries' policy", "[Policy test]"){
     }
 
     SECTION("policy type - 2") {
+        SECTION("single country") {
+            CountryIEPolicy2 country("TestCountry 1", {{wood, 20}, {iron, 10}, {chest, 5}, {bed, 8}, {string, 3}, {fishing_rod, 1}}, {{sand, 5}, {stick, 15}, {shovel, 1}, {string, 1}});
 
+            country.simulation(productsIE, 0);
+
+            REQUIRE(productsIE[0].getExport() == 0);
+            REQUIRE(productsIE[1].getExport() == 0);
+            REQUIRE(productsIE[2].getExport() == 9);
+            REQUIRE(productsIE[3].getExport() == 0);
+            REQUIRE(productsIE[4].getExport() == 0);
+
+            REQUIRE(productsIE[0].getImport() == 10);
+            REQUIRE(productsIE[1].getImport() == 0);
+            REQUIRE(productsIE[2].getImport() == 0);
+            REQUIRE(productsIE[3].getImport() == 5);
+            REQUIRE(productsIE[4].getImport() == 0);
+
+            REQUIRE(productsIE[0].balance() == -10);
+            REQUIRE(productsIE[1].balance() == 0);
+            REQUIRE(productsIE[2].balance() == 9);
+            REQUIRE(productsIE[3].balance() == -5);
+            REQUIRE(productsIE[4].balance() == 0);
+        }
+
+        SECTION("a couple of countries") {
+            CountryIEPolicy2 country_1("TestCountry 1", {{wood, 10}, {iron, 7}, {chest, 9}, {bed, 11}, {glass, 3}, {string, 5}}, {{iron, 4}, {sand, 3}, {chest, 10}, {shovel, 8}, {string ,7}});
+            CountryIEPolicy2 country_2("TestCountry 2", {{wool, 7}, {sand, 8}, {chest, 3}, {glass, 3}}, {{iron, 4}, {bed, 2}, {glass, 4}, {fishing_rod, 1}});
+            CountryIEPolicy2 country_3("TestCountry 3", {{wool, 6}, {coal, 3}, {torch, 18}}, {{stick, 10}, {shovel, 5}, {torch, 11}, {string, 3}});
+            CountryIEPolicy2 country_4("TestCountry 1", {{wood, 20}, {iron, 10}, {chest, 5}, {bed, 8}, {string, 3}, {fishing_rod, 1}}, {{sand, 5}, {stick, 15}, {shovel, 1}, {string, 1}});
+
+            country_1.simulation(productsIE, 0);
+            country_2.simulation(productsIE, 0);
+            country_3.simulation(productsIE, 0);
+            country_4.simulation(productsIE, 0);
+
+            REQUIRE(productsIE[0].getExport() == 2);
+            REQUIRE(productsIE[1].getExport() == 4);
+            REQUIRE(productsIE[2].getExport() == 9);
+            REQUIRE(productsIE[3].getExport() == 5);
+            REQUIRE(productsIE[4].getExport() == 3);
+
+            REQUIRE(productsIE[0].getImport() == 36);
+            REQUIRE(productsIE[1].getImport() == 2);
+            REQUIRE(productsIE[2].getImport() == 14);
+            REQUIRE(productsIE[3].getImport() == 8);
+            REQUIRE(productsIE[4].getImport() == 0);
+
+            REQUIRE(productsIE[0].balance() == -34);
+            REQUIRE(productsIE[1].balance() == 2);
+            REQUIRE(productsIE[2].balance() == -5);
+            REQUIRE(productsIE[3].balance() == -3);
+            REQUIRE(productsIE[4].balance() == 3);
+        }
+
+        SECTION("several years") {
+            std::shared_ptr<CountryIEPolicy2> country_1 = std::make_shared<CountryIEPolicy2>(CountryIEPolicy2("TestCountry 2", {{wool, 7}, {sand, 8}, {chest, 3}, {glass, 3}}, {{iron, 4}, {bed, 2}, {glass, 4}, {fishing_rod, 1}}));
+            std::shared_ptr<CountryIEPolicy2> country_2 = std::make_shared<CountryIEPolicy2>(CountryIEPolicy2("TestCountry 3", {{wool, 6}, {coal, 3}, {torch, 18}}, {{stick, 10}, {shovel, 5}, {torch, 11}, {string, 3}}));
+            std::shared_ptr<CountryIEPolicy2> country_3 = std::make_shared<CountryIEPolicy2>(CountryIEPolicy2("TestCountry 1", {{wood, 20}, {iron, 10}, {chest, 5}, {bed, 8}, {string, 3}, {fishing_rod, 1}}, {{sand, 5}, {stick, 15}, {shovel, 1}, {string, 1}}));
+
+            Simulation simulation(2000, 4, products, {country_1, country_2, country_3}, 0);
+
+            //real production and consumption volumes are equal to average value because random_precision = 0;
+            for (auto& year : simulation.getData()) {
+                REQUIRE(year[0].getExport() == 0);
+                REQUIRE(year[1].getExport() == 4);
+                REQUIRE(year[2].getExport() == 9);
+                REQUIRE(year[3].getExport() == 5);
+                REQUIRE(year[4].getExport() == 3);
+
+                REQUIRE(year[0].getImport() == 36);
+                REQUIRE(year[1].getImport() == 0);
+                REQUIRE(year[2].getImport() == 9);
+                REQUIRE(year[3].getImport() == 5);
+                REQUIRE(year[4].getImport() == 0);
+
+                REQUIRE(year[0].balance() == -36);
+                REQUIRE(year[1].balance() == 4);
+                REQUIRE(year[2].balance() == 0);
+                REQUIRE(year[3].balance() == 0);
+                REQUIRE(year[4].balance() == 3);
+            }
+        }
     }
 
     SECTION("policy type - 3") {
