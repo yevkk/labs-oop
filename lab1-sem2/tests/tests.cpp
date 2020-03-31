@@ -186,13 +186,29 @@ TEST_CASE("sting countries' policy", "[Policy test]"){
             for (auto& year : simulation.getData()) {
                 checkExport(year, {0, 3, 8, 0, 12, 0, 0, 0, 5, 6, 3, 1, 2});
                 checkImport(year , {22, 5, 1, 4, 11, 0, 45, 0, 3, 0, 0, 18, 1});
-                checkBalance(year, {-22, -2, 7, -4, 1, 0, -45, 0, 2, 6, 3, -17, 1});
+                checkBalance(year  , {-22, -2, 7, -4, 1, 0, -45, 0, 2, 6, 3, -17, 1});
             }
 
         }
     }
 
     SECTION("all types") {
+        CountryIEPolicy1 country_1{"TestCountry 1", {{wood, 3}, {coal, 4}, {stick, 10}, {shovel, 5}, {string, 7}}, {{wool, 10}, {bed, 12}, {glass, 5}}};
+        CountryIEPolicy1 country_2{"TestCountry 2", {{iron, 10}, {sand, 6}, {chest, 4}}, {{wood, 9}, {iron, 4}, {chest, 3}, {bed, 10}, {shovel, 4}, {torch, 3}, {string, 10}, {fishing_rod, 7}}};
+        CountryIEPolicy2 country_3{"TestCountry 3", {{wool, 7}, {sand, 8}, {chest, 3}, {glass, 3}}, {{iron, 4}, {bed, 2}, {glass, 4}, {fishing_rod, 1}}};
+        CountryIEPolicy2 country_4{"TestCountry 4", {{wool, 6}, {coal, 3}, {torch, 18}}, {{stick, 10}, {shovel, 5}, {torch, 11}, {string, 3}}};
+        CountryIEPolicy3 country_5{"TestCountry 5", {{iron, 10}, {coal, 15}, {stick, 7}, {shovel, 4}, {torch, 6}, {fishing_rod, 2}}, {5, 20, 4, 0, 0, 3}};
+        CountryIEPolicy3 country_6{"TestCountry 6", {{iron, 10}, {coal, 12}, {stick, 4}, {shovel, 3}, {string, 5}, {fishing_rod, 1}}, {0, 0, 0, 2, 2, 1}};
 
+        country_1.simulation(productsIE, 0);
+        country_2.simulation(productsIE, 0);
+        country_3.simulation(productsIE, 0);
+        country_4.simulation(productsIE, 0);
+        country_5.simulation(productsIE, 0);
+        country_6.simulation(productsIE, 0);
+
+        checkExport(productsIE, {3, 4, 18, 11, 19, 4, 10, 0, 10, 6, 0, 8, 0});
+        checkImport(productsIE, {57, 15, 13, 0, 11, 3, 22, 22, 4, 3, 5, 14, 8});
+        checkBalance(productsIE, {-54, -11, 5, 11, 8, 1, -12, -22, 6, 3, -5, -6, -8});
     }
 }
