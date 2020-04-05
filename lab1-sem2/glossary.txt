@@ -1,0 +1,17 @@
+Product
+	raw
+	final - is produced by using raw
+Raw list
+Import
+Export
+Balance - subtraction of export and import
+Country
+Production list - list of products, that are produced in particular country
+Consumption list - list of products, that are consumpted in particular country
+Consumption volumes
+Production volumes
+Importing countries
+Exporting countries
+Policy
+Simulation
+Year
