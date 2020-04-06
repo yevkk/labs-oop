@@ -47,14 +47,28 @@ public:
 };
 
 /**
+ * @brief interface for countries with consumption list
+ */
+class HasConsumptionList {
+protected:
+    ConsumptionList _consumption_list;
+
+public:
+    /**
+     * @param consumption_list : a list of products consumpted by this country
+     */
+    HasConsumptionList(const ConsumptionList& consumption_list);
+
+    ConsumptionList getConsumptionList() const;
+};
+
+/**
  * @brief Country with policy type 1
  * @note EXPORT: all products from production list
    @note IMPORT: all products from consumption list
  */
-class CountryIEPolicy1 : public Country {
+class CountryIEPolicy1 : public Country, public HasConsumptionList {
 private:
-      ConsumptionList _consumption_list;
-
 public:
    /**
     * @param name
@@ -63,8 +77,6 @@ public:
     */
    CountryIEPolicy1(const std::string& name, const ProductionList& production_list = ProductionList(),
                     const ConsumptionList& consumption_list = ConsumptionList());
-
-   ConsumptionList getConsumptionList() const;
 
    /**
     * @param products : a list of available products
@@ -78,10 +90,8 @@ public:
  * @note EXPORT: extra raw products from production list
    @note IMPORT: raw products for production products from consumption list and products from consumption list, that were not produced
  */
-class CountryIEPolicy2 : public Country {
+class CountryIEPolicy2 : public Country, public HasConsumptionList {
 private:
-   ConsumptionList _consumption_list;
-
 public:
    /**
     * @param name
@@ -90,8 +100,6 @@ public:
     */
    CountryIEPolicy2(const std::string& name, const ProductionList& production_list = ProductionList(),
                     const ConsumptionList& consumption_list = ConsumptionList());
-
-   ConsumptionList getConsumptionList() const;
 
    /**
     * @param products : a list of available products

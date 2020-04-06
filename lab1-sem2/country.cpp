@@ -27,15 +27,20 @@ void Country::setProductionList(const ProductionList &production_list)
 
 //======================================================
 
+HasConsumptionList::HasConsumptionList(const ConsumptionList& consumption_list) :
+    _consumption_list(consumption_list) {};
+
+ConsumptionList HasConsumptionList::getConsumptionList() const{
+    return _consumption_list;
+}
+
+//======================================================
+
 CountryIEPolicy1::CountryIEPolicy1(const std::string &name, const ProductionList &production_list,
                                    const ConsumptionList &consumption_list) :
    Country(name, production_list),
-   _consumption_list(consumption_list) {
+   HasConsumptionList(consumption_list) {
 
-}
-
-ConsumptionList CountryIEPolicy1::getConsumptionList() const {
-   return _consumption_list;
 }
 
 void CountryIEPolicy1::simulation(std::vector<ProductIE>& products, double random_precision) const {
@@ -70,12 +75,8 @@ void CountryIEPolicy1::simulation(std::vector<ProductIE>& products, double rando
 CountryIEPolicy2::CountryIEPolicy2(const std::string &name, const ProductionList &production_list,
                                    const ConsumptionList &consumption_list) :
    Country(name, production_list),
-   _consumption_list(consumption_list) {
+   HasConsumptionList(consumption_list) {
 
-}
-
-ConsumptionList CountryIEPolicy2::getConsumptionList() const {
-   return _consumption_list;
 }
 
 void CountryIEPolicy2::simulation(std::vector<ProductIE>& products, double random_precision) const {
