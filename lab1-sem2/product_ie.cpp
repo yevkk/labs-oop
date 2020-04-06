@@ -49,10 +49,10 @@ void ProductIE::resetIE() {
    _export = _import = 0;
 }
 
-std::vector<std::shared_ptr<Country> > ProductIE::getImportingCountriesList() {
-   return _importing_countries_list;
+std::vector<std::shared_ptr<Country> > ProductIE::getImpCountries() {
+   return _imp_countries;
 }
 
-std::vector<std::shared_ptr<Country> > ProductIE::getExportingCountriesList() {
-   return _exporting_countries_list;
+std::vector<std::shared_ptr<Country> > ProductIE::getExpCountries() {
+   return _exp_countries;
 }

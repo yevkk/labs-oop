@@ -61,6 +61,9 @@ TEST_CASE("sting countries' policy", "[Policy test]"){
      * 12 - Fishing rod
      */
 
+    /**
+     * @test testing policy type 1
+     */
     SECTION("policy type - 1") {
         SECTION("single country") {
             CountryIEPolicy1 country{"TestCountry 1", {{wood, 3}, {sand, 5}, {stick, 6}, {torch, 7}}, {{stick, 3}, {torch, 6}, {fishing_rod, 2}}};
@@ -107,6 +110,9 @@ TEST_CASE("sting countries' policy", "[Policy test]"){
         }
     }
 
+    /**
+     * @test testing policy type 2
+     */
     SECTION("policy type - 2") {
         SECTION("single country") {
             CountryIEPolicy2 country{"TestCountry 1", {{wood, 20}, {iron, 10}, {chest, 5}, {bed, 8}, {string, 3}, {fishing_rod, 1}}, {{sand, 5}, {stick, 15}, {shovel, 1}, {string, 1}}};
@@ -150,6 +156,9 @@ TEST_CASE("sting countries' policy", "[Policy test]"){
         }
     }
 
+    /**
+     * @test testing policy type 3
+     */
     SECTION("policy type - 3") {
         SECTION("single country") {
             CountryIEPolicy3 country{"TestCountry 1", {{wool, 3}, {sand, 10}, {shovel, 1}, {glass, 3}, {fishing_rod, 7}}, {0, 5, 4, 0, 5}};

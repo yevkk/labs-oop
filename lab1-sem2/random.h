@@ -7,6 +7,11 @@
 
 class Random {
 public:
+    /**
+    * @param min : lower bound
+    * @param max : upper bound
+    * @return random int value
+    */
    static int randomInt(int min, int max) {
       static std::random_device rd;
       static std::seed_seq seed{rd(), static_cast<unsigned int>(time(nullptr))};
@@ -16,6 +21,11 @@ public:
       return dist(gen);
    }
 
+   /**
+   * @param min : lower bound
+   * @param max : upper bound
+   * @return random double value
+   */
    static double randomDouble(double min, double max) {
       static std::random_device rd;
       static std::seed_seq seed{rd(), static_cast<unsigned int>(time(nullptr))};
@@ -25,6 +35,11 @@ public:
       return dist(gen);
    }
 
+   /**
+    * @param : length A length of string
+    * @param : alphabet A set of characters that can be used in string
+    * @return A random string
+    */
    static std::string randomString(int length, const std::string& alphabet = "abcdefghijklmnopqrstuvwxyz") {
       std::string  res = "";
 

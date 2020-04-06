@@ -8,9 +8,15 @@
 
 constexpr double RANDOM_PRECISION = 0.3;
 
+/**
+ * @brief A class that stores data generated during simulation
+ */
 class Simulation {
 private:
-   std::vector<std::vector<ProductIE>> _data; //each vector element represents a set of products data in some year
+    /**
+     * @note Each element represents a year of simulation
+     */
+   std::vector<std::vector<ProductIE>> _data;
 
    unsigned _starting_year;
 

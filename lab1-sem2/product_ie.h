@@ -9,6 +9,9 @@
 
 class Country;
 
+/**
+ * @brief Corresponds to some RawProduct object, represent its import/export usage
+ */
 class ProductIE {
 private:
    std::shared_ptr<RawProduct> _product;
@@ -17,9 +20,15 @@ private:
 
    uint64_t _export;
 
-   std::vector<std::shared_ptr<Country>> _importing_countries_list;
+   /**
+    * @brief A list of countries that import product
+    */
+   std::vector<std::shared_ptr<Country>> _imp_countries;
 
-   std::vector<std::shared_ptr<Country>> _exporting_countries_list;
+   /**
+    * @brief A list of countries that export product
+    */
+   std::vector<std::shared_ptr<Country>> _exp_countries;
 
 public:
    ProductIE();
@@ -40,13 +49,20 @@ public:
 
    int getExport();
 
+   /**
+    * @return A balance of product
+    * @note balance of product is a difference between its export and import values
+    */
    int balance();
 
+   /**
+    * @brief Sets all values to 0
+    */
    void resetIE();
 
-   std::vector<std::shared_ptr<Country>> getImportingCountriesList();
+   std::vector<std::shared_ptr<Country>> getImpCountries();
 
-   std::vector<std::shared_ptr<Country>> getExportingCountriesList();
+   std::vector<std::shared_ptr<Country>> getExpCountries();
 };
 
 #endif // PRODUCT_IE_H
