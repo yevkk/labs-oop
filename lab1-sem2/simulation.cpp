@@ -13,7 +13,7 @@ Simulation::Simulation(unsigned starting_year, int years_count,
       std::vector<ProductIE> current_year = basic_vector;
 
       for (auto &country:countries){
-        country->simulation(current_year, random_precision);
+          country->simulation(current_year, random_precision);
       }
 
       _data.push_back(current_year);
