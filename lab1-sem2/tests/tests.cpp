@@ -6,19 +6,19 @@
 #include <memory>
 #include <vector>
 
-void checkExport(std::vector<ProductIE> products, const std::vector<unsigned>& values) {
+void checkExport(const std::vector<ProductIE>& products, const std::vector<unsigned>& values) {
     for (unsigned i = 0; i < values.size(); i++) {
         REQUIRE(products[i].getExport() == values[i]);
     }
 }
 
-void checkImport(std::vector<ProductIE> products, const std::vector<unsigned>& values) {
+void checkImport(const std::vector<ProductIE>& products, const std::vector<unsigned>& values) {
     for (unsigned i = 0; i < values.size(); i++) {
         REQUIRE(products[i].getImport() == values[i]);
     }
 }
 
-void checkBalance(std::vector<ProductIE> products, const std::vector<int>& values) {
+void checkBalance(const std::vector<ProductIE>& products, const std::vector<int>& values) {
     for (unsigned i = 0; i < values.size(); i++) {
         REQUIRE(products[i].balance() == values[i]);
     }

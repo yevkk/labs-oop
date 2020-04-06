@@ -35,25 +35,25 @@ public:
 
    ProductIE(std::shared_ptr<RawProduct> product);
 
-   std::shared_ptr<RawProduct> getProduct();
+   std::shared_ptr<RawProduct> getProduct() const;
 
    void setImport(int value);
 
    void incImport(int value);
 
-   int getImport();
+   int getImport() const;
 
    void setExport(int value);
 
    void incExport(int value);
 
-   int getExport();
+   int getExport() const;
 
    /**
     * @return A balance of product
     * @note balance of product is a difference between its export and import values
     */
-   int balance();
+   int balance() const;
 
    /**
     * @brief Sets all values to 0

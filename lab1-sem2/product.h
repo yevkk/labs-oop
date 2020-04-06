@@ -26,15 +26,15 @@ public:
 
    RawProduct(const std::string& name);
 
-   std::string getName();
+   std::string getName() const;
 
-   virtual RawListVector getRawList();
+   virtual RawListVector getRawList() const;
 
    /**
     * @param product : an object to check
     * @return true if product is used to produce this
     */
-   virtual bool isUsed(std::shared_ptr<RawProduct> product); // returns true if product is used to produce this
+   virtual bool isUsed(std::shared_ptr<RawProduct> product) const; // returns true if product is used to produce this
 };
 
 /**
@@ -55,13 +55,13 @@ public:
     */
    FinalProduct(const std::string& name, const RawListVector& raw_list);
 
-   RawListVector getRawList() override;
+   RawListVector getRawList() const override;
 
    /**
     * @param product : an object to check
     * @return true if product is used to produce this
     */
-   bool isUsed(std::shared_ptr<RawProduct> product) override;
+   bool isUsed(std::shared_ptr<RawProduct> product) const override;
 };
 
 

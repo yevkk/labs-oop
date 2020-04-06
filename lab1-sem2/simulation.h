@@ -25,9 +25,9 @@ public:
               const std::vector<std::shared_ptr<RawProduct>>& products,
               const std::vector<std::shared_ptr<Country>>& countries, double random_precision = RANDOM_PRECISION);
 
-   unsigned getStartingYear();
+   unsigned getStartingYear() const;
 
-   std::vector<std::vector<ProductIE>> getData();
+   std::vector<std::vector<ProductIE>> getData() const;
 };
 
 #endif // SIMULATION_H

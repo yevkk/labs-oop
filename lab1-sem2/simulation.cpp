@@ -20,10 +20,10 @@ Simulation::Simulation(unsigned starting_year, int years_count,
    }
 }
 
-unsigned Simulation::getStartingYear() {
+unsigned Simulation::getStartingYear() const {
    return _starting_year;
 }
 
-std::vector<std::vector<ProductIE>> Simulation::getData() {
+std::vector<std::vector<ProductIE>> Simulation::getData() const {
    return _data;
 }

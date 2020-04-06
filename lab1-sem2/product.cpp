@@ -10,16 +10,15 @@ RawProduct::RawProduct(const std::string& name): _name(name)
 
 }
 
-std::string RawProduct::getName()
-{
+std::string RawProduct::getName() const {
     return _name;
 }
 
-RawListVector RawProduct::getRawList() {
+RawListVector RawProduct::getRawList() const {
    return RawListVector();
 }
 
-bool RawProduct::isUsed(std::shared_ptr<RawProduct> product) {
+bool RawProduct::isUsed(std::shared_ptr<RawProduct> product) const {
    return (this == product.get()) ? true : false;
 }
 
@@ -29,11 +28,11 @@ FinalProduct::FinalProduct(const std::string& name, const RawListVector& raw_lis
 
 }
 
-RawListVector FinalProduct::getRawList() {
+RawListVector FinalProduct::getRawList() const {
    return _raw_list;
 }
 
-bool FinalProduct::isUsed(std::shared_ptr<RawProduct> product) {
+bool FinalProduct::isUsed(std::shared_ptr<RawProduct> product) const {
    if (this == product.get()) return true;
 
    for (auto &e:_raw_list)

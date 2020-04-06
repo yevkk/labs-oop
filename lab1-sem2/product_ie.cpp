@@ -13,7 +13,7 @@ ProductIE::ProductIE(std::shared_ptr<RawProduct> product) :
 
 }
 
-std::shared_ptr<RawProduct> ProductIE::getProduct() {
+std::shared_ptr<RawProduct> ProductIE::getProduct() const {
    return _product;
 }
 
@@ -25,7 +25,7 @@ void ProductIE::incImport(int value) {
    _import += value;
 }
 
-int ProductIE::getImport() {
+int ProductIE::getImport() const {
    return _import;
 }
 
@@ -37,11 +37,11 @@ void ProductIE::incExport(int value) {
    _export += value;
 }
 
-int ProductIE::getExport() {
+int ProductIE::getExport() const {
    return _export;
 }
 
-int ProductIE::balance() {
+int ProductIE::balance() const {
    return _export - _import;
 }
 

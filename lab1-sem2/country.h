@@ -33,9 +33,9 @@ public:
     */
    Country(const std::string& name, const ProductionList& production_list = ProductionList());
 
-   std::string getName();
+   std::string getName() const;
 
-   ProductionList getProductionList();
+   ProductionList getProductionList() const;
 
    void setProductionList(const ProductionList& production_list);
 
@@ -43,7 +43,7 @@ public:
     * @param products : a list of available products
     * @param random_precision : a precision for setting a real production/consumption values based on average
     */
-   virtual void simulation(std::vector<ProductIE>& products, double random_precision) = 0; //some actions according to export/import policy;
+   virtual void simulation(std::vector<ProductIE>& products, double random_precision) const = 0; //some actions according to export/import policy;
 };
 
 /**
@@ -64,13 +64,13 @@ public:
    CountryIEPolicy1(const std::string& name, const ProductionList& production_list = ProductionList(),
                     const ConsumptionList& consumption_list = ConsumptionList());
 
-   ConsumptionList getConsumptionList();
+   ConsumptionList getConsumptionList() const;
 
    /**
     * @param products : a list of available products
     * @param random_precision : a precision for setting a real production/consumption values based on average
     */
-   void simulation(std::vector<ProductIE>& products, double random_precision) override;
+   void simulation(std::vector<ProductIE>& products, double random_precision) const override;
 };
 
 /**
@@ -91,13 +91,13 @@ public:
    CountryIEPolicy2(const std::string& name, const ProductionList& production_list = ProductionList(),
                     const ConsumptionList& consumption_list = ConsumptionList());
 
-   ConsumptionList getConsumptionList();
+   ConsumptionList getConsumptionList() const;
 
    /**
     * @param products : a list of available products
     * @param random_precision : a precision for setting a real production/consumption values based on average
     */
-   void simulation(std::vector<ProductIE>& products, double random_precision) override;
+   void simulation(std::vector<ProductIE>& products, double random_precision) const override;
 };
 
 //;
@@ -128,7 +128,7 @@ public:
     * @param products : a list of available products
     * @param random_precision : a precision for setting a real production/consumption values based on average
     */
-   void simulation(std::vector<ProductIE>& products, double random_precision) override;
+   void simulation(std::vector<ProductIE>& products, double random_precision) const override;
 };
 
 std::shared_ptr<Country> randomCountry(std::vector<std::shared_ptr<RawProduct>> products);

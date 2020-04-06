@@ -12,11 +12,11 @@ Country::Country(const std::string& name, const ProductionList& production_list)
 
 }
 
-std::string Country::getName() {
+std::string Country::getName() const {
    return _name;
 }
 
-ProductionList Country::getProductionList() {
+ProductionList Country::getProductionList() const {
    return _production_list;
 }
 
@@ -34,11 +34,11 @@ CountryIEPolicy1::CountryIEPolicy1(const std::string &name, const ProductionList
 
 }
 
-ConsumptionList CountryIEPolicy1::getConsumptionList() {
+ConsumptionList CountryIEPolicy1::getConsumptionList() const {
    return _consumption_list;
 }
 
-void CountryIEPolicy1::simulation(std::vector<ProductIE>& products, double random_precision) {
+void CountryIEPolicy1::simulation(std::vector<ProductIE>& products, double random_precision) const {
    //EXPORT: all products from production list;
    //IMPORT: all products from consumption list;
 
@@ -74,11 +74,11 @@ CountryIEPolicy2::CountryIEPolicy2(const std::string &name, const ProductionList
 
 }
 
-ConsumptionList CountryIEPolicy2::getConsumptionList() {
+ConsumptionList CountryIEPolicy2::getConsumptionList() const {
    return _consumption_list;
 }
 
-void CountryIEPolicy2::simulation(std::vector<ProductIE>& products, double random_precision) {
+void CountryIEPolicy2::simulation(std::vector<ProductIE>& products, double random_precision) const {
    auto production_list = getProductionList();
    auto consumption_list = getConsumptionList();
 
@@ -184,7 +184,7 @@ void CountryIEPolicy3::setComsumptionVolumesList(const std::vector<unsigned> &ne
    _consumption_volumes_list = new_list;
 }
 
-void CountryIEPolicy3::simulation(std::vector<ProductIE>& products, double random_precision) {
+void CountryIEPolicy3::simulation(std::vector<ProductIE>& products, double random_precision) const {
    auto production_list = getProductionList();
 
    std::vector<int> produced_amount(production_list.size()); //i-th element corresponds to production_list[i];
