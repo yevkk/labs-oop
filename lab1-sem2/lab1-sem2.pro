@@ -1,6 +1,6 @@
 CONFIG += c++11
 
-CONFIG += testsConfig
+CONFIG += mainConfig
 
 SOURCES += \
     country.cpp \
@@ -50,6 +50,7 @@ SOURCES += \
 HEADERS += tests/catch.hpp
 }
 
+RC_ICONS = icon.ico
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
