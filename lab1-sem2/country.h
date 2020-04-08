@@ -55,7 +55,7 @@ protected:
 
 public:
     /**
-     * @param consumption_list : a list of products consumpted by this country
+     * @param consumption_list : a list of products consumed by this country
      */
     HasConsumptionList(const ConsumptionList& consumption_list);
 
@@ -73,7 +73,7 @@ public:
    /**
     * @param name
     * @param production_list : a list of products produced in this country
-    * @param consumption_list : a list of products consumpted by this country
+    * @param consumption_list : a list of products consumed by this country
     */
    CountryIEPolicy1(const std::string& name, const ProductionList& production_list = ProductionList(),
                     const ConsumptionList& consumption_list = ConsumptionList());
@@ -96,7 +96,7 @@ public:
    /**
     * @param name
     * @param production_list : a list of products produced in this country
-    * @param consumption_list : a list of products consumpted by this country
+    * @param consumption_list : a list of products consumed by this country
     */
    CountryIEPolicy2(const std::string& name, const ProductionList& production_list = ProductionList(),
                     const ConsumptionList& consumption_list = ConsumptionList());

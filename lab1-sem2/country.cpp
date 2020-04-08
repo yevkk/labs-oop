@@ -83,18 +83,18 @@ void CountryIEPolicy2::simulation(std::vector<ProductIE>& products, double rando
    auto consumption_list = getConsumptionList();
 
    std::vector<int> produced_amount(production_list.size()); //i-th element corresponds to production_list[i];
-   std::vector<int> consumpted_amount(consumption_list.size()); //i-th element corresponds to consumption_list[i];
+   std::vector<int> consumed_amount(consumption_list.size()); //i-th element corresponds to consumption_list[i];
 
    for (unsigned i = 0; i < produced_amount.size(); i++)
       produced_amount[i] = Random::randomDouble(production_list[i].second * (1 - random_precision),
                                                 production_list[i].second * (1 + random_precision));
 
-   for (unsigned i = 0; i < consumpted_amount.size(); i++) {
-       consumpted_amount[i] = Random::randomDouble(consumption_list[i].second * (1 - random_precision),
+   for (unsigned i = 0; i < consumed_amount.size(); i++) {
+       consumed_amount[i] = Random::randomDouble(consumption_list[i].second * (1 - random_precision),
                                                    consumption_list[i].second * (1 + random_precision));
    }
 
-   //removing produced and consumpted items
+   //removing produced and consumed items
    for (unsigned i = 0; i < production_list.size(); i++) {
           auto consumtion_item = std::find_if(consumption_list.begin(), consumption_list.end(),
                                               [&](const std::pair<std::shared_ptr<RawProduct>, unsigned>& element){ return element.first == production_list[i].first; });
@@ -102,35 +102,35 @@ void CountryIEPolicy2::simulation(std::vector<ProductIE>& products, double rando
           if (consumtion_item != consumption_list.end()) {
               auto j = std::distance(consumption_list.begin(), consumtion_item);
 
-              if (consumpted_amount[j] >= produced_amount[i]) {
-                  consumpted_amount[j] -= produced_amount[i];
+              if (consumed_amount[j] >= produced_amount[i]) {
+                  consumed_amount[j] -= produced_amount[i];
                   produced_amount[i] = 0;
               } else {
-                  produced_amount[i] -= consumpted_amount[j];
-                  consumpted_amount[j] = 0;
+                  produced_amount[i] -= consumed_amount[j];
+                  consumed_amount[j] = 0;
               }
           }
     }
 
-    //analysis of consumpted items
+    //analysis of consumed items
     for (unsigned j = 0; j < consumption_list.size(); j++) {
-        //if consumpted item is raw
+        //if consumed item is raw
         if(consumption_list[j].first->getRawList().empty()) {
             auto production_item = std::find_if(production_list.begin(), production_list.end(),
                                                 [&](const std::pair<std::shared_ptr<RawProduct>, unsigned>& element){ return consumption_list[j].first == element.first; });
 
             if (production_item != production_list.end()) {
                 auto index = std::distance(production_list.begin(), production_item);
-                produced_amount[index] -= consumpted_amount[j];
+                produced_amount[index] -= consumed_amount[j];
             } else {
                 auto it = std::find_if(products.begin(), products.end(), [&](const ProductIE& product){return consumption_list[j].first == product.getProduct();});
-                it->incImport(consumpted_amount[j]);
+                it->incImport(consumed_amount[j]);
             }
 
             continue;
         }
 
-        //if consumpted item is not raw
+        //if consumed item is not raw
         for(auto& item : consumption_list[j].first->getRawList()) {
             if (!item.first->getRawList().empty()) continue;
 
@@ -140,10 +140,10 @@ void CountryIEPolicy2::simulation(std::vector<ProductIE>& products, double rando
             if (production_item != production_list.end()) {
                 auto i = std::distance(production_list.begin(), production_item);
 
-                produced_amount[i] -= item.second * consumpted_amount[j];
+                produced_amount[i] -= item.second * consumed_amount[j];
             } else {
                 auto it = std::find_if(products.begin(), products.end(), [&](const ProductIE& product){return item.first == product.getProduct();});
-                it->incImport(item.second * consumpted_amount[j]);
+                it->incImport(item.second * consumed_amount[j]);
             }
         }
     }
@@ -179,14 +179,14 @@ void CountryIEPolicy3::simulation(std::vector<ProductIE>& products, double rando
     auto production_list = getProductionList();
 
     std::vector<int> produced_amount(production_list.size()); //i-th element corresponds to production_list[i];
-    std::vector<int> consumpted_amount(_consumption_volumes_list.size()); //i-th element corresponds to consumption_list[i];
+    std::vector<int> consumed_amount(_consumption_volumes_list.size()); //i-th element corresponds to consumption_list[i];
 
     for (unsigned i = 0; i < produced_amount.size(); i++)
         produced_amount[i] = Random::randomDouble(production_list[i].second * (1 - random_precision),
                                                   production_list[i].second * (1 + random_precision));
 
-    for (unsigned i = 0; i < consumpted_amount.size(); i++)
-        consumpted_amount[i] = Random::randomDouble(_consumption_volumes_list[i] * (1 - random_precision),
+    for (unsigned i = 0; i < consumed_amount.size(); i++)
+        consumed_amount[i] = Random::randomDouble(_consumption_volumes_list[i] * (1 - random_precision),
                                                     _consumption_volumes_list[i] * (1 + random_precision));
 
     for (unsigned i = 0; i < production_list.size(); i++) {
@@ -205,7 +205,7 @@ void CountryIEPolicy3::simulation(std::vector<ProductIE>& products, double rando
     }
 
     for (unsigned i = 0; i < produced_amount.size(); i++) {
-        produced_amount[i] -= consumpted_amount[i];
+        produced_amount[i] -= consumed_amount[i];
     }
 
     for (unsigned i = 0; i < production_list.size(); i++) {

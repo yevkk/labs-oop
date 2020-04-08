@@ -36,7 +36,7 @@ For working with plots a [QCustomPlot](https://www.qcustomplot.com "Project webs
 
 ### Unit tests
 Unit tests are provided for countries' policies simulations. [Catch 2](https://github.com/catchorg/Catch2 "Project github page") is used.
-To run unit tests you should change line 3 i *.pro* file as it is shown lower:
+To run unit tests you should change line 3 in *.pro* file as it is shown lower:
 ```qmake
 CONFIG += testsConfig
 ```
@@ -45,7 +45,7 @@ CONFIG += testsConfig
 There are UML diagrams created by [Visual Paradigm Community Edition](https://www.visual-paradigm.com/download/community.jsp "Website"):
 - [X] Class diagram
 - [X] Use-case diagram
-- [X] Object diagram for prducts' relations, created in tests
+- [X] Object diagram for products' relations, created in tests
 - [X] Activity diagram for `CountryIEPolicy1::simulation()`
 - [X] Activity diagram for `CountryIEPolicy2::simulation()`
 - [ ] Activity diagram for `CountryIEPolicy3::simulation()`
@@ -61,6 +61,7 @@ Key points of project are documented using [Doxygen](http://www.doxygen.nl/ "Web
 - [X] Marked methods `const` where it's logically correct;
 - [X] Added interface `HasConsumptionList` to avoid massive code duplicates in country types with different production and consumption lists;
 - [X] Multiple loops replaced with stl functions;
+- [X] Names refactored;
 - [X] Added documentation;
 - [ ] Added UML diagrams;
 	
