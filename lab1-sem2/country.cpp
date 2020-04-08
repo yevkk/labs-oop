@@ -202,9 +202,7 @@ void CountryIEPolicy3::simulation(std::vector<ProductIE>& products, double rando
                 it->incImport(item.second * produced_amount[i]);
             }
         }
-    }
 
-    for (unsigned i = 0; i < produced_amount.size(); i++) {
         produced_amount[i] -= consumed_amount[i];
     }
 

@@ -48,7 +48,7 @@ There are UML diagrams created by [Visual Paradigm Community Edition](https://ww
 - [X] Object diagram for products' relations, created in tests
 - [X] Activity diagram for `CountryIEPolicy1::simulation()`
 - [X] Activity diagram for `CountryIEPolicy2::simulation()`
-- [ ] Activity diagram for `CountryIEPolicy3::simulation()`
+- [X] Activity diagram for `CountryIEPolicy3::simulation()`
 
 ### Documentation
 Key points of project are documented using [Doxygen](http://www.doxygen.nl/ "Website")-style comment blocks
@@ -63,5 +63,5 @@ Key points of project are documented using [Doxygen](http://www.doxygen.nl/ "Web
 - [X] Multiple loops replaced with stl functions;
 - [X] Names refactored;
 - [X] Added documentation;
-- [ ] Added UML diagrams;
+- [X] Added UML diagrams;
 	
