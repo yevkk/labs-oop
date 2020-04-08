@@ -47,7 +47,7 @@ There are UML diagrams created by [Visual Paradigm Community Edition](https://ww
 - [X] Use-case diagram
 - [X] Object diagram for prducts' relations, created in tests
 - [X] Activity diagram for `CountryIEPolicy1::simulation()`
-- [ ] Activity diagram for `CountryIEPolicy2::simulation()`
+- [X] Activity diagram for `CountryIEPolicy2::simulation()`
 - [ ] Activity diagram for `CountryIEPolicy3::simulation()`
 
 ### Documentation
