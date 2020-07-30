@@ -12,11 +12,13 @@ class BTreePlus;
 
 /**
  * @brief A base class provides a general interface for b_tree nodes and its variations
- * @tparam DataType a type of data stored in a node
+ * @tparam DataType a type of data stored in node
  */
 template<typename DataType>
 class BTreeNode {
 public:
+    BTreeNode();
+
     /**
      * @return number of keys stored in node
      */
@@ -54,15 +56,17 @@ protected:
     std::vector<std::shared_ptr<BTreeNode>> _children;
     bool _is_leaf;
     std::weak_ptr<BTreeNode> _parent;
-
 };
 
 /**
  * @brief A class for storing a node of plain b_tree
- * @tparam DataType a type of data stored in a node
+ * @tparam DataType a type of data stored in node
  */
 template<typename DataType>
 class BTreePlainNode : public BTreeNode<DataType> {
+public:
+    BTreePlainNode();
+
     friend BTreePlain<DataType>;
 };
 
@@ -72,6 +76,8 @@ class BTreePlainNode : public BTreeNode<DataType> {
  */
 class BTreePlusNode : public BTreeNode<std::size_t> {
 public:
+    BTreePlusNode();
+
     /**
      * @return shared_ptr to next leaf node
      */
@@ -81,6 +87,7 @@ public:
      * @return shared_ptr to previous leaf node
      */
     [[nodiscard]] std::shared_ptr<BTreePlusNode> prevLeaf() const;
+
 private:
     std::weak_ptr<BTreePlusNode> _next_leaf;
     std::weak_ptr<BTreePlusNode> _prev_leaf;
@@ -91,8 +98,28 @@ private:
 };
 
 /**
+ * @brief A factory class for creating new b_tree nodes
+ */
+class BTreeNodeFactory {
+public:
+    /**
+     * @brief creates a new plain b_tree node
+     * @tparam DataType a type of data stored in node
+     * @return shared_ptr to the created node
+     */
+    template<typename DataType>
+    static auto NewPlain();
+
+    /**
+     * @brief creates a new b+_tree node
+     * @return shared_ptr to the created node
+     */
+    static auto NewPlus();
+};
+
+/**
  * @brief A base class provides a general interface for b_tree data structure and its variations
- * @tparam DataType a type of data stored in a node
+ * @tparam DataType a type of data stored in tree
  * @tparam NodeType a type of nodes used in a tree
  * @note NodeType must be BTreeNode or derived from BTreeNode
  */
@@ -122,7 +149,7 @@ protected:
 
 /**
  * @brief A class for storing a plain b_tree
- * @tparam DataType a type of data stored in a node
+ * @tparam DataType a type of data stored in tree
  * @note type of nodes is set BTreePlainNode<DataType>
  */
 template<typename DataType>
@@ -132,7 +159,7 @@ class BTreePlain : public BTree<DataType, BTreePlainNode<DataType>> {
 
 /**
  * @brief A class for storing a b+_tree
- * @tparam DataType a type of data stored in a node
+ * @tparam DataType a type of data stored in tree
  * @note type of nodes is set BTreePlusNode
  */
 template<typename DataType>
