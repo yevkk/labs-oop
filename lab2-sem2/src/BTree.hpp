@@ -4,6 +4,8 @@
 #include <vector>
 #include <type_traits>
 
+constexpr std::size_t MIN_DEGREE = 2;
+
 template<typename DataType>
 class BTreePlain;
 
@@ -130,6 +132,8 @@ template<
 >
 class BTree {
 public:
+    explicit BTree(std::size_t min_degree = MIN_DEGREE);
+
     /**
      * @return min degree parameter of tree
      */
@@ -154,7 +158,9 @@ protected:
  */
 template<typename DataType>
 class BTreePlain : public BTree<DataType, BTreePlainNode<DataType>> {
-    using Node = BTreePlainNode<DataType>;
+    using NodeType = BTreePlainNode<DataType>;
+public:
+    explicit BTreePlain(std::size_t min_degree = MIN_DEGREE);
 };
 
 /**
@@ -164,7 +170,9 @@ class BTreePlain : public BTree<DataType, BTreePlainNode<DataType>> {
  */
 template<typename DataType>
 class BTreePlus : public BTree<DataType, BTreePlusNode<DataType>> {
-    using Node = BTreePlusNode<DataType>;
+    using NodeType = BTreePlusNode<DataType>;
+public:
+    explicit BTreePlus(std::size_t min_degree = MIN_DEGREE);
 };
 
 #include "BTree.hxx"

@@ -75,6 +75,15 @@ auto BTreeNodeFactory::NewPlus() {
 }
 
 template<typename DataType, typename NodeType, typename Condition>
+BTree<DataType, NodeType, Condition>::BTree(std::size_t min_degree) :
+        _min_degree{min_degree < MIN_DEGREE ? MIN_DEGREE : min_degree},
+        _min_node_fill{_min_degree - 1},
+        _max_node_fill{_min_node_fill * 2 - 1},
+        _root{std::make_shared<NodeType>()} {
+    _root->leaf = true;
+}
+
+template<typename DataType, typename NodeType, typename Condition>
 std::size_t BTree<DataType, NodeType, Condition>::minDegree() {
     return _min_degree;
 }
@@ -83,3 +92,12 @@ template<typename DataType, typename NodeType, typename Condition>
 std::shared_ptr<NodeType> BTree<DataType, NodeType, Condition>::root() const {
     return _root;
 }
+
+template<typename DataType>
+BTreePlain<DataType>::BTreePlain(std::size_t min_degree) :
+        BTree<DataType, NodeType>{min_degree} {}
+
+template<typename  DataType>
+BTreePlus<DataType>::BTreePlus(std::size_t min_degree) :
+        BTree<DataType, NodeType>{min_degree} {}
+
