@@ -14,8 +14,9 @@ template<typename DataType>
 BTreePlainNode<DataType>::BTreePlainNode() :
         BTreeNode<DataType>{} {}
 
-BTreePlusNode::BTreePlusNode() :
-        BTreeNode<std::size_t>{},
+template<typename DataType>
+BTreePlusNode<DataType>::BTreePlusNode() :
+        BTreeNode<DataType>{},
         _next_leaf{},
         _prev_leaf{} {}
 
@@ -51,13 +52,15 @@ std::shared_ptr<BTreeNode<DataType>> BTreeNode<DataType>::parent() const {
     return _parent.lock();
 }
 
-std::shared_ptr<BTreePlusNode> BTreePlusNode::nextLeaf() const {
-    assert(_is_leaf && "called for non-leaf node");
+template<typename DataType>
+std::shared_ptr<BTreePlusNode<DataType>> BTreePlusNode<DataType>::nextLeaf() const {
+    assert(this->_is_leaf && "called for non-leaf node");
     return _next_leaf.lock();
 }
 
-std::shared_ptr<BTreePlusNode> BTreePlusNode::prevLeaf() const {
-    assert(_is_leaf && "called for non-leaf node");
+template<typename DataType>
+std::shared_ptr<BTreePlusNode<DataType>> BTreePlusNode<DataType>::prevLeaf() const {
+    assert(this->_is_leaf && "called for non-leaf node");
     return _prev_leaf.lock();
 }
 
@@ -66,8 +69,9 @@ auto BTreeNodeFactory::NewPlain() {
     return std::make_shared<BTreePlainNode<DataType>>();
 }
 
+template<typename DataType>
 auto BTreeNodeFactory::NewPlus() {
-    return std::make_shared<BTreePlusNode>();
+    return std::make_shared<BTreePlusNode<DataType>>();
 }
 
 template<typename DataType, typename NodeType, typename Condition>
@@ -78,10 +82,4 @@ std::size_t BTree<DataType, NodeType, Condition>::minDegree() {
 template<typename DataType, typename NodeType, typename Condition>
 std::shared_ptr<NodeType> BTree<DataType, NodeType, Condition>::root() const {
     return _root;
-}
-
-template<typename DataType>
-DataType BTreePlus<DataType>::getValue(std::size_t index) const {
-    assert(index < _data.size() && "wrong parameter value");
-    return _data[index];
 }

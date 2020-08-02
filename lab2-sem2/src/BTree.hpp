@@ -72,9 +72,10 @@ public:
 
 /**
  * @brief A class for storing a node of plain b_tree
- * @note stores keys of std::size_t type which correspond to indexes of values stored in member _data of BTreePlus object
+ * @tparam DataType a type of data stored in node
  */
-class BTreePlusNode : public BTreeNode<std::size_t> {
+template<typename DataType>
+class   BTreePlusNode : public BTreeNode<DataType> {
 public:
     BTreePlusNode();
 
@@ -92,9 +93,7 @@ private:
     std::weak_ptr<BTreePlusNode> _next_leaf;
     std::weak_ptr<BTreePlusNode> _prev_leaf;
 
-    template<typename DataType>
-    friend
-    class BTreePlus;
+    friend BTreePlus<DataType>;
 };
 
 /**
@@ -114,6 +113,7 @@ public:
      * @brief creates a new b+_tree node
      * @return shared_ptr to the created node
      */
+    template<typename DataType>
     static auto NewPlus();
 };
 
@@ -163,20 +163,8 @@ class BTreePlain : public BTree<DataType, BTreePlainNode<DataType>> {
  * @note type of nodes is set BTreePlusNode
  */
 template<typename DataType>
-class BTreePlus : public BTree<DataType, BTreePlusNode> {
-    using Node = BTreePlusNode;
-public:
-    /**
-     * @param index
-     * @return value stored at position index in data container
-     */
-    DataType getValue(std::size_t index) const;
-
-private:
-    /**
-     * @brief stores keys of tree to avoid duplication of objects in non-leaf nodes
-     */
-    std::vector<DataType> _data;
+class BTreePlus : public BTree<DataType, BTreePlusNode<DataType>> {
+    using Node = BTreePlusNode<DataType>;
 };
 
 #include "BTree.hxx"
