@@ -2,135 +2,40 @@
 
 #include <memory>
 #include <vector>
-#include <type_traits>
+
+/**
+ * included for quick debug output
+ * TODO: remove
+ */
+#include <iostream>
 
 constexpr std::size_t MIN_DEGREE = 2;
 
-template<typename DataType>
-class BTreePlain;
-
-template<typename DataType>
-class BTreePlus;
-
-/**
- * @brief A base class provides a general interface for b_tree nodes and its variations
- * @tparam DataType a type of data stored in node
- */
-template<typename DataType>
-class BTreeNode {
+template<typename T>
+class BTree {
 public:
-    BTreeNode();
-
-    /**
-     * @return number of keys stored in node
-     */
-    [[nodiscard]] std::size_t size() const;
-
-    /**
-     * @return number of node's children
-     */
-    [[nodiscard]] std::size_t childrenNumber() const;
-
-    /**
-     * @param index
-     * @return value of key stored at position index
-     */
-    [[nodiscard]] DataType getKeyValue(std::size_t index) const;
-
-    /**
-     * @param index
-     * @return shared_ptr to child node at position index
-     */
-    [[nodiscard]] std::shared_ptr<BTreeNode> getChild(std::size_t index) const;
-
-    /**
-     * @return true if node is leaf, else - false
-     */
-    [[nodiscard]] bool isLeaf() const;
-
-    /**
-     * @return shared_ptr to parent node
-     */
-    [[nodiscard]] std::shared_ptr<BTreeNode> parent() const;
-
-protected:
-    std::vector<DataType> _keys;
-    std::vector<std::shared_ptr<BTreeNode>> _children;
-    bool _is_leaf;
-    std::weak_ptr<BTreeNode> _parent;
-};
-
-/**
- * @brief A class for storing a node of plain b_tree
- * @tparam DataType a type of data stored in node
- */
-template<typename DataType>
-class BTreePlainNode : public BTreeNode<DataType> {
-public:
-    BTreePlainNode();
-
-    friend BTreePlain<DataType>;
-};
-
-/**
- * @brief A class for storing a node of plain b_tree
- * @tparam DataType a type of data stored in node
- */
-template<typename DataType>
-class   BTreePlusNode : public BTreeNode<DataType> {
-public:
-    BTreePlusNode();
-
-    /**
-     * @return shared_ptr to next leaf node
-     */
-    [[nodiscard]] std::shared_ptr<BTreePlusNode> nextLeaf() const;
-
-    /**
-     * @return shared_ptr to previous leaf node
-     */
-    [[nodiscard]] std::shared_ptr<BTreePlusNode> prevLeaf() const;
+    using value_type = T;
 
 private:
-    std::weak_ptr<BTreePlusNode> _next_leaf;
-    std::weak_ptr<BTreePlusNode> _prev_leaf;
+    struct Node {
+        Node();
 
-    friend BTreePlus<DataType>;
-};
+        /**
+         * @return number of keys stored in node
+         */
+        [[nodiscard]] std::size_t size() const;
 
-/**
- * @brief A factory class for creating new b_tree nodes
- */
-class BTreeNodeFactory {
-public:
-    /**
-     * @brief creates a new plain b_tree node
-     * @tparam DataType a type of data stored in node
-     * @return shared_ptr to the created node
-     */
-    template<typename DataType>
-    static auto NewPlain();
+        /**
+         * @return number of node's children
+         */
+        [[nodiscard]] std::size_t childrenNumber() const;
 
-    /**
-     * @brief creates a new b+_tree node
-     * @return shared_ptr to the created node
-     */
-    template<typename DataType>
-    static auto NewPlus();
-};
+        std::vector<value_type> keys;
+        std::vector<std::shared_ptr<Node>> children;
+        bool is_leaf;
+        std::weak_ptr<Node> parent;
+    };
 
-/**
- * @brief A base class provides a general interface for b_tree data structure and its variations
- * @tparam DataType a type of data stored in tree
- * @tparam NodeType a type of nodes used in a tree
- * @note NodeType must be BTreeNode or derived from BTreeNode
- */
-template<
-        typename DataType,
-        typename NodeType,
-        typename = typename std::enable_if_t<std::is_base_of<BTreeNode<DataType>, NodeType>::value>
->
-class BTree {
 public:
     explicit BTree(std::size_t min_degree = MIN_DEGREE);
 
@@ -139,40 +44,77 @@ public:
      */
     [[nodiscard]] std::size_t minDegree();
 
-    /**
-     * @return shared_ptr to root node of tree
-     */
-    [[nodiscard]] std::shared_ptr<NodeType> root() const;
+private:
+    //temporary solution for quick testing
+    //TODO:: remove;
+    template<typename OStream>
+    void _print(OStream &output, std::shared_ptr<Node> node, int level = 0) {
+        output << '|';
+        for (std::size_t i = 0; i < level; i++) {
+            output << '\t' << '|';
+        }
 
-protected:
+        if (!node) {
+            output << "*\n";
+        } else {
+            output << "Data: (" << node->size() << ")\n";
+
+            for (auto &item : node->keys) {
+                output << '|';
+                for (std::size_t i = 0; i < level; i++) {
+                    output << '\t' << '|';
+                }
+                output << item << "\n";
+            }
+
+            if (!node->is_leaf) {
+                output << '|';
+                for (std::size_t i = 0; i < level; i++) {
+                    output << '\t' << '|';
+                }
+                output << "Children:\n";
+                for (auto &item : node->children) {
+                    _print(output, item, level + 1);
+                }
+            }
+        }
+
+        output << '|';
+        for (std::size_t i = 0; i < level; i++) {
+            output << '\t' << '|';
+        }
+        output << "=============\n";
+    }
+
+
+    /**
+     * @brief splits node's child to separate nodes to avoid overflow
+     * @param node the node with full child
+     * @param child the full node
+     * @param child_index index of full child
+     */
+    void _splitChild(std::shared_ptr<Node> node,
+                     std::shared_ptr<Node> child,
+                     std::size_t child_index);
+
+    /**
+     * @brief inserts new key to the tree with non full root
+     * @param node a candidate node for key insertion
+     * @param key new key to be inserted
+     */
+    void _insertNonFull(std::shared_ptr<Node> node,
+                        const value_type &key);
+
+    /**
+     * @brief implementation of new key insertion
+     * @param key new key to be inserted
+     */
+    void _insertImpl(const value_type &key);
+
     std::size_t _min_degree;
     std::size_t _min_node_fill;
     std::size_t _max_node_fill;
-    std::shared_ptr<NodeType> _root;
-};
-
-/**
- * @brief A class for storing a plain b_tree
- * @tparam DataType a type of data stored in tree
- * @note type of nodes is set BTreePlainNode<DataType>
- */
-template<typename DataType>
-class BTreePlain : public BTree<DataType, BTreePlainNode<DataType>> {
-    using NodeType = BTreePlainNode<DataType>;
-public:
-    explicit BTreePlain(std::size_t min_degree = MIN_DEGREE);
-};
-
-/**
- * @brief A class for storing a b+_tree
- * @tparam DataType a type of data stored in tree
- * @note type of nodes is set BTreePlusNode
- */
-template<typename DataType>
-class BTreePlus : public BTree<DataType, BTreePlusNode<DataType>> {
-    using NodeType = BTreePlusNode<DataType>;
-public:
-    explicit BTreePlus(std::size_t min_degree = MIN_DEGREE);
+    std::shared_ptr<Node> _root;
 };
 
 #include "BTree.hxx"
