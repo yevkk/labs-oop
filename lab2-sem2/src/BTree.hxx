@@ -44,10 +44,10 @@ T BTree<T>::_subtreeMinValue(std::shared_ptr<Node> subtree_root) {
 
 template<typename T>
 T BTree<T>::_subtreeMaxValue(std::shared_ptr<Node> subtree_root) {
-    if(subtree_root->is_leaf) {
+    if (subtree_root->is_leaf) {
         return subtree_root->keys.back();
     } else {
-        return _subtreeMaxValue(subtree_root->children.back())
+        return _subtreeMaxValue(subtree_root->children.back());
     }
 }
 
@@ -67,6 +67,9 @@ void BTree<T>::_splitChild(std::shared_ptr<Node> node,
     if (!new_child->is_leaf) {
         new_child->children.resize(new_child->size() + 1);
         std::move(child->children.cbegin() + median_index + 1, child->children.cend(), new_child->children.begin());
+        for(auto& item : new_child->children) {
+            item->parent = new_child;
+        }
         child->children.erase(child->children.cbegin() + median_index + 1, child->children.cend());
     }
 
@@ -94,7 +97,7 @@ void BTree<T>::_insertNonFull(std::shared_ptr<Node> node,
                 );
 
         auto destination_child = node->children[destination_child_index];
-        if (destination_child->size() == this->_max_node_fill) {
+        if (destination_child->size() == _max_node_fill) {
             _splitChild(node, destination_child, destination_child_index);
             if (key > node->keys[destination_child_index]) {
                 destination_child = node->children[destination_child_index + 1];
@@ -107,15 +110,15 @@ void BTree<T>::_insertNonFull(std::shared_ptr<Node> node,
 
 template<typename T>
 void BTree<T>::_insertImpl(const value_type &key) {
-    auto root = this->_root;
-    if (root->size() == this->_max_node_fill) {
+    auto root = _root;
+    if (root->size() == _max_node_fill) {
         auto new_root = std::make_shared<Node>();
 
         new_root->is_leaf = false;
         new_root->children.push_back(root);
         root->parent = new_root;
 
-        this->_root = new_root;
+        _root = new_root;
 
         _splitChild(new_root, root, 0);
         _insertNonFull(new_root, key);
