@@ -86,6 +86,17 @@ private:
         output << "=============\n";
     }
 
+    /**
+     * @param subtree_root root of subtree being processed
+     * @return min value stored in subtree
+     */
+    value_type _subtreeMinValue(std::shared_ptr<Node> subtree_root);
+
+    /**
+     * @param subtree_root root of subtree being processed
+     * @return max value stored in subtree
+     */
+    value_type _subtreeMaxValue(std::shared_ptr<Node> subtree_root);
 
     /**
      * @brief splits node's child to separate nodes to avoid overflow

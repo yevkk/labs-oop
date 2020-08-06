@@ -34,6 +34,24 @@ std::size_t BTree<T>::minDegree() {
 }
 
 template<typename T>
+T BTree<T>::_subtreeMinValue(std::shared_ptr<Node> subtree_root) {
+    if (subtree_root->is_leaf) {
+        return subtree_root->keys.front();
+    } else {
+        return _subtreeMinValue(subtree_root->children.front());
+    }
+}
+
+template<typename T>
+T BTree<T>::_subtreeMaxValue(std::shared_ptr<Node> subtree_root) {
+    if(subtree_root->is_leaf) {
+        return subtree_root->keys.back();
+    } else {
+        return _subtreeMaxValue(subtree_root->children.back())
+    }
+}
+
+template<typename T>
 void BTree<T>::_splitChild(std::shared_ptr<Node> node,
                            std::shared_ptr<Node> child,
                            std::size_t child_index) {
