@@ -67,7 +67,7 @@ void BTree<T>::_splitChild(std::shared_ptr<Node> node,
     if (!new_child->is_leaf) {
         new_child->children.resize(new_child->size() + 1);
         std::move(child->children.cbegin() + median_index + 1, child->children.cend(), new_child->children.begin());
-        for(auto& item : new_child->children) {
+        for (auto &item : new_child->children) {
             item->parent = new_child;
         }
         child->children.erase(child->children.cbegin() + median_index + 1, child->children.cend());
@@ -77,6 +77,35 @@ void BTree<T>::_splitChild(std::shared_ptr<Node> node,
     node->children.insert(node->children.cbegin() + child_index + 1, new_child);
 
     child->keys.erase(child->keys.cbegin() + median_index, child->keys.cend());
+}
+
+template<typename T>
+void BTree<T>::_mergeChildren(std::shared_ptr<Node> node,
+                              std::size_t separator_index) {
+    auto &left_child = node->children[separator_index];
+    auto &right_child = node->children[separator_index + 1];
+
+    left_child->keys.push_back(node->keys[separator_index]);
+    left_child->keys.resize(left_child->keys.size() + right_child->keys.size());
+    std::move(right_child->keys.cbegin(),
+              right_child->keys.cend(),
+              left_child->keys.end() - right_child->keys.size());
+
+    for (auto &item : right_child->children) {
+        item->parent = left_child;
+    }
+    left_child->children.resize(left_child->children.size() + right_child->children.size());
+    std::move(right_child->children.cbegin(),
+              right_child->children.cend(),
+              left_child->children.end() - right_child->children.size());
+
+    node->keys.erase(node->keys.begin() + separator_index);
+    node->children.erase(node->children.begin() + separator_index + 1);
+
+    if (node == _root && node->size() == 0) {
+        left_child->parent.reset();
+        _root = left_child;
+    }
 }
 
 template<typename T>
@@ -127,3 +156,90 @@ void BTree<T>::_insertImpl(const value_type &key) {
     }
 }
 
+template<typename T>
+void BTree<T>::_removeImpl(std::shared_ptr<Node> node,
+                           const value_type &key) {
+    auto key_it = std::find(node->keys.cbegin(), node->keys.cend(), key);
+    if (node->is_leaf) {
+        if (key_it != node->keys.cend()) {
+            node->keys.erase(key_it);
+        }
+    } else {
+        if (key_it != node->keys.cend()) {
+
+            std::size_t key_index = std::distance(node->keys.cbegin(), key_it);
+            auto &prev_child = node->children[key_index];
+            auto &next_child = node->children[key_index + 1];
+
+            if (prev_child->size() > _min_node_fill) {
+                auto key_predecessor = _subtreeMaxValue(prev_child);
+                _removeImpl(prev_child, key_predecessor);
+                node->keys[key_index] = key_predecessor;
+
+            } else if (next_child->size() > _min_node_fill) {
+                auto key_successor = _subtreeMinValue(next_child);
+                _removeImpl(next_child, key_successor);
+                node->keys[key_index] = key_successor;
+
+            } else {
+                _mergeChildren(node, key_index);
+                _removeImpl(prev_child, key);
+            }
+
+        } else {
+            auto dest_child_index =
+                    std::distance(node->keys.cbegin(),
+                                  std::find_if(node->keys.cbegin(), node->keys.cend(),
+                                               [key = key](const auto &item) { return item >= key; }
+                                  )
+                    );
+            auto dest_child = node->children[dest_child_index];
+
+            if (dest_child->size() == _min_node_fill) {
+
+                bool dest_is_leftmost = (dest_child_index == 0);
+                bool dest_is_rightmost = (dest_child_index == node->children.size() - 1);
+
+                if (!dest_is_leftmost && node->children[dest_child_index - 1]->size() > _min_node_fill) {
+                    auto &left_sibling = node->children[dest_child_index - 1];
+                    auto separator_index = dest_child_index - 1;
+
+                    dest_child->keys.insert(dest_child->keys.begin(), node->keys[separator_index]);
+                    node->keys[separator_index] = left_sibling->keys.back();
+                    left_sibling->keys.pop_back();
+
+                    if (!dest_child->is_leaf) {
+                        left_sibling->children.back()->parent = dest_child;
+                        dest_child->children.insert(dest_child->children.begin(),
+                                                    left_sibling->children.back());
+                        left_sibling->children.pop_back();
+                    }
+
+                } else if (!dest_is_rightmost && node->children[dest_child_index + 1]->size() > _min_node_fill) {
+                    auto &right_sibling = node->children[dest_child_index + 1];
+                    auto separator_index = dest_child_index;
+
+                    dest_child->keys.push_back(node->keys[separator_index]);
+                    node->keys[separator_index] = right_sibling->keys.front();
+                    right_sibling->keys.erase(right_sibling->keys.begin());
+
+                    if (!dest_child->is_leaf) {
+                        right_sibling->children.front()->parent = dest_child;
+                        dest_child->children.push_back(right_sibling->children.front());
+                        right_sibling->children.erase(right_sibling->children.begin());
+                    }
+
+                } else {
+                    if (!dest_is_rightmost) {
+                        _mergeChildren(node, dest_child_index);
+                    } else {
+                        _mergeChildren(node, dest_child_index - 1);
+                        dest_child = node->children[dest_child_index - 1];
+                    }
+                }
+            }
+
+            _removeImpl(dest_child, key);
+        }
+    }
+}

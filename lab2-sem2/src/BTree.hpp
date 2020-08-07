@@ -109,6 +109,14 @@ private:
                      std::size_t child_index);
 
     /**
+     * @brief merges two node's children separated by single key
+     * @param node a parent node of mergeable children
+     * @param separator_index index of key - separator of mergeable children
+     */
+    void _mergeChildren(std::shared_ptr<Node> node,
+                        std::size_t separator_index);
+
+    /**
      * @brief inserts new key to the tree with non full root
      * @param node a candidate node for key insertion
      * @param key new key to be inserted
@@ -121,6 +129,14 @@ private:
      * @param key new key to be inserted
      */
     void _insertImpl(const value_type &key);
+
+    /**
+     * @brief implementation of key removing
+     * @param node a candidate node for key removing
+     * @param key key to be removed
+     */
+    void _removeImpl(std::shared_ptr<Node> node,
+                     const value_type &key);
 
     std::size_t _min_degree;
     std::size_t _min_node_fill;
