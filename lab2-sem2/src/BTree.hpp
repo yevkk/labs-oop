@@ -44,6 +44,31 @@ public:
      */
     [[nodiscard]] std::size_t minDegree();
 
+    /**
+     * @brief checks if key was added to tree
+     * @param key a key to check
+     * @return true if key is in tree, else - false
+     */
+    [[nodiscard]] bool includes(const value_type& key);
+
+    /**
+     * @brief inserts key to tree
+     * @param key a key to be inserted
+     */
+    void insert(const value_type& key);
+
+    /**
+     * @brief removes key from tree
+     * @param key a key to be removed
+     */
+    void remove(const value_type& key);
+
+    //temporary solution for quick testing
+    //TODO:: remove;
+    void print() {
+        _print(std::cout, _root);
+    }
+
 private:
     //temporary solution for quick testing
     //TODO:: remove;
@@ -136,6 +161,15 @@ private:
      * @param key key to be removed
      */
     void _removeImpl(std::shared_ptr<Node> node,
+                     const value_type &key);
+
+    /**
+     * @brief implementation of key search
+     * @param node a candidate node for key search
+     * @param key searched key
+     * @return true if key is in node, else - false
+     */
+    bool _searchImpl(std::shared_ptr<Node> node,
                      const value_type &key);
 
     std::size_t _min_degree;

@@ -34,6 +34,21 @@ std::size_t BTree<T>::minDegree() {
 }
 
 template<typename T>
+bool BTree<T>::includes(const value_type& key) {
+    return _searchImpl(_root, key);
+}
+
+template<typename T>
+void BTree<T>::insert(const value_type& key) {
+    _insertImpl(key);
+}
+
+template<typename T>
+void BTree<T>::remove(const value_type& key) {
+    _removeImpl(_root, key);
+}
+
+template<typename T>
 T BTree<T>::_subtreeMinValue(std::shared_ptr<Node> subtree_root) {
     if (subtree_root->is_leaf) {
         return subtree_root->keys.front();
@@ -241,5 +256,25 @@ void BTree<T>::_removeImpl(std::shared_ptr<Node> node,
 
             _removeImpl(dest_child, key);
         }
+    }
+}
+
+template<typename T>
+bool BTree<T>::_searchImpl(std::shared_ptr<Node> node, const value_type &key) {
+    auto key_it = std::find(node->keys.cbegin(), node->keys.cend(), key);
+    if (node->is_leaf) {
+        return key_it != node->keys.cend();
+    } else {
+        if (key_it != node->keys.cend()) {
+            return true;
+        }
+
+        auto dest_child_index =
+                std::distance(node->keys.cbegin(),
+                              std::find_if(node->keys.cbegin(), node->keys.cend(),
+                                           [key = key](const auto &item) { return item > key; }
+                              )
+                );
+        return _searchImpl(node->children[dest_child_index], key);
     }
 }
