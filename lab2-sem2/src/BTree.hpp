@@ -11,12 +11,19 @@
 
 constexpr std::size_t MIN_DEGREE = 2;
 
+/**
+ * @brief a class for storing b-tree data structure
+ * @tparam T a type of data stored in tree
+ */
 template<typename T>
 class BTree {
 public:
     using value_type = T;
 
 private:
+    /**
+     * @brief tree node structure
+     */
     struct Node {
         Node();
 
@@ -37,6 +44,31 @@ private:
     };
 
 public:
+    /**
+     * @brief tree iterator structure
+     */
+    struct Iterator {
+        value_type operator*();
+
+        Iterator &operator++();
+
+        Iterator &operator--();
+
+        Iterator &operator=(const Iterator &rhs);
+
+        friend bool operator==(const Iterator &lhs, const Iterator &rhs);
+
+        friend bool operator!=(const Iterator &lhs, const Iterator &rhs);
+
+    private:
+        Iterator(std::shared_ptr<Node> node, std::size_t key_index);
+
+        std::weak_ptr<Node> _node;
+        std::size_t _key_index;
+
+        friend BTree;
+    };
+
     explicit BTree(std::size_t min_degree = MIN_DEGREE);
 
     /**
@@ -45,23 +77,43 @@ public:
     [[nodiscard]] std::size_t minDegree();
 
     /**
+     * @return an iterator pointing to the first element in the tree
+     */
+    Iterator begin();
+
+    /**
+     * @return an iterator pointing to the last element in the tree
+     */
+    Iterator end();
+
+    /**
+     * @return a const iterator pointing to the first element in the tree
+     */
+    const Iterator cbegin();
+
+    /**
+     * @return a const iterator pointing to the last element in the tree
+     */
+    const Iterator cend();
+
+    /**
      * @brief checks if key was added to tree
      * @param key a key to check
      * @return true if key is in tree, else - false
      */
-    [[nodiscard]] bool includes(const value_type& key);
+    [[nodiscard]] bool includes(const value_type &key);
 
     /**
      * @brief inserts key to tree
      * @param key a key to be inserted
      */
-    void insert(const value_type& key);
+    void insert(const value_type &key);
 
     /**
      * @brief removes key from tree
      * @param key a key to be removed
      */
-    void remove(const value_type& key);
+    void remove(const value_type &key);
 
     //temporary solution for quick testing
     //TODO:: remove;
