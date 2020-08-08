@@ -12,6 +12,8 @@ set(LIB_NAME b-tree)
 set(SRC_LIST
         ${SRC_DIR}/BTree.hpp
         ${SRC_DIR}/BTree.hxx
+        ${SRC_DIR}/RedBlackTree.hpp
+        ${SRC_DIR}/RedBlackTree.hxx
         )
 
 add_library(${LIB_NAME} INTERFACE)
