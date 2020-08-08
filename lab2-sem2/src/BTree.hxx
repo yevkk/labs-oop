@@ -3,6 +3,8 @@
 #include <memory>
 #include <vector>
 #include <algorithm>
+#include "BTree.hpp"
+
 
 template<typename T>
 BTree<T>::Node::Node() :
@@ -34,17 +36,17 @@ std::size_t BTree<T>::minDegree() {
 }
 
 template<typename T>
-bool BTree<T>::includes(const value_type& key) {
+bool BTree<T>::includes(const value_type &key) {
     return _searchImpl(_root, key);
 }
 
 template<typename T>
-void BTree<T>::insert(const value_type& key) {
+void BTree<T>::insert(const value_type &key) {
     _insertImpl(key);
 }
 
 template<typename T>
-void BTree<T>::remove(const value_type& key) {
+void BTree<T>::remove(const value_type &key) {
     _removeImpl(_root, key);
 }
 

@@ -44,57 +44,12 @@ private:
     };
 
 public:
-    /**
-     * @brief tree iterator structure
-     */
-    struct Iterator {
-        value_type operator*();
-
-        Iterator &operator++();
-
-        Iterator &operator--();
-
-        Iterator &operator=(const Iterator &rhs);
-
-        friend bool operator==(const Iterator &lhs, const Iterator &rhs);
-
-        friend bool operator!=(const Iterator &lhs, const Iterator &rhs);
-
-    private:
-        Iterator(std::shared_ptr<Node> node, std::size_t key_index);
-
-        std::weak_ptr<Node> _node;
-        std::size_t _key_index;
-
-        friend BTree;
-    };
-
     explicit BTree(std::size_t min_degree = MIN_DEGREE);
 
     /**
      * @return min degree parameter of tree
      */
     [[nodiscard]] std::size_t minDegree();
-
-    /**
-     * @return an iterator pointing to the first element in the tree
-     */
-    Iterator begin();
-
-    /**
-     * @return an iterator pointing to the last element in the tree
-     */
-    Iterator end();
-
-    /**
-     * @return a const iterator pointing to the first element in the tree
-     */
-    const Iterator cbegin();
-
-    /**
-     * @return a const iterator pointing to the last element in the tree
-     */
-    const Iterator cend();
 
     /**
      * @brief checks if key was added to tree
