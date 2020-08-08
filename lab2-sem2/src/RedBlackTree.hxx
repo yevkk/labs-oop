@@ -104,3 +104,59 @@ auto RedBlackTree<T>::_nodePredecessor(std::shared_ptr<Node> node) -> std::share
     return ptr;
 }
 
+template<typename T>
+auto RedBlackTree<T>::_searchImpl(std::shared_ptr<Node> node, const value_type &key) -> std::shared_ptr<Node> {
+    if ((node == _null_node) || (key = node->key)) {
+        return node;
+    }
+
+    if (key < node->key) {
+        return _searchImpl(node->left, key);
+    } else {
+        return _searchImpl(node->right, key);
+    }
+}
+
+template<typename T>
+void RedBlackTree<T>::_leftRotate(std::shared_ptr<Node> node_x) {
+    auto node_y = node_x->right;
+    node_x->right = node_y->left;
+
+    if (node_y->left != _null_node) {
+        node_y->left->parent = node_x;
+    }
+
+    node_y->parent = node_x->parent;
+    if (node_x->parent.lock() == _null_node) {
+        _root = node_y;
+    } else if (node_x == node_x->parent.lock()->left) {
+        node_x->parent.lock()->left = node_y;
+    } else {
+        node_x->parent.lock()->right = node_y;
+    }
+
+    node_y->left = node_x;
+    node_x->parent = node_y;
+}
+
+template<typename T>
+void RedBlackTree<T>::_rightRotate(std::shared_ptr<Node> node_x) {
+    auto node_y = node_x->left;
+    node_x->left = node_y->right;
+
+    if (node_y->right != _null_node) {
+        node_y->right->parent = node_x;
+    }
+
+    node_y->parent = node_x->parent;
+    if (node_x->parent.lock() == _null_node) {
+        _root = node_y;
+    } else if (node_x == node_x->parent.lock()->left) {
+        node_x->parent.lock()->left = node_y;
+    } else {
+        node_x->parent.lock()->right = node_y;
+    }
+
+    node_y->right = node_x;
+    node_x->parent = node_y;
+}

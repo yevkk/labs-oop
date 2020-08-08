@@ -94,11 +94,25 @@ private:
      */
     auto _nodePredecessor(std::shared_ptr<Node> node) -> std::shared_ptr<Node>;
 
+    /**
+     * @brief an implementation of search operation
+     * @param node a candidate node
+     * @param key a key to be searched
+     * @return a node where search is stopped (equal to _null_node if key was not found)
+     */
     auto _searchImpl(std::shared_ptr<Node> node, const value_type &key) -> std::shared_ptr<Node>;
 
-    void _leftRotate(std::shared_ptr<Node> node);
+    /**
+     * @brief left rotate method for tree balancing
+     * @param node_x a node of tree
+     */
+    void _leftRotate(std::shared_ptr<Node> node_x);
 
-    void _rightRotate(std::shared_ptr<Node> node);
+    /**
+     * @brief right rotate method for tree balancing
+     * @param node_x a node of tree
+     */
+    void _rightRotate(std::shared_ptr<Node> node_x);
 
     std::shared_ptr<Node> _root;
     std::shared_ptr<Node> _null_node;
