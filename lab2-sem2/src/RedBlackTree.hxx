@@ -27,8 +27,77 @@ RedBlackTree<T>::RedBlackTree() :
 }
 
 template<typename T>
-void RedBlackTree<T>::_insertFixup(std::shared_ptr<Node> node) {
+void RedBlackTree<T>::insert(const value_type& key) {
+    auto node_y = _null_node;
+    auto node_x = _root;
 
+    while(node_x != _null_node) {
+        node_y = node_x;
+
+        if (key < node_x->key) {
+            node_x = node_x->left;
+        } else {
+            node_x = node_x->right;
+        }
+    }
+
+    auto new_node = std::make_shared<Node>(key);
+    new_node->parent = node_y;
+    if (node_y == _null_node) {
+        _root = new_node;
+    } else if (key < node_y->key) {
+        node_y->left = new_node;
+    } else {
+        node_y->right = new_node;
+    }
+
+    _insertFixup(new_node);
+}
+
+template<typename T>
+void RedBlackTree<T>::_insertFixup(std::shared_ptr<Node> node) {
+    while (node->parent.lock()->color == Node::Color::RED) {
+        if (node->parent.lock() == node->parent.lock()->parent.lock()->left) {
+            auto node_y = node->parent.lock()->parent.lock()->right;
+            if (node_y->color == Node::Color::RED) {
+                node->parent.lock()->color = Node::Color::BLACK;
+                node_y->color = Node::Color::BLACK;
+                node->parent.lock()->parent.lock()->color = Node::Color::RED;
+                node = node->parent.lock()->parent.lock();
+
+            } else {
+                if (node == node->parent.lock()->right) {
+                    node = node->parent.lock();
+                    _leftRotate(node);
+                }
+                node->parent.lock()->color = Node::Color::BLACK;
+                node->parent.lock()->parent.lock()->color = Node::Color::RED;
+                _rightRotate(node->parent.lock()->parent.lock());
+
+            }
+
+        } else {
+            auto node_y = node->parent.lock()->parent.lock()->left;
+            if (node_y->color == Node::Color::RED) {
+                node->parent.lock()->color = Node::Color::BLACK;
+                node_y->color = Node::Color::BLACK;
+                node->parent.lock()->parent.lock()->color = Node::Color::RED;
+                node = node->parent.lock()->parent.lock();
+
+            } else {
+                if (node == node->parent.lock()->left) {
+                    node = node->parent.lock();
+                    _rightRotate(node);
+                }
+                node->parent.lock()->color = Node::Color::BLACK;
+                node->parent.lock()->parent.lock()->color = Node::Color::RED;
+                _leftRotate(node->parent.lock()->parent.lock());
+
+            }
+        }
+    }
+
+    _root->color = Node::Color::BLACK;
 }
 
 template<typename T>
