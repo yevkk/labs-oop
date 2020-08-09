@@ -21,17 +21,19 @@ void RedBlackTree<T>::Node::switchColor() {
 
 template<typename T>
 RedBlackTree<T>::RedBlackTree() :
-        _root{nullptr},
         _null_node{std::make_shared<Node>(value_type{})} {
+    _null_node->left = _null_node->right = _null_node;
+    _null_node->parent = _null_node;
     _null_node->color = Node::Color::BLACK;
+    _root = _null_node;
 }
 
 template<typename T>
-void RedBlackTree<T>::insert(const value_type& key) {
+void RedBlackTree<T>::insert(const value_type &key) {
     auto node_y = _null_node;
     auto node_x = _root;
 
-    while(node_x != _null_node) {
+    while (node_x != _null_node) {
         node_y = node_x;
 
         if (key < node_x->key) {
@@ -43,6 +45,7 @@ void RedBlackTree<T>::insert(const value_type& key) {
 
     auto new_node = std::make_shared<Node>(key);
     new_node->parent = node_y;
+    new_node->left = new_node->right = _null_node;
     if (node_y == _null_node) {
         _root = new_node;
     } else if (key < node_y->key) {
@@ -52,6 +55,48 @@ void RedBlackTree<T>::insert(const value_type& key) {
     }
 
     _insertFixup(new_node);
+}
+
+template<typename T>
+void RedBlackTree<T>::remove(const value_type &key) {
+    auto node = _searchImpl(_root, key);
+    if (node != _null_node) {
+        _removeImpl(node);
+    }
+}
+
+template<typename T>
+void RedBlackTree<T>::_removeImpl(std::shared_ptr<Node> node) {
+    auto node_y = node;
+    decltype(node) node_x;
+    typename Node::Color y_init_color = node_y->color;
+
+    if (node->left == _null_node) {
+        node_x = node->right;
+        _transplant(node, node->right);
+    } else if (node->right == _null_node) {
+        node_x = node->left;
+        _transplant(node, node->left);
+    } else {
+        node_y = _subtreeMinNode(node->right);
+        y_init_color = node_y->color;
+        node_x = node_y->right;
+        if (node_y->parent.lock() == node) {
+            node_x->parent = node_y;
+        } else {
+            _transplant(node_y, node_y->right);
+            node_y->right = node->right;
+            node_y->right->parent = node_y;
+        }
+        _transplant(node, node_y);
+        node_y->left = node->left;
+        node_y->left->parent = node_y;
+        node_y->color = node->color;
+    }
+
+    if (y_init_color == Node::Color::BLACK) {
+        _deleteFixup(node_x);
+    }
 }
 
 template<typename T>
@@ -102,7 +147,63 @@ void RedBlackTree<T>::_insertFixup(std::shared_ptr<Node> node) {
 
 template<typename T>
 void RedBlackTree<T>::_deleteFixup(std::shared_ptr<Node> node) {
+    while ((node != _root) && (node->color == Node::Color::BLACK)) {
+        if (node == node->parent.lock()->left) {
+            auto node_w = node->parent.lock()->right;
+            if (node_w->color == Node::Color::RED) {
+                node_w->color = Node::Color::BLACK;
+                node->parent.lock()->color = Node::Color::RED;
+                _leftRotate(node->parent.lock());
+                node_w = node->parent.lock()->right;
+            }
 
+            if (node_w->left->color == Node::Color::BLACK && node_w->right->color == Node::Color::BLACK) {
+                node_w->color = Node::Color::RED;
+                node = node->parent.lock();
+
+            } else {
+                if (node_w->right->color == Node::Color::BLACK) {
+                    node_w->left->color = Node::Color::BLACK;
+                    node_w->color = Node::Color::RED;
+                    _rightRotate(node_w);
+                    node_w = node->parent.lock()->right;
+                }
+                node_w->color = node->parent.lock()->color;
+                node->parent.lock()->color = Node::Color::BLACK;
+                node_w->right->color == Node::Color::BLACK;
+                _leftRotate(node->parent.lock());
+                node = _root;
+            }
+
+        } else {
+            auto node_w = node->parent.lock()->left;
+            if (node_w->color == Node::Color::RED) {
+                node_w->color = Node::Color::BLACK;
+                node->parent.lock()->color = Node::Color::RED;
+                _rightRotate(node->parent.lock());
+                node_w = node->parent.lock()->left;
+            }
+
+            if (node_w->right->color == Node::Color::BLACK && node_w->left->color == Node::Color::BLACK) {
+                node_w->color = Node::Color::RED;
+                node = node->parent.lock();
+
+            } else {
+                if (node_w->left->color == Node::Color::BLACK) {
+                    node_w->right->color = Node::Color::BLACK;
+                    node_w->color = Node::Color::RED;
+                    _leftRotate(node_w);
+                    node_w = node->parent.lock()->left;
+                }
+                node_w->color = node->parent.lock()->color;
+                node->parent.lock()->color = Node::Color::BLACK;
+                node_w->left->color == Node::Color::BLACK;
+                _rightRotate(node->parent.lock());
+                node = _root;
+            }
+        }
+    }
+    node->color = Node::Color::BLACK;
 }
 
 template<typename T>
@@ -150,7 +251,7 @@ auto RedBlackTree<T>::_nodeSuccessor(std::shared_ptr<Node> node) -> std::shared_
     }
 
     auto ptr = node->parent.lock();
-    while((ptr != _null_node) && (node == ptr->right)) {
+    while ((ptr != _null_node) && (node == ptr->right)) {
         node = ptr;
         ptr = ptr->parent.lock();
     }
@@ -165,7 +266,7 @@ auto RedBlackTree<T>::_nodePredecessor(std::shared_ptr<Node> node) -> std::share
     }
 
     auto ptr = node->parent.lock();
-    while((ptr != _null_node) && (node == ptr->left)) {
+    while ((ptr != _null_node) && (node == ptr->left)) {
         node = ptr;
         ptr = ptr->parent.lock();
     }
@@ -175,7 +276,7 @@ auto RedBlackTree<T>::_nodePredecessor(std::shared_ptr<Node> node) -> std::share
 
 template<typename T>
 auto RedBlackTree<T>::_searchImpl(std::shared_ptr<Node> node, const value_type &key) -> std::shared_ptr<Node> {
-    if ((node == _null_node) || (key = node->key)) {
+    if ((node == _null_node) || (key == node->key)) {
         return node;
     }
 

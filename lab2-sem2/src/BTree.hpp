@@ -163,8 +163,8 @@ private:
     void _insertImpl(const value_type &key);
 
     /**
-     * @brief implementation of key removing
-     * @param node a candidate node for key removing
+     * @brief implementation of key removal
+     * @param node a candidate node for key removal
      * @param key key to be removed
      */
     void _removeImpl(std::shared_ptr<Node> node,

@@ -3,6 +3,12 @@
 #include <memory>
 
 /**
+ * included for quick debug output
+ * TODO: remove
+ */
+#include <iostream>
+
+/**
  * a class for storing red-black tree data structure
  * @tparam T a type of data stored in tree
  */
@@ -53,10 +59,51 @@ public:
      */
     void remove(const value_type &key);
 
-private:
+    //temporary solution for quick testing
+    //TODO:: remove;
+    void print() {
+        _print(std::cout, _root);
+    };
 
+private:
+    //temporary solution for quick testing
+    //TODO:: remove;
+    template<typename OStream>
+    void _print(OStream &output, std::shared_ptr<Node> node, int level = 0) {
+
+        output << '|';
+        for (std::size_t i = 0; i < level; i++) {
+            output << "\t|";
+        }
+
+        if (node == _null_node) {
+            output << "*\n";
+            return;
+        } else {
+            output << node->key << " (";
+
+            if (node->color == Node::Color::BLACK) {
+                output << "B";
+            } else {
+                output << "R";
+            }
+
+            output << ")\n";
+        }
+        _print(output, node->left, level + 1);
+        _print(output, node->right, level + 1);
+    }
+
+    /**
+     * @brief restores rb-tree features after key insertion
+     * @param node a node of tree
+     */
     void _insertFixup(std::shared_ptr<Node> node);
 
+    /**
+     * @brief restores rb-tree features after key removal
+     * @param node a node of tree
+     */
     void _deleteFixup(std::shared_ptr<Node> node);
 
     /**
@@ -103,6 +150,12 @@ private:
     auto _searchImpl(std::shared_ptr<Node> node, const value_type &key) -> std::shared_ptr<Node>;
 
     /**
+     * @brief an implementation of node removal
+     * @param node a node to remove
+     */
+    void _removeImpl(std::shared_ptr<Node> node);
+
+    /**
      * @brief left rotate method for tree balancing
      * @param node_x a node of tree
      */
@@ -117,7 +170,6 @@ private:
     std::shared_ptr<Node> _root;
     std::shared_ptr<Node> _null_node;
 };
-
 
 
 #include "RedBlackTree.hxx"
