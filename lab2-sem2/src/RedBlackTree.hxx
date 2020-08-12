@@ -8,7 +8,7 @@ RedBlackTree<T>::Node::Node(const value_type &key) :
         color{Color::RED},
         left{nullptr},
         right{nullptr},
-        parent{} {}
+        parent{nullptr} {}
 
 template<typename T>
 void RedBlackTree<T>::Node::switchColor() {
@@ -21,9 +21,8 @@ void RedBlackTree<T>::Node::switchColor() {
 
 template<typename T>
 RedBlackTree<T>::RedBlackTree() :
-        _null_node{std::make_shared<Node>(value_type{})} {
-    _null_node->left = _null_node->right = _null_node;
-    _null_node->parent = _null_node;
+        _null_node{new Node(value_type())} {
+    _null_node->parent = _null_node->left = _null_node->right = _null_node;
     _null_node->color = Node::Color::BLACK;
     _root = _null_node;
 }
@@ -43,7 +42,7 @@ void RedBlackTree<T>::insert(const value_type &key) {
         }
     }
 
-    auto new_node = std::make_shared<Node>(key);
+    auto new_node = new Node(key);
     new_node->parent = node_y;
     new_node->left = new_node->right = _null_node;
     if (node_y == _null_node) {
@@ -66,77 +65,78 @@ void RedBlackTree<T>::remove(const value_type &key) {
 }
 
 template<typename T>
-void RedBlackTree<T>::_removeImpl(std::shared_ptr<Node> node) {
-    auto node_y = node;
-    decltype(node) node_x;
-    typename Node::Color y_init_color = node_y->color;
+void RedBlackTree<T>::_removeImpl(Node *node) {
+    auto *y = node;
+    decltype(node) x;
+    auto y_original_color = y->color;
 
     if (node->left == _null_node) {
-        node_x = node->right;
+        x = node->right;
         _transplant(node, node->right);
     } else if (node->right == _null_node) {
-        node_x = node->left;
+        x = node->left;
         _transplant(node, node->left);
     } else {
-        node_y = _subtreeMinNode(node->right);
-        y_init_color = node_y->color;
-        node_x = node_y->right;
-        if (node_y->parent.lock() == node) {
-            node_x->parent = node_y;
+        y = _subtreeMinNode(node->right);
+        y_original_color = y->color;
+        x = y->right;
+        if (y->parent == node) {
+            x->parent = y;
         } else {
-            _transplant(node_y, node_y->right);
-            node_y->right = node->right;
-            node_y->right->parent = node_y;
+            _transplant(y, y->right);
+            y->right = node->right;
+            y->right->parent = y;
         }
-        _transplant(node, node_y);
-        node_y->left = node->left;
-        node_y->left->parent = node_y;
-        node_y->color = node->color;
+        _transplant(node, y);
+        y->left = node->left;
+        y->left->parent = y;
+        y->color = node->color;
     }
+    delete node;
 
-    if (y_init_color == Node::Color::BLACK) {
-        _deleteFixup(node_x);
+    if (y_original_color == Node::Color::BLACK) {
+        _deleteFixup(x);
     }
 }
 
 template<typename T>
-void RedBlackTree<T>::_insertFixup(std::shared_ptr<Node> node) {
-    while (node->parent.lock()->color == Node::Color::RED) {
-        if (node->parent.lock() == node->parent.lock()->parent.lock()->left) {
-            auto node_y = node->parent.lock()->parent.lock()->right;
+void RedBlackTree<T>::_insertFixup(Node *node) {
+    while (node->parent->color == Node::Color::RED) {
+        if (node->parent == node->parent->parent->left) {
+            auto node_y = node->parent->parent->right;
             if (node_y->color == Node::Color::RED) {
-                node->parent.lock()->color = Node::Color::BLACK;
+                node->parent->color = Node::Color::BLACK;
                 node_y->color = Node::Color::BLACK;
-                node->parent.lock()->parent.lock()->color = Node::Color::RED;
-                node = node->parent.lock()->parent.lock();
+                node->parent->parent->color = Node::Color::RED;
+                node = node->parent->parent;
 
             } else {
-                if (node == node->parent.lock()->right) {
-                    node = node->parent.lock();
+                if (node == node->parent->right) {
+                    node = node->parent;
                     _leftRotate(node);
                 }
-                node->parent.lock()->color = Node::Color::BLACK;
-                node->parent.lock()->parent.lock()->color = Node::Color::RED;
-                _rightRotate(node->parent.lock()->parent.lock());
+                node->parent->color = Node::Color::BLACK;
+                node->parent->parent->color = Node::Color::RED;
+                _rightRotate(node->parent->parent);
 
             }
 
         } else {
-            auto node_y = node->parent.lock()->parent.lock()->left;
+            auto node_y = node->parent->parent->left;
             if (node_y->color == Node::Color::RED) {
-                node->parent.lock()->color = Node::Color::BLACK;
+                node->parent->color = Node::Color::BLACK;
                 node_y->color = Node::Color::BLACK;
-                node->parent.lock()->parent.lock()->color = Node::Color::RED;
-                node = node->parent.lock()->parent.lock();
+                node->parent->parent->color = Node::Color::RED;
+                node = node->parent->parent;
 
             } else {
-                if (node == node->parent.lock()->left) {
-                    node = node->parent.lock();
+                if (node == node->parent->left) {
+                    node = node->parent;
                     _rightRotate(node);
                 }
-                node->parent.lock()->color = Node::Color::BLACK;
-                node->parent.lock()->parent.lock()->color = Node::Color::RED;
-                _leftRotate(node->parent.lock()->parent.lock());
+                node->parent->color = Node::Color::BLACK;
+                node->parent->parent->color = Node::Color::RED;
+                _leftRotate(node->parent->parent);
 
             }
         }
@@ -146,59 +146,54 @@ void RedBlackTree<T>::_insertFixup(std::shared_ptr<Node> node) {
 }
 
 template<typename T>
-void RedBlackTree<T>::_deleteFixup(std::shared_ptr<Node> node) {
-    while ((node != _root) && (node->color == Node::Color::BLACK)) {
-        if (node == node->parent.lock()->left) {
-            auto node_w = node->parent.lock()->right;
+void RedBlackTree<T>::_deleteFixup(Node *node) {
+    while (node != _root && node->color == Node::Color::BLACK) {
+        if (node == node->parent->left) {
+            auto node_w = node->parent->right;
             if (node_w->color == Node::Color::RED) {
                 node_w->color = Node::Color::BLACK;
-                node->parent.lock()->color = Node::Color::RED;
-                _leftRotate(node->parent.lock());
-                node_w = node->parent.lock()->right;
+                node->parent->color = Node::Color::RED;
+                _leftRotate(node->parent);
+                node_w = node->parent->right;
             }
-
             if (node_w->left->color == Node::Color::BLACK && node_w->right->color == Node::Color::BLACK) {
                 node_w->color = Node::Color::RED;
-                node = node->parent.lock();
-
+                node = node->parent;
             } else {
                 if (node_w->right->color == Node::Color::BLACK) {
                     node_w->left->color = Node::Color::BLACK;
                     node_w->color = Node::Color::RED;
                     _rightRotate(node_w);
-                    node_w = node->parent.lock()->right;
+                    node_w = node->parent->right;
                 }
-                node_w->color = node->parent.lock()->color;
-                node->parent.lock()->color = Node::Color::BLACK;
-                node_w->right->color == Node::Color::BLACK;
-                _leftRotate(node->parent.lock());
+                node_w->color = node->parent->color;
+                node->parent->color = Node::Color::BLACK;
+                node_w->right->color = Node::Color::BLACK;
+                _leftRotate(node->parent);
                 node = _root;
             }
-
         } else {
-            auto node_w = node->parent.lock()->left;
+            auto node_w = node->parent->left;
             if (node_w->color == Node::Color::RED) {
                 node_w->color = Node::Color::BLACK;
-                node->parent.lock()->color = Node::Color::RED;
-                _rightRotate(node->parent.lock());
-                node_w = node->parent.lock()->left;
+                node->parent->color = Node::Color::RED;
+                _rightRotate(node->parent);
+                node_w = node->parent->left;
             }
-
             if (node_w->right->color == Node::Color::BLACK && node_w->left->color == Node::Color::BLACK) {
                 node_w->color = Node::Color::RED;
-                node = node->parent.lock();
-
+                node = node->parent;
             } else {
                 if (node_w->left->color == Node::Color::BLACK) {
                     node_w->right->color = Node::Color::BLACK;
                     node_w->color = Node::Color::RED;
                     _leftRotate(node_w);
-                    node_w = node->parent.lock()->left;
+                    node_w = node->parent->left;
                 }
-                node_w->color = node->parent.lock()->color;
-                node->parent.lock()->color = Node::Color::BLACK;
-                node_w->left->color == Node::Color::BLACK;
-                _rightRotate(node->parent.lock());
+                node_w->color = node->parent->color;
+                node->parent->color = Node::Color::BLACK;
+                node_w->left->color = Node::Color::BLACK;
+                _rightRotate(node->parent);
                 node = _root;
             }
         }
@@ -207,14 +202,13 @@ void RedBlackTree<T>::_deleteFixup(std::shared_ptr<Node> node) {
 }
 
 template<typename T>
-void RedBlackTree<T>::_transplant(std::shared_ptr<Node> dst,
-                                  std::shared_ptr<Node> src) {
-    if (dst->parent.lock() == _null_node) {
+void RedBlackTree<T>::_transplant(Node *dst, Node *src) {
+    if (dst->parent == _null_node) {
         _root = src;
-    } else if (dst == dst->parent.lock()->left) {
-        dst->parent.lock()->left = src;
+    } else if (dst == dst->parent->left) {
+        dst->parent->left = src;
     } else {
-        dst->parent.lock()->right = src;
+        dst->parent->right = src;
     }
 
     if (src != _null_node) {
@@ -223,8 +217,8 @@ void RedBlackTree<T>::_transplant(std::shared_ptr<Node> dst,
 }
 
 template<typename T>
-auto RedBlackTree<T>::_subtreeMinNode(std::shared_ptr<Node> subtree_root) -> std::shared_ptr<Node> {
-    auto ptr = _root;
+auto RedBlackTree<T>::_subtreeMinNode(Node *subtree_root) -> Node * {
+    auto ptr = subtree_root;
 
     while (ptr->left != _null_node) {
         ptr = ptr->left;
@@ -234,8 +228,8 @@ auto RedBlackTree<T>::_subtreeMinNode(std::shared_ptr<Node> subtree_root) -> std
 }
 
 template<typename T>
-auto RedBlackTree<T>::_subtreeMaxNode(std::shared_ptr<Node> subtree_root) -> std::shared_ptr<Node> {
-    auto ptr = _root;
+auto RedBlackTree<T>::_subtreeMaxNode(Node *subtree_root) -> Node * {
+    auto ptr = subtree_root;
 
     while (ptr->right != _null_node) {
         ptr = ptr->right;
@@ -245,37 +239,37 @@ auto RedBlackTree<T>::_subtreeMaxNode(std::shared_ptr<Node> subtree_root) -> std
 }
 
 template<typename T>
-auto RedBlackTree<T>::_nodeSuccessor(std::shared_ptr<Node> node) -> std::shared_ptr<Node> {
+auto RedBlackTree<T>::_nodeSuccessor(Node *node) -> Node * {
     if (node->right != _null_node) {
         return _subtreeMinNode(node->right);
     }
 
-    auto ptr = node->parent.lock();
+    auto ptr = node->parent;
     while ((ptr != _null_node) && (node == ptr->right)) {
         node = ptr;
-        ptr = ptr->parent.lock();
+        ptr = ptr->parent;
     }
 
     return ptr;
 }
 
 template<typename T>
-auto RedBlackTree<T>::_nodePredecessor(std::shared_ptr<Node> node) -> std::shared_ptr<Node> {
+auto RedBlackTree<T>::_nodePredecessor(Node *node) -> Node * {
     if (node->left != _null_node) {
         return _subtreeMaxNode(node->left);
     }
 
-    auto ptr = node->parent.lock();
+    auto ptr = node->parent;
     while ((ptr != _null_node) && (node == ptr->left)) {
         node = ptr;
-        ptr = ptr->parent.lock();
+        ptr = ptr->parent;
     }
 
     return ptr;
 }
 
 template<typename T>
-auto RedBlackTree<T>::_searchImpl(std::shared_ptr<Node> node, const value_type &key) -> std::shared_ptr<Node> {
+auto RedBlackTree<T>::_searchImpl(Node *node, const value_type &key) -> Node * {
     if ((node == _null_node) || (key == node->key)) {
         return node;
     }
@@ -288,7 +282,7 @@ auto RedBlackTree<T>::_searchImpl(std::shared_ptr<Node> node, const value_type &
 }
 
 template<typename T>
-void RedBlackTree<T>::_leftRotate(std::shared_ptr<Node> node_x) {
+void RedBlackTree<T>::_leftRotate(Node *node_x) {
     auto node_y = node_x->right;
     node_x->right = node_y->left;
 
@@ -297,12 +291,12 @@ void RedBlackTree<T>::_leftRotate(std::shared_ptr<Node> node_x) {
     }
 
     node_y->parent = node_x->parent;
-    if (node_x->parent.lock() == _null_node) {
+    if (node_x->parent == _null_node) {
         _root = node_y;
-    } else if (node_x == node_x->parent.lock()->left) {
-        node_x->parent.lock()->left = node_y;
+    } else if (node_x == node_x->parent->left) {
+        node_x->parent->left = node_y;
     } else {
-        node_x->parent.lock()->right = node_y;
+        node_x->parent->right = node_y;
     }
 
     node_y->left = node_x;
@@ -310,7 +304,7 @@ void RedBlackTree<T>::_leftRotate(std::shared_ptr<Node> node_x) {
 }
 
 template<typename T>
-void RedBlackTree<T>::_rightRotate(std::shared_ptr<Node> node_x) {
+void RedBlackTree<T>::_rightRotate(Node *node_x) {
     auto node_y = node_x->left;
     node_x->left = node_y->right;
 
@@ -319,12 +313,12 @@ void RedBlackTree<T>::_rightRotate(std::shared_ptr<Node> node_x) {
     }
 
     node_y->parent = node_x->parent;
-    if (node_x->parent.lock() == _null_node) {
+    if (node_x->parent == _null_node) {
         _root = node_y;
-    } else if (node_x == node_x->parent.lock()->left) {
-        node_x->parent.lock()->left = node_y;
+    } else if (node_x == node_x->parent->left) {
+        node_x->parent->left = node_y;
     } else {
-        node_x->parent.lock()->right = node_y;
+        node_x->parent->right = node_y;
     }
 
     node_y->right = node_x;
