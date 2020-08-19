@@ -211,9 +211,7 @@ void RedBlackTree<T>::_transplant(Node *dst, Node *src) {
         dst->parent->right = src;
     }
 
-    if (src != _null_node) {
-        src->parent = dst->parent;
-    }
+    src->parent = dst->parent;
 }
 
 template<typename T>
