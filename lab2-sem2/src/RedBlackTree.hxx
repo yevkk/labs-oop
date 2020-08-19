@@ -66,36 +66,36 @@ void RedBlackTree<T>::remove(const value_type &key) {
 
 template<typename T>
 void RedBlackTree<T>::_removeImpl(Node *node) {
-    auto *y = node;
-    decltype(node) x;
-    auto y_original_color = y->color;
+    auto *node_y = node;
+    decltype(node) node_x;
+    auto y_original_color = node_y->color;
 
     if (node->left == _null_node) {
-        x = node->right;
+        node_x = node->right;
         _transplant(node, node->right);
     } else if (node->right == _null_node) {
-        x = node->left;
+        node_x = node->left;
         _transplant(node, node->left);
     } else {
-        y = _subtreeMinNode(node->right);
-        y_original_color = y->color;
-        x = y->right;
-        if (y->parent == node) {
-            x->parent = y;
+        node_y = _subtreeMinNode(node->right);
+        y_original_color = node_y->color;
+        node_x = node_y->right;
+        if (node_y->parent == node) {
+            node_x->parent = node_y;
         } else {
-            _transplant(y, y->right);
-            y->right = node->right;
-            y->right->parent = y;
+            _transplant(node_y, node_y->right);
+            node_y->right = node->right;
+            node_y->right->parent = node_y;
         }
-        _transplant(node, y);
-        y->left = node->left;
-        y->left->parent = y;
-        y->color = node->color;
+        _transplant(node, node_y);
+        node_y->left = node->left;
+        node_y->left->parent = node_y;
+        node_y->color = node->color;
     }
     delete node;
 
     if (y_original_color == Node::Color::BLACK) {
-        _deleteFixup(x);
+        _deleteFixup(node_x);
     }
 }
 
