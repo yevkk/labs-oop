@@ -188,7 +188,7 @@ public:
      *         (keys smaller than node's key are stored in left subtree, bigger - in right subtree),
      *         else - false
      */
-    bool checkValues();
+    [[nodiscard]] bool checkValues();
 
     /**
      * @brief checks if nodes of tree have correct colors
@@ -196,13 +196,13 @@ public:
      *         (1. root and all leaves (nil) are black; 2. if node is red, both of its children are black),
      *         else - false
      */
-    bool checkColors();
+    [[nodiscard]] bool checkColors();
 
     /**
      * @brief checks if all black heights of leaves are equal
      * @return true if the rule for black height is satisfied, else - false
      */
-    bool checkBlackHeights();
+    [[nodiscard]] bool checkBlackHeights();
 
 private:
     using Node = typename RedBlackTree<T>::Node;
@@ -214,21 +214,21 @@ private:
      *         a pointer to node with the smallest key in a subtree with a root in given node and
      *         a pointer to node with the greatest key in a subtree with a root in given node
      */
-    auto _checkValuesImpl(Node *node) -> std::tuple<bool, Node *, Node *>;
+    [[nodiscard]] auto _checkValuesImpl(Node *node) -> std::tuple<bool, Node *, Node *>;
 
     /**
      * @brief an implementation of checking nodes' colors
      * @param node a node of tree
      * @return true if rule for colors is satisfied for given node, its left and right subtrees, else - false
      */
-    bool _checkColorsImpl(Node *node);
+    [[nodiscard]] bool _checkColorsImpl(Node *node);
 
     /**
      * @brief an implementation of checking rule on black heights
      * @param node a node of tree
      * @return a pair of a bool result of rule satisfaction for given node and a black height of given node
      */
-    auto _checkBlackHeightsImpl(Node *node) -> std::pair<bool, std::size_t>;
+    [[nodiscard]] auto _checkBlackHeightsImpl(Node *node) -> std::pair<bool, std::size_t>;
 };
 
 #include "RedBlackTree.hxx"
