@@ -16,7 +16,7 @@ void RedBlackTree<T>::Node::switchColor() {
         color = Color::RED;
     } else {
         color = Color::BLACK;
-    };
+    }
 }
 
 template<typename T>
@@ -321,4 +321,88 @@ void RedBlackTree<T>::_rightRotate(Node *node_x) {
 
     node_y->right = node_x;
     node_x->parent = node_y;
+}
+
+template<typename T>
+RedBlackTreeTestable<T>::RedBlackTreeTestable() : RedBlackTree<T>() {}
+
+template<typename T>
+bool RedBlackTreeTestable<T>::checkValues() {
+    return std::get<0>(_checkValuesImpl(this->_root));
+}
+
+template<typename T>
+bool RedBlackTreeTestable<T>::checkColors() {
+    return this->_root->color == RedBlackTree<T>::Node::Color::BLACK &&
+           this->_null_node->color == RedBlackTree<T>::Node::Color::BLACK &&
+           _checkColorsImpl(this->_root);
+}
+
+template<typename T>
+bool RedBlackTreeTestable<T>::checkBlackHeights() {
+    return _checkBlackHeightsImpl(this->_root).first;
+}
+
+template<typename T>
+auto RedBlackTreeTestable<T>::_checkValuesImpl(Node *node) -> std::tuple<bool, Node *, Node *> {
+    if (node->left != this->_null_node && node->right != this->_null_node) {
+        auto[left_check, left_min_node, left_max_node] = _checkValuesImpl(node->left);
+        auto[right_check, right_min_node, right_max_node] = _checkValuesImpl(node->right);
+
+        return std::make_tuple(
+                left_check && right_check && (node->key > left_max_node->key) && (node->key <= right_min_node->key),
+                left_min_node,
+                right_max_node
+        );
+    }
+
+    if (node->right != this->_null_node) {
+        auto[right_check, right_min_node, right_max_node] = _checkValuesImpl(node->right);
+        return std::make_tuple(
+                right_check && (node->key <= right_min_node->key),
+                node,
+                right_max_node
+        );
+    }
+
+    if (node->left != this->_null_node) {
+        auto[left_check, left_min_node, left_max_node] = _checkValuesImpl(node->left);
+        return std::make_tuple(
+                left_check && (node->key > left_max_node->key),
+                left_min_node,
+                node
+        );
+    }
+
+    return std::make_tuple(true, node, node);
+}
+
+template<typename T>
+bool RedBlackTreeTestable<T>::_checkColorsImpl(Node *node) {
+    if (node == this->_null_node) {
+        return true;
+    } else if (node->color == RedBlackTree<T>::Node::Color::BLACK) {
+        return _checkColorsImpl(node->left) && _checkColorsImpl(node->right);
+    } else {
+        return node->left->color == RedBlackTree<T>::Node::Color::BLACK &&
+               node->right->color == RedBlackTree<T>::Node::Color::BLACK &&
+               _checkColorsImpl(node->left) &&
+               _checkColorsImpl(node->right);
+    }
+}
+
+template<typename T>
+auto RedBlackTreeTestable<T>::_checkBlackHeightsImpl(Node* node) -> std::pair<bool, std::size_t> {
+    if (node == this->_null_node) {
+        return {true, 1};
+    }
+
+    auto [left_check, left_black_height] = _checkBlackHeightsImpl(node->left);
+    auto [right_check, right_black_height] = _checkBlackHeightsImpl(node->right);
+
+    if(left_check && right_check && (left_black_height == right_black_height)) {
+        return {true, (node->color == Node::Color::BLACK ? left_black_height + 1 : left_black_height)};
+    } else {
+        return {false, 0};
+    }
 }
