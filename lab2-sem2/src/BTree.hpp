@@ -2,6 +2,8 @@
 
 #include <memory>
 #include <vector>
+#include <tuple>
+#include <optional>
 
 /**
  * included for quick debug output
@@ -20,7 +22,7 @@ class BTree {
 public:
     using value_type = T;
 
-private:
+protected:
     /**
      * @brief tree node structure
      */
@@ -179,10 +181,66 @@ private:
     bool _searchImpl(std::shared_ptr<Node> node,
                      const value_type &key);
 
+protected:
     std::size_t _min_degree;
     std::size_t _min_node_fill;
     std::size_t _max_node_fill;
     std::shared_ptr<Node> _root;
+};
+
+/**
+ * @brief a decorated BTree class with methods for checking the correctness of constructed structure
+ * @tparam T a type of data stored in tree
+ */
+template<typename T>
+class BTreeTestable : public BTree<T> {
+public:
+    explicit BTreeTestable(std::size_t min_degree = MIN_DEGREE);
+
+    /**
+     * @brief checks if keys are stored correctly in tree
+     * @return true if keys are stored correctly, else - false
+     */
+    [[nodiscard]] bool checkValues();
+
+    /**
+     * @brief checks number of keys stored in nodes
+     * @return true if all nodes are filled enough and there is no overflow, else - false
+     */
+    [[nodiscard]] bool checkFilling();
+
+    /**
+     * @brief checks heights in tree
+     * @return true if all leaves have equal heights, else - false
+     */
+    [[nodiscard]] bool checkHeights();
+
+private:
+    using Node = typename BTree<T>::Node;
+
+    /**
+     * @brief an implementation of checking keys storing in tree
+     * @param node a node of tree
+     * @param lower_bound a value expected to be lower than any key stored in the given node
+     * @param upper_bound a value expected to be greater than any key stored in the given node
+     * @return true if all rules on keys storing are satisfied, else - false
+     */
+    [[nodiscard]] bool _checkValuesImpl(std::shared_ptr<Node> node,
+                                        const std::optional<T> &lower_bound,
+                                        const std::optional<T> &upper_bound);
+
+    /**
+     * @brief an implementation of node's filling check
+     * @return true if node's filling is greater than required value and smaller than maximum allowed, else - false
+     */
+    [[nodiscard]] bool _checkFillingImpl(std::shared_ptr<Node> node);
+
+    /**
+     * @brief an implementation of heights check
+     * @param node a node of tree
+     * @return a pair of bool result of checking rules on height in given node and height of given node
+     */
+    [[nodiscard]] auto _checkHeightsImpl(std::shared_ptr<Node> node) -> std::pair<bool, std::size_t>;
 };
 
 #include "BTree.hxx"

@@ -280,3 +280,94 @@ bool BTree<T>::_searchImpl(std::shared_ptr<Node> node, const value_type &key) {
         return _searchImpl(node->children[dest_child_index], key);
     }
 }
+
+template<typename T>
+BTreeTestable<T>::BTreeTestable(std::size_t min_degree) : BTree<T>(min_degree) {}
+
+template<typename T>
+bool BTreeTestable<T>::checkValues() {
+    return _checkValuesImpl(this->_root, std::nullopt, std::nullopt);
+}
+
+template<typename T>
+bool BTreeTestable<T>::checkFilling() {
+    return _checkFillingImpl(this->_root);
+}
+
+template<typename T>
+bool BTreeTestable<T>::checkHeights() {
+    return _checkHeightsImpl(this->_root).first;
+}
+
+template<typename T>
+bool BTreeTestable<T>::_checkValuesImpl(std::shared_ptr<Node> node,
+                                        const std::optional<T> &lower_bound,
+                                        const std::optional<T> &upper_bound) {
+    bool res = true;
+    for (std::size_t i = 1; i < node->size(); i++) {
+        res &= node->keys[i - 1] <= node->keys[i];
+    }
+
+    if (lower_bound.has_value()) {
+        res &= (node->keys.front() >= lower_bound.value());
+    }
+
+    if (upper_bound.has_value()) {
+        res &= (node->keys.back() <= upper_bound.value());
+    }
+
+    if (!res) {
+        return false;
+    }
+
+    if (!node->is_leaf) {
+        for (std::size_t i = 1; i < node->size(); i++) {
+            res &= _checkValuesImpl(node->children[i], node->keys[i - 1], node->keys[i]);
+        }
+        res &= _checkValuesImpl(node->children.front(), lower_bound, node->keys.front());
+        res &= _checkValuesImpl(node->children.back(), node->keys.back(), upper_bound);
+    }
+
+    return res;
+}
+
+template<typename T>
+bool BTreeTestable<T>::_checkFillingImpl(std::shared_ptr<Node> node) {
+    bool res;
+
+    if (node == this->_root) {
+        res = (node->size() <= this->_max_node_fill);
+    } else {
+        res = (node->size() >= this->_min_node_fill) && (node->size() <= this->_max_node_fill);
+    }
+
+    if (!node->is_leaf) {
+        for (const auto &child : node->children) {
+            if (!res) {
+                return false;
+            }
+            res &= _checkFillingImpl(child);
+        }
+    }
+
+    return res;
+}
+
+template<typename T>
+auto BTreeTestable<T>::_checkHeightsImpl(std::shared_ptr<Node> node) -> std::pair<bool, std::size_t> {
+    if (node->is_leaf) {
+        return {true, 1};
+    }
+
+    auto [res, height] = _checkHeightsImpl(node->children[0]);
+    for (auto it = node->children.begin() + 1; it != node->children.end(); it++) {
+        if (!res) {
+            return {false, 0};
+        }
+
+        auto [res_step, height_step] = _checkHeightsImpl(*it);
+        res &= res_step && (height == height_step);
+    }
+
+    return {res, height};
+}
