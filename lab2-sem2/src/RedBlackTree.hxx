@@ -65,6 +65,11 @@ void RedBlackTree<T>::remove(const value_type &key) {
 }
 
 template<typename T>
+bool RedBlackTree<T>::includes(const value_type &key) {
+    return _searchImpl(_root, key) != _null_node;
+}
+
+template<typename T>
 void RedBlackTree<T>::_removeImpl(Node *node) {
     auto *node_y = node;
     decltype(node) node_x;
@@ -355,7 +360,7 @@ auto RedBlackTreeTestable<T>::_checkValuesImpl(Node *node) -> std::tuple<bool, N
         auto[right_check, right_min_node, right_max_node] = _checkValuesImpl(node->right);
 
         return std::make_tuple(
-                left_check && right_check && (node->key > left_max_node->key) && (node->key <= right_min_node->key),
+                left_check && right_check && (node->key >= left_max_node->key) && (node->key <= right_min_node->key),
                 left_min_node,
                 right_max_node
         );
@@ -373,7 +378,7 @@ auto RedBlackTreeTestable<T>::_checkValuesImpl(Node *node) -> std::tuple<bool, N
     if (node->left != this->_null_node) {
         auto[left_check, left_min_node, left_max_node] = _checkValuesImpl(node->left);
         return std::make_tuple(
-                left_check && (node->key > left_max_node->key),
+                left_check && (node->key >= left_max_node->key),
                 left_min_node,
                 node
         );
