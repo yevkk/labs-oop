@@ -204,6 +204,12 @@ public:
      */
     [[nodiscard]] bool checkBlackHeights();
 
+    /**
+     * @brief runs all possible checks for tree
+     * @return true if all checks passed successfully, else - false
+     */
+    [[nodiscard]] bool complexCheck();
+
 private:
     using Node = typename RedBlackTree<T>::Node;
 

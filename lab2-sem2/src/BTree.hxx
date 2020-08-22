@@ -300,6 +300,11 @@ bool BTreeTestable<T>::checkHeights() {
 }
 
 template<typename T>
+bool BTreeTestable<T>::complexCheck() {
+    return checkValues() && checkFilling() && checkHeights();
+}
+
+template<typename T>
 bool BTreeTestable<T>::_checkValuesImpl(std::shared_ptr<Node> node,
                                         const std::optional<T> &lower_bound,
                                         const std::optional<T> &upper_bound) {

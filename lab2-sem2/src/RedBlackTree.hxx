@@ -344,6 +344,11 @@ bool RedBlackTreeTestable<T>::checkBlackHeights() {
 }
 
 template<typename T>
+bool RedBlackTreeTestable<T>::complexCheck() {
+    return checkValues() && checkColors() && checkBlackHeights();
+}
+
+template<typename T>
 auto RedBlackTreeTestable<T>::_checkValuesImpl(Node *node) -> std::tuple<bool, Node *, Node *> {
     if (node->left != this->_null_node && node->right != this->_null_node) {
         auto[left_check, left_min_node, left_max_node] = _checkValuesImpl(node->left);
