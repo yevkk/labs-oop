@@ -3,6 +3,7 @@ project(tests)
 set(SRC_LIST
         main.cpp
         TestsBTree.cpp
+        TestsRedBlackTree.cpp
         )
 
 add_executable(tests ${SRC_LIST})

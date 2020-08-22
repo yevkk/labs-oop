@@ -4,25 +4,16 @@
 #include "../src/RedBlackTree.hpp"
 
 #include <random>
-#include <ctime>
 #include <iostream>
-#include <iterator>
 #include <unordered_set>
 
-bool printSeedSeq(std::seed_seq &seed) {
-    std::cout << "SEED SEQUENCE: ";
-    seed.param(std::ostream_iterator<int>(std::cout, " "));
-    std::cout << std::endl;
 
-    return {};
-}
 
 TEST_CASE("Red-Black Tree test", "[Red-Black Tree]") {
-    std::random_device rd{};
-    std::seed_seq seed{rd(), static_cast<unsigned int>(time(nullptr))};
+    auto& seed = utils::TestParam::seed();
 
     //to avoid printing seed sequence multiple times
-    [[maybe_unused]] static auto print = printSeedSeq(seed);
+    [[maybe_unused]] static auto print = utils::printSeedSeq(seed);
 
     auto randomInt = [&seed](int lower_bound, int upper_bound) {
         static std::mt19937_64 gen(seed);
