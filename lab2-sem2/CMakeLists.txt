@@ -13,6 +13,7 @@ set(SRC_LIST
         ${SRC_DIR}/Tree.hpp
         ${SRC_DIR}/TreeAdapters.hpp
         ${SRC_DIR}/TreeAdapters.hxx
+        ${SRC_DIR}/TreeFactory.hpp
         ${SRC_DIR}/BTree.hpp
         ${SRC_DIR}/BTree.hxx
         ${SRC_DIR}/RedBlackTree.hpp
