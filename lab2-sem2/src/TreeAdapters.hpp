@@ -42,7 +42,7 @@ public:
 
     ~RedBlackTreeAdapter() = default;
 
-public:
+private:
     std::unique_ptr<RedBlackTree<T>> _tree;
 };
 
@@ -84,7 +84,7 @@ public:
 
     ~BTreeAdapter() = default;
 
-public:
+private:
     std::unique_ptr<BTree<T>> _tree;
 };
 
