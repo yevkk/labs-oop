@@ -14,6 +14,8 @@ set(SRC_LIST
         ${SRC_DIR}/TreeAdapters.hpp
         ${SRC_DIR}/TreeAdapters.hxx
         ${SRC_DIR}/TreeFactory.hpp
+        ${SRC_DIR}/TreeCommands.hpp
+        ${SRC_DIR}/TreeCommands.hxx
         ${SRC_DIR}/BTree.hpp
         ${SRC_DIR}/BTree.hxx
         ${SRC_DIR}/RedBlackTree.hpp
@@ -38,5 +40,5 @@ if (ENABLE_TESTS)
 endif()
 
 # executable for quick testing in main.cpp
-add_executable(main main.cpp src/TreeFactory.hpp)
+add_executable(main main.cpp)
 target_link_libraries(main PRIVATE ${LIB_NAME})
