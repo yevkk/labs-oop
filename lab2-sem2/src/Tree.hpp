@@ -7,6 +7,8 @@
 template<typename T>
 class Tree {
 public:
+    using value_type = T;
+
     /**
      * @brief inserts a new key tree
      * @param key a key to insert
