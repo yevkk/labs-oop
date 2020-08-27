@@ -11,14 +11,14 @@ namespace utils {
 struct BMParams {
     struct small {
         static constexpr std::size_t start_point = 1;
-        static constexpr std::size_t end_point = 64;
+        static constexpr std::size_t end_point = 32;
         static constexpr std::size_t multiplier = 2;
     };
 
     struct big {
         static constexpr std::size_t start_point = 64;
-        static constexpr std::size_t end_point = 16384;
-        static constexpr std::size_t multiplier = 2;
+        static constexpr std::size_t end_point = 16384; //131072
+        static constexpr std::size_t multiplier = 2; //4
     };
 
     static constexpr int int_lower_bound = -10000;
