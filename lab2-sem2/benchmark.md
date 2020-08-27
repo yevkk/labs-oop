@@ -1,4 +1,4 @@
-## Benchamrk results
+## Benchmark results
 Used [Google Benchmark](https://github.com/google/benchmark "Sourcecode repository")
 
 `Run on (8 X 1800 MHz CPU s)`
