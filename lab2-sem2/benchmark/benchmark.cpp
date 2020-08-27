@@ -1,13 +1,32 @@
 #include <benchmark/benchmark.h>
 
-#include <vector>
+#include "BenchmarkUtils.hpp"
 
-void BM_StringCreation(benchmark::State& state) {
-    std::vector<int> a(state.range(0));
-    for (auto i = 0; i < state.range(0); i++) {
-        a.push_back(i);
+#include "../src/RedBlackTree.hpp"
+
+
+static void BM_insert(benchmark::State &state) {
+    RedBlackTree<int> tree;
+    for (auto _ : state) {
+        for (std::size_t i = 0; i < state.range(0); i++) {
+            tree.insert(
+                    utils::randomInt(
+                            utils::BMParams::int_lower_bound,
+                            utils::BMParams::int_upper_bound
+                    )
+            );
+        }
     }
 }
-BENCHMARK(BM_StringCreation)->RangeMultiplier(2)->Range(8, 1024);
+
+BENCHMARK(BM_insert)
+    ->RangeMultiplier(utils::BMParams::small::multiplier)
+    ->Range(utils::BMParams::small::start_point, utils::BMParams::small::end_point)
+    ->Unit(benchmark::kNanosecond);
+
+BENCHMARK(BM_insert)
+        ->RangeMultiplier(utils::BMParams::big::multiplier)
+        ->Range(utils::BMParams::big::start_point, utils::BMParams::big::end_point)
+        ->Unit(benchmark::kMillisecond);
 
 BENCHMARK_MAIN();

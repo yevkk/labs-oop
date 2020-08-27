@@ -1,9 +1,8 @@
 project(lab_benchmark)
 
-add_executable(lab_benchmark benchmark.cpp)
+add_executable(lab_benchmark benchmark.cpp BenchmarkUtils.hpp)
 
-#PRIVATE ${LIB_NAME}
-target_link_libraries(lab_benchmark benchmark::benchmark)
+target_link_libraries(lab_benchmark PRIVATE benchmark::benchmark ${LIB_NAME})
 
 add_subdirectory(googletest)
 add_subdirectory(benchmark)
