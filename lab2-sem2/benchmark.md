@@ -1,4 +1,4 @@
-##Benchamrk results
+## Benchamrk results
 Used [Google Benchmark](https://github.com/google/benchmark "Sourcecode repository")
 
 `Run on (8 X 1800 MHz CPU s)`
@@ -25,7 +25,7 @@ Every time measurement includes vector of keys' iteration
 
 ---
 
-###Insertion
+### Insertion
 Time taken to insert keys to empty tree
 
 | Number of keys | Time (Red-Black tree) | Time (B-tree) |
@@ -48,7 +48,7 @@ Time taken to insert keys to empty tree
 
 ---
 
-###Removal
+### Removal
 Time taken to remove all keys from tree (key is chosen randomly)
 
 | Number of keys | Time (Red-Black tree) | Time (B-tree) |
@@ -71,7 +71,7 @@ Time taken to remove all keys from tree (key is chosen randomly)
 
 ---
 
-###Search
+### Search
 
 Time taken to find all keys one by one in tree (key is chosen randomly)
 
