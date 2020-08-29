@@ -2,13 +2,12 @@
 
 #include <iostream>
 #include <cassert>
+#include <algorithm>
 #include "Matrix.hpp"
 
 namespace detail {
     template<typename TT>
     Matrix<TT> defaultMultiplication(const Matrix<TT> &lhs, const Matrix<TT> &rhs) {
-        assert(lhs.size_cols() == rhs.size_rows() && "Incorrect");
-
         Matrix res(lhs.size_rows(), rhs.size_cols(), 0);
 
         for (std::size_t i = 0; i < lhs.size_rows(); i++)
@@ -18,6 +17,65 @@ namespace detail {
 
         return res;
     }
+
+    template<typename TT>
+    Matrix<TT> StrassensMultiplication(const Matrix<TT> &lhs,
+                                       const Matrix<TT> &rhs,
+                                       MatrixMultiplicationPolicy policy) {
+
+        std::size_t sqr_size = std::max({lhs.size_rows(), lhs.size_cols(), rhs.size_rows(), rhs.size_cols()});
+        std::size_t power2 = 1;
+        while (power2 < sqr_size) {
+            power2 *= 2;
+        }
+
+        Matrix<TT> new_lhs(power2, power2, 0);
+        Matrix<TT> new_rhs(power2, power2, 0);
+
+        for (std::size_t i = 0; i < lhs.size_rows(); i++) {
+            std::copy(lhs._rows_data[i].begin(), lhs._rows_data[i].end(), new_lhs._rows_data[i].begin());
+        }
+
+        for (std::size_t i = 0; i < rhs.size_rows(); i++) {
+            std::copy(rhs._rows_data[i].begin(), rhs._rows_data[i].end(), new_rhs._rows_data[i].begin());
+        }
+
+        Matrix<TT> sub_res {{0}};
+        if (policy == MatrixMultiplicationPolicy::Strassen) {
+            sub_res = StrassensMultiplicationStep(new_lhs, new_rhs, power2);
+        } else {
+            sub_res = StrassensMultiplicationStepParallel(new_lhs, new_rhs, power2);
+        }
+
+        Matrix res(lhs.size_rows(), rhs.size_cols(), 0);
+        for (std::size_t i = 0; i < lhs.size_rows(); i++) {
+            std::copy(sub_res._rows_data[i].begin(),
+                      sub_res._rows_data[i].begin() + res.size_cols(),
+                      res._rows_data[i].begin()
+            );
+        }
+
+        return res;
+    }
+
+    template<typename TT>
+    Matrix<TT> StrassensMultiplicationStep(const Matrix<TT> &lhs,
+                                           const Matrix<TT> &rhs,
+                                           const std::size_t &size) {
+        //TODO: implement this
+        std::cout << "ITS'S A TRAP" << std::endl;
+        return {size, size, 2810};
+    }
+
+    template<typename TT>
+    Matrix<TT> StrassensMultiplicationStepParallel(const Matrix<TT> &lhs,
+                                                   const Matrix<TT> &rhs,
+                                                   const std::size_t &size) {
+        //TODO: implement this
+        std::cout << "HELLO THERE" << std::endl;
+        return {size, size, 2810};
+    }
+
 }
 
 template<typename T>
@@ -94,8 +152,8 @@ template<typename T>
 bool operator==(const Matrix<T> &lhs, const Matrix<T> &rhs) {
     if (lhs.size_rows() != rhs.size_rows() || lhs.size_cols() != rhs.size_cols()) return false;
 
-    for(int i = 0; i < lhs.size_rows(); i++){
-        for(int j = 0; j < lhs.size_cols(); j++){
+    for (int i = 0; i < lhs.size_rows(); i++) {
+        for (int j = 0; j < lhs.size_cols(); j++) {
             if (lhs(i, j) != rhs(i, j)) return false;
         }
     }
@@ -110,7 +168,7 @@ bool operator!=(const Matrix<T> &lhs, const Matrix<T> &rhs) {
 
 template<typename T>
 template<typename OStream>
-void Matrix<T>::print(OStream& os) {
+void Matrix<T>::print(OStream &os) {
     for (std::size_t i = 0; i < size_rows(); i++) {
         for (std::size_t j = 0; j < size_cols(); j++) {
             os << _rows_data[i][j] << ' ';
@@ -119,18 +177,13 @@ void Matrix<T>::print(OStream& os) {
     }
 }
 
-
-
 template<typename T>
-Matrix<T> multiply(const Matrix<T> &lhs, const Matrix<T> &rhs,  MatrixMultiplicationPolicy policy) {
-    switch (policy) {
-        case MatrixMultiplicationPolicy::Default:
-            return detail::defaultMultiplication(std::move(lhs), std::move(rhs));
-        case MatrixMultiplicationPolicy::Strassen:
-            return {{0}};
-        case MatrixMultiplicationPolicy::StrassenParallel:
-            return {{0}};
-    }
+Matrix<T> multiply(const Matrix<T> &lhs, const Matrix<T> &rhs, MatrixMultiplicationPolicy policy) {
+    assert(lhs.size_cols() == rhs.size_rows() && "Incorrect arguments");
 
-    return {{0}};
+    if (policy == MatrixMultiplicationPolicy::Default) {
+        return detail::defaultMultiplication(std::move(lhs), std::move(rhs));
+    } else {
+        return detail::StrassensMultiplication(std::move(lhs), std::move(rhs), policy);
+    }
 }

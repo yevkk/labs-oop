@@ -6,9 +6,31 @@
 template<typename T>
 class Matrix;
 
+enum class MatrixMultiplicationPolicy {
+    Default, Strassen, StrassenParallel
+};
+
 namespace detail {
     template<typename TT>
     Matrix<TT> defaultMultiplication(const Matrix<TT> &lhs, const Matrix<TT> &rhs);
+
+    template<typename TT>
+    Matrix<TT> StrassensMultiplication(const Matrix<TT> &lhs,
+                                       const Matrix<TT> &rhs,
+                                       MatrixMultiplicationPolicy policy
+    );
+
+    template<typename TT>
+    Matrix<TT> StrassensMultiplicationStep(const Matrix<TT> &lhs,
+                                           const Matrix<TT> &rhs,
+                                           const std::size_t &size
+    );
+
+    template<typename TT>
+    Matrix<TT> StrassensMultiplicationStepParallel(const Matrix<TT> &lhs,
+                                                   const Matrix<TT> &rhs,
+                                                   const std::size_t &size
+    );
 }
 
 /**
@@ -20,8 +42,6 @@ class Matrix {
     static_assert(std::is_arithmetic_v<T>);
 
 public:
-    Matrix() = delete;
-
     /**
      * @brief constructor
      * @param size_r number of rows
@@ -54,7 +74,7 @@ public:
     [[nodiscard]] std::size_t size_rows() const;
 
     /**
-     * @return nu,ber of columns in matrix
+     * @return number of columns in matrix
      */
     [[nodiscard]] std::size_t size_cols() const;
 
@@ -69,13 +89,27 @@ public:
     template<typename TT>
     friend Matrix<TT> detail::defaultMultiplication(const Matrix<TT> &lhs, const Matrix<TT> &rhs);
 
+    template<typename TT>
+    friend Matrix<TT> detail::StrassensMultiplication(const Matrix<TT> &lhs,
+                                                      const Matrix<TT> &rhs,
+                                                      MatrixMultiplicationPolicy policy
+    );
+
+    template<typename TT>
+    friend Matrix<TT> detail::StrassensMultiplicationStep(const Matrix<TT> &lhs,
+                                                          const Matrix<TT> &rhs,
+                                                          const std::size_t &size
+    );
+
+    template<typename TT>
+    friend Matrix<TT> detail::StrassensMultiplicationStepParallel(const Matrix<TT> &lhs,
+                                                                  const Matrix<TT> &rhs,
+                                                                  const std::size_t &size
+    );
+
 private:
     std::vector<std::vector<T>> _rows_data;
 
-};
-
-enum class MatrixMultiplicationPolicy {
-    Default, Strassen, StrassenParallel
 };
 
 template<typename T>
@@ -91,6 +125,14 @@ template<typename T>
 bool operator!=(const Matrix<T> &lhs, const Matrix<T> &rhs);
 
 
+/**
+ * @brief matrix multiplication
+ * @tparam T arithmetic type of elements stored in matrix
+ * @param lhs left multiplication argument
+ * @param rhs right multiplication argument
+ * @param policy multiplication policy
+ * @return result os multiplication
+ */
 template<typename T>
 Matrix<T> multiply(const Matrix<T> &lhs,
                    const Matrix<T> &rhs,
