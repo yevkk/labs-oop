@@ -3,6 +3,14 @@
 #include <type_traits>
 #include <vector>
 
+template<typename T>
+class Matrix;
+
+namespace detail {
+    template<typename TT>
+    Matrix<TT> defaultMultiplication(const Matrix<TT> &lhs, const Matrix<TT> &rhs);
+}
+
 /**
  * @brief a class for storing numerical matrix
  * @tparam T arithmetic type of elements stored in matrix
@@ -43,12 +51,12 @@ public:
     /**
      * @return number of rows in matrix
      */
-    std::size_t size_rows() const;
+    [[nodiscard]] std::size_t size_rows() const;
 
     /**
      * @return nu,ber of columns in matrix
      */
-    std::size_t size_cols() const;
+    [[nodiscard]] std::size_t size_cols() const;
 
     /**
      * @brief prints matrix to output stream
@@ -56,11 +64,18 @@ public:
      * @param os a stream reference
      */
     template<typename OStream>
-    void print(OStream& os);
+    void print(OStream &os);
+
+    template<typename TT>
+    friend Matrix<TT> detail::defaultMultiplication(const Matrix<TT> &lhs, const Matrix<TT> &rhs);
 
 private:
     std::vector<std::vector<T>> _rows_data;
 
+};
+
+enum class MatrixMultiplicationPolicy {
+    Default, Strassen, StrassenParallel
 };
 
 template<typename T>
@@ -74,5 +89,13 @@ bool operator==(const Matrix<T> &lhs, const Matrix<T> &rhs);
 
 template<typename T>
 bool operator!=(const Matrix<T> &lhs, const Matrix<T> &rhs);
+
+
+template<typename T>
+Matrix<T> multiply(const Matrix<T> &lhs,
+                   const Matrix<T> &rhs,
+                   MatrixMultiplicationPolicy policy = MatrixMultiplicationPolicy::Default
+);
+
 
 #include "Matrix.hxx"

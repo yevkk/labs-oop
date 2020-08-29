@@ -11,7 +11,8 @@ set(SRC_DIR ${TOP_DIR}/src)
 set(LIB_NAME matrix)
 
 set(SRC_LIST
-#        ${SRC_DIR}/
+        ${SRC_DIR}/Matrix.hpp
+        ${SRC_DIR}/Matrix.hxx
         )
 
 add_library(${LIB_NAME} INTERFACE)

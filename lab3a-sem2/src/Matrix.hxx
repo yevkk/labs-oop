@@ -1,8 +1,24 @@
 #pragma once
 
+#include <iostream>
 #include <cassert>
 #include "Matrix.hpp"
 
+namespace detail {
+    template<typename TT>
+    Matrix<TT> defaultMultiplication(const Matrix<TT> &lhs, const Matrix<TT> &rhs) {
+        assert(lhs.size_cols() == rhs.size_rows() && "Incorrect");
+
+        Matrix res(lhs.size_rows(), rhs.size_cols(), 0);
+
+        for (std::size_t i = 0; i < lhs.size_rows(); i++)
+            for (std::size_t j = 0; j < rhs.size_cols(); j++)
+                for (std::size_t k = 0; k < lhs.size_cols(); k++)
+                    res(i, j) += lhs(i, k) * rhs(k, j);
+
+        return res;
+    }
+}
 
 template<typename T>
 Matrix<T>::Matrix(const std::size_t &rows, const std::size_t &cols, const T &default_element) :
@@ -44,8 +60,8 @@ T &Matrix<T>::operator()(const std::size_t &row, const std::size_t &col) {
 
 template<typename T>
 Matrix<T> operator+(const Matrix<T> &lhs, const Matrix<T> &rhs) {
-    assert(lhs.size_rows() == rhs.size_rows() && "Wrong arguments");
-    assert(lhs.size_cols() == rhs.size_cols() && "Wrong arguments");
+    assert(lhs.size_rows() == rhs.size_rows() && "Incorrect arguments");
+    assert(lhs.size_cols() == rhs.size_cols() && "Incorrect arguments");
 
     Matrix res(lhs.size_rows(), lhs.size_cols(), 0);
 
@@ -60,8 +76,8 @@ Matrix<T> operator+(const Matrix<T> &lhs, const Matrix<T> &rhs) {
 
 template<typename T>
 Matrix<T> operator-(const Matrix<T> &lhs, const Matrix<T> &rhs) {
-    assert(lhs.size_rows() == rhs.size_rows() && "Wrong arguments");
-    assert(lhs.size_cols() == rhs.size_cols() && "Wrong arguments");
+    assert(lhs.size_rows() == rhs.size_rows() && "Incorrect arguments");
+    assert(lhs.size_cols() == rhs.size_cols() && "Incorrect arguments");
 
     Matrix res(lhs.size_rows(), lhs.size_cols(), 0);
 
@@ -101,4 +117,20 @@ void Matrix<T>::print(OStream& os) {
         }
         os << std::endl;
     }
+}
+
+
+
+template<typename T>
+Matrix<T> multiply(const Matrix<T> &lhs, const Matrix<T> &rhs,  MatrixMultiplicationPolicy policy) {
+    switch (policy) {
+        case MatrixMultiplicationPolicy::Default:
+            return detail::defaultMultiplication(std::move(lhs), std::move(rhs));
+        case MatrixMultiplicationPolicy::Strassen:
+            return {{0}};
+        case MatrixMultiplicationPolicy::StrassenParallel:
+            return {{0}};
+    }
+
+    return {{0}};
 }
