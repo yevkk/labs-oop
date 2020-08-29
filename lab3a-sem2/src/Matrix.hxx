@@ -19,9 +19,9 @@ namespace detail {
     }
 
     template<typename TT>
-    Matrix<TT> StrassensMultiplication(const Matrix<TT> &lhs,
-                                       const Matrix<TT> &rhs,
-                                       MatrixMultiplicationPolicy policy) {
+    Matrix<TT> StrassenMultiplication(const Matrix<TT> &lhs,
+                                      const Matrix<TT> &rhs,
+                                      MatrixMultiplicationPolicy policy) {
 
         std::size_t sqr_size = std::max({lhs.size_rows(), lhs.size_cols(), rhs.size_rows(), rhs.size_cols()});
         std::size_t power2 = 1;
@@ -42,9 +42,9 @@ namespace detail {
 
         Matrix<TT> sub_res {{0}};
         if (policy == MatrixMultiplicationPolicy::Strassen) {
-            sub_res = StrassensMultiplicationStep(new_lhs, new_rhs, power2);
+            sub_res = StrassenMultiplicationStep(new_lhs, new_rhs, power2);
         } else {
-            sub_res = StrassensMultiplicationStepParallel(new_lhs, new_rhs, power2);
+            sub_res = StrassenMultiplicationStepParallel(new_lhs, new_rhs, power2);
         }
 
         Matrix res(lhs.size_rows(), rhs.size_cols(), 0);
@@ -59,18 +59,18 @@ namespace detail {
     }
 
     template<typename TT>
-    Matrix<TT> StrassensMultiplicationStep(const Matrix<TT> &lhs,
-                                           const Matrix<TT> &rhs,
-                                           const std::size_t &size) {
+    Matrix<TT> StrassenMultiplicationStep(const Matrix<TT> &lhs,
+                                          const Matrix<TT> &rhs,
+                                          const std::size_t &size) {
         //TODO: implement this
         std::cout << "ITS'S A TRAP" << std::endl;
         return {size, size, 2810};
     }
 
     template<typename TT>
-    Matrix<TT> StrassensMultiplicationStepParallel(const Matrix<TT> &lhs,
-                                                   const Matrix<TT> &rhs,
-                                                   const std::size_t &size) {
+    Matrix<TT> StrassenMultiplicationStepParallel(const Matrix<TT> &lhs,
+                                                  const Matrix<TT> &rhs,
+                                                  const std::size_t &size) {
         //TODO: implement this
         std::cout << "HELLO THERE" << std::endl;
         return {size, size, 2810};
@@ -184,6 +184,6 @@ Matrix<T> multiply(const Matrix<T> &lhs, const Matrix<T> &rhs, MatrixMultiplicat
     if (policy == MatrixMultiplicationPolicy::Default) {
         return detail::defaultMultiplication(std::move(lhs), std::move(rhs));
     } else {
-        return detail::StrassensMultiplication(std::move(lhs), std::move(rhs), policy);
+        return detail::StrassenMultiplication(std::move(lhs), std::move(rhs), policy);
     }
 }

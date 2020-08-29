@@ -15,21 +15,21 @@ namespace detail {
     Matrix<TT> defaultMultiplication(const Matrix<TT> &lhs, const Matrix<TT> &rhs);
 
     template<typename TT>
-    Matrix<TT> StrassensMultiplication(const Matrix<TT> &lhs,
-                                       const Matrix<TT> &rhs,
-                                       MatrixMultiplicationPolicy policy
+    Matrix<TT> StrassenMultiplication(const Matrix<TT> &lhs,
+                                      const Matrix<TT> &rhs,
+                                      MatrixMultiplicationPolicy policy
     );
 
     template<typename TT>
-    Matrix<TT> StrassensMultiplicationStep(const Matrix<TT> &lhs,
-                                           const Matrix<TT> &rhs,
-                                           const std::size_t &size
+    Matrix<TT> StrassenMultiplicationStep(const Matrix<TT> &lhs,
+                                          const Matrix<TT> &rhs,
+                                          const std::size_t &size
     );
 
     template<typename TT>
-    Matrix<TT> StrassensMultiplicationStepParallel(const Matrix<TT> &lhs,
-                                                   const Matrix<TT> &rhs,
-                                                   const std::size_t &size
+    Matrix<TT> StrassenMultiplicationStepParallel(const Matrix<TT> &lhs,
+                                                  const Matrix<TT> &rhs,
+                                                  const std::size_t &size
     );
 }
 
@@ -90,21 +90,21 @@ public:
     friend Matrix<TT> detail::defaultMultiplication(const Matrix<TT> &lhs, const Matrix<TT> &rhs);
 
     template<typename TT>
-    friend Matrix<TT> detail::StrassensMultiplication(const Matrix<TT> &lhs,
-                                                      const Matrix<TT> &rhs,
-                                                      MatrixMultiplicationPolicy policy
+    friend Matrix<TT> detail::StrassenMultiplication(const Matrix<TT> &lhs,
+                                                     const Matrix<TT> &rhs,
+                                                     MatrixMultiplicationPolicy policy
     );
 
     template<typename TT>
-    friend Matrix<TT> detail::StrassensMultiplicationStep(const Matrix<TT> &lhs,
-                                                          const Matrix<TT> &rhs,
-                                                          const std::size_t &size
+    friend Matrix<TT> detail::StrassenMultiplicationStep(const Matrix<TT> &lhs,
+                                                         const Matrix<TT> &rhs,
+                                                         const std::size_t &size
     );
 
     template<typename TT>
-    friend Matrix<TT> detail::StrassensMultiplicationStepParallel(const Matrix<TT> &lhs,
-                                                                  const Matrix<TT> &rhs,
-                                                                  const std::size_t &size
+    friend Matrix<TT> detail::StrassenMultiplicationStepParallel(const Matrix<TT> &lhs,
+                                                                 const Matrix<TT> &rhs,
+                                                                 const std::size_t &size
     );
 
 private:
