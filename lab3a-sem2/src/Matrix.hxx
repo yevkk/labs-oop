@@ -275,6 +275,16 @@ Matrix<T>::Matrix(std::initializer_list<std::vector<T>> elements) :
 }
 
 template<typename T>
+Matrix<T>::Matrix(std::vector<std::vector<T>> elements) :
+        _rows{elements} {
+    assert(elements.size() != 0 && "No elements provided");
+    auto size_tmp = _rows[0].size();
+    for (std::size_t i = 1; i < _rows.size(); i++) {
+        assert(_rows[i].size() == size_tmp && "Wrong elements sequence provided");
+    }
+}
+
+template<typename T>
 std::size_t Matrix<T>::size_rows() const {
     return _rows.size();
 }

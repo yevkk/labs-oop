@@ -55,6 +55,8 @@ public:
 
     Matrix(std::initializer_list<std::vector<T>> elements);
 
+    Matrix(std::vector<std::vector<T>> elements);
+
     /**
      * @brief gives access to an element value
      * @param row element's row index
