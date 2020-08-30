@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(TOP_DIR ${CMAKE_SOURCE_DIR})
 set(SRC_DIR ${TOP_DIR}/src)
 set(TESTS_DIR ${TOP_DIR}/tests)
-#set(BENCHMARK_DIR ${TOP_DIR}/benchmark)
+set(BENCHMARK_DIR ${TOP_DIR}/benchmark)
 
 set(LIB_NAME matrix)
 
@@ -32,11 +32,11 @@ if (ENABLE_TESTS)
     enable_testing()
     add_subdirectory(${TESTS_DIR})
 endif()
-#
-#if (ENABLE_BENCHMARK)
-#    add_subdirectory(${BENCHMARK_DIR})
-#endif()
+
+if (ENABLE_BENCHMARK)
+    add_subdirectory(${BENCHMARK_DIR})
+endif()
 
 # executable for quick testing in main.cpp
-add_executable(main main.cpp tests/main.cpp tests/MatrixTest.cpp)
+add_executable(main main.cpp tests/main.cpp tests/MatrixTest.cpp benchmark/benchmark.cpp)
 target_link_libraries(main PRIVATE ${LIB_NAME})
