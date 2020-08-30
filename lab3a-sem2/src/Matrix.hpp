@@ -121,6 +121,13 @@ private:
 };
 
 template<typename T>
+Matrix(std::initializer_list<std::vector<T>>) -> Matrix<T>;
+
+template<typename T>
+Matrix(const std::size_t &, const std::size_t &, const T &) -> Matrix<T>;
+
+
+template<typename T>
 Matrix<T> operator+(const Matrix<T> &lhs, const Matrix<T> &rhs);
 
 template<typename T>
