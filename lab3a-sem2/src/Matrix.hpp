@@ -17,19 +17,22 @@ namespace detail {
     template<typename TT>
     Matrix<TT> StrassenMultiplication(const Matrix<TT> &lhs,
                                       const Matrix<TT> &rhs,
-                                      MatrixMultiplicationPolicy policy
+                                      MatrixMultiplicationPolicy policy,
+                                      const std::size_t &size_bound
     );
 
     template<typename TT>
     Matrix<TT> StrassenMultiplicationStep(const Matrix<TT> &lhs,
                                           const Matrix<TT> &rhs,
-                                          const std::size_t &size
+                                          const std::size_t &size,
+                                          const std::size_t &size_bound
     );
 
     template<typename TT>
     Matrix<TT> StrassenMultiplicationStepParallel(const Matrix<TT> &lhs,
                                                   const Matrix<TT> &rhs,
-                                                  const std::size_t &size
+                                                  const std::size_t &size,
+                                                  const std::size_t &size_bound
     );
 }
 
@@ -92,23 +95,28 @@ public:
     template<typename TT>
     friend Matrix<TT> detail::StrassenMultiplication(const Matrix<TT> &lhs,
                                                      const Matrix<TT> &rhs,
-                                                     MatrixMultiplicationPolicy policy
+                                                     MatrixMultiplicationPolicy policy,
+                                                     const std::size_t &size_bound
     );
 
     template<typename TT>
     friend Matrix<TT> detail::StrassenMultiplicationStep(const Matrix<TT> &lhs,
                                                          const Matrix<TT> &rhs,
-                                                         const std::size_t &size
+                                                         const std::size_t &size,
+                                                         const std::size_t &size_bound
     );
 
     template<typename TT>
     friend Matrix<TT> detail::StrassenMultiplicationStepParallel(const Matrix<TT> &lhs,
                                                                  const Matrix<TT> &rhs,
-                                                                 const std::size_t &size
+                                                                 const std::size_t &size,
+                                                                 const std::size_t &size_bound
     );
 
+
+    ~Matrix();
 private:
-    std::vector<std::vector<T>> _rows_data;
+    std::vector<std::vector<T>> _rows;
 
 };
 
@@ -124,6 +132,18 @@ bool operator==(const Matrix<T> &lhs, const Matrix<T> &rhs);
 template<typename T>
 bool operator!=(const Matrix<T> &lhs, const Matrix<T> &rhs);
 
+/**
+ * @brief matrix multiplication
+ * @tparam T arithmetic type of elements stored in matrix
+ * @param lhs left multiplication argument
+ * @param rhs right multiplication argument
+ * @return result os multiplication
+ */
+template<typename T>
+Matrix<T> multiply(const Matrix<T> &lhs,
+                   const Matrix<T> &rhs);
+
+constexpr std::size_t SIZE_BOUND = 64;
 
 /**
  * @brief matrix multiplication
@@ -136,7 +156,8 @@ bool operator!=(const Matrix<T> &lhs, const Matrix<T> &rhs);
 template<typename T>
 Matrix<T> multiply(const Matrix<T> &lhs,
                    const Matrix<T> &rhs,
-                   MatrixMultiplicationPolicy policy = MatrixMultiplicationPolicy::Default
+                   MatrixMultiplicationPolicy policy,
+                   const std::size_t &size_bound = SIZE_BOUND
 );
 
 
