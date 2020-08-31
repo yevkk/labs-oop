@@ -38,5 +38,5 @@ if (ENABLE_BENCHMARK)
 endif()
 
 # executable for quick testing in main.cpp
-add_executable(main main.cpp tests/main.cpp tests/MatrixTest.cpp benchmark/benchmark.cpp)
+add_executable(main main.cpp)
 target_link_libraries(main PRIVATE ${LIB_NAME})
