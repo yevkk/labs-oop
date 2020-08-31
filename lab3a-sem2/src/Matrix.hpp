@@ -55,7 +55,7 @@ public:
 
     Matrix(std::initializer_list<std::vector<T>> elements);
 
-    Matrix(std::vector<std::vector<T>> elements);
+    explicit Matrix(const std::vector<std::vector<T>> &elements);
 
     /**
      * @brief gives access to an element value

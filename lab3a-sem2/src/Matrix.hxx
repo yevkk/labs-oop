@@ -208,39 +208,19 @@ namespace detail {
                                StrassenMultiplicationStepParallel<TT>,
                                 A11, B12 - B22, half_size, size_bound
         );
-        auto S_fut = std::async(std::launch::async,
-                                StrassenMultiplicationStepParallel<TT>,
-                                A22, B21 - B11, half_size, size_bound
-        );
-        auto T_fut = std::async(std::launch::async,
-                                StrassenMultiplicationStepParallel<TT>,
-                                A11 + A12, B22, half_size, size_bound
-        );
-        auto U_fut = std::async(std::launch::async,
-                                StrassenMultiplicationStepParallel<TT>,
-                                A21 - A11, B11 + B12, half_size, size_bound
-        );
-        auto V_fut = std::async(std::launch::async,
-                               StrassenMultiplicationStepParallel<TT>,
-                                A12 - A22, B21 + B22, half_size, size_bound
-        );
 
         P_fut.wait();
         Q_fut.wait();
         R_fut.wait();
-        S_fut.wait();
-        T_fut.wait();
-        U_fut.wait();
-        V_fut.wait();
-
 
         auto P = P_fut.get();
         auto Q = Q_fut.get();
         auto R = R_fut.get();
-        auto S = S_fut.get();
-        auto T = T_fut.get();
-        auto U = U_fut.get();
-        auto V = V_fut.get();
+        auto S = StrassenMultiplicationStepParallel(A22, B21 - B11, half_size, size_bound);
+        auto T = StrassenMultiplicationStepParallel(A11 + A12, B22, half_size, size_bound);
+        auto U = StrassenMultiplicationStepParallel(A21 - A11, B11 + B12, half_size, size_bound);
+        auto V = StrassenMultiplicationStepParallel(A12 - A22, B21 + B22, half_size, size_bound);
+
 
         A11 = P + S - T + V;
         A12 = R + T;
@@ -275,7 +255,7 @@ Matrix<T>::Matrix(std::initializer_list<std::vector<T>> elements) :
 }
 
 template<typename T>
-Matrix<T>::Matrix(std::vector<std::vector<T>> elements) :
+Matrix<T>::Matrix(const std::vector<std::vector<T>> &elements) :
         _rows{elements} {
     assert(elements.size() != 0 && "No elements provided");
     auto size_tmp = _rows[0].size();
