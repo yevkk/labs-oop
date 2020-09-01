@@ -92,9 +92,6 @@ public:
     void print(OStream &os);
 
     template<typename TT>
-    friend Matrix<TT> detail::defaultMultiplication(const Matrix<TT> &lhs, const Matrix<TT> &rhs);
-
-    template<typename TT>
     friend Matrix<TT> detail::StrassenMultiplication(const Matrix<TT> &lhs,
                                                      const Matrix<TT> &rhs,
                                                      MatrixMultiplicationPolicy policy,
