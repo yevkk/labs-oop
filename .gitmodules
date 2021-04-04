@@ -4,3 +4,9 @@
 [submodule "lab2-sem2/benchmark/googletest"]
 	path = lab2-sem2/benchmark/googletest
 	url = https://github.com/google/googletest
+[submodule "lab3a-sem2/benchmark/benchmark"]
+	path = lab3a-sem2/benchmark/benchmark
+	url = https://github.com/google/benchmark.git
+[submodule "lab3a-sem2/benchmark/googletest"]
+	path = lab3a-sem2/benchmark/googletest
+	url = https://github.com/google/googletest.git
